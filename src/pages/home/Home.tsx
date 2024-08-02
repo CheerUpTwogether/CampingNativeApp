@@ -8,7 +8,7 @@ import {
   RootStackParamList,
 } from "../../components/router/Router";
 
-const menu = require("../../../assets/icons/menu.png");
+const menu = require("../../assets/icons/menu.png");
 
 const profile = { uri: "https://picsum.photos/200/300" };
 
