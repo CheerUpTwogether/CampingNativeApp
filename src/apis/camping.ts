@@ -8,6 +8,8 @@ interface CampingType {
   addr2: string;
   facltDivNm: string;
   mangeDivNm: string;
+  induty: string;
+  resveCl: string;
 }
 type CampingsType = CampingType[] | null;
 
