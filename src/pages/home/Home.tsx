@@ -1,12 +1,12 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import TopBar from "../../components/common/TopBar";
+import TopBar from "@/components/common/TopBar";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import {
   RootBottomParamList,
   RootStackParamList,
-} from "../../components/router/Router";
+} from "@/components/router/Router";
 
 const menu = require("../../assets/icons/menu.png");
 
