@@ -1,19 +1,25 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
+import { RootStackParamList } from "@/components/router/Router";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 const helpIcon = require("@/assets/icons/Help.png");
-const GoogleIcon = require("@/assets/icons/GoogleIcon.png");
-const FacebookIcon = require("@/assets/icons/FacebookIcon.png");
-
+const googleIcon = require("@/assets/icons/GoogleIcon.png");
+const facebookIcon = require("@/assets/icons/FacebookIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
+
+type SettingsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   return (
     <SafeAreaView style={styles.wrapper}>
       <ScrollView style={styles.wrapper} showsHorizontalScrollIndicator={false}>
@@ -30,23 +36,12 @@ const Login = () => {
         <View style={styles.subGradient} />
 
         <View style={{ alignItems: "flex-end" }}>
-          <TouchableOpacity
-            style={{
-              marginTop: 30,
-              marginRight: 20,
-              width: 44,
-              height: 44,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 20,
-              backgroundColor: "rgba(87, 51, 83, 0.2)",
-            }}
-          >
+          <TouchableOpacity style={styles.helpWrapper}>
             <Image source={helpIcon} style={{ width: 22, height: 22 }} />
           </TouchableOpacity>
         </View>
         <View
-          style={{ alignItems: "center", marginTop: 230, marginBottom: 30 }}
+          style={{ alignItems: "center", marginTop: 230, marginBottom: 60 }}
         >
           <Text style={{ fontSize: 32, fontWeight: "700", color: "#573353" }}>
             환영해요!
@@ -67,7 +62,7 @@ const Login = () => {
               marginBottom: 8,
             }}
           >
-            <Image source={GoogleIcon} style={{ width: 23, height: 23 }} />
+            <Image source={googleIcon} style={{ width: 23, height: 23 }} />
             <Text style={{ fontSize: 16, color: "#573353" }}>
               Continue with Google
             </Text>
@@ -85,7 +80,7 @@ const Login = () => {
               borderRadius: 12,
             }}
           >
-            <Image source={FacebookIcon} style={{ width: 23, height: 23 }} />
+            <Image source={facebookIcon} style={{ width: 23, height: 23 }} />
             <Text style={{ fontSize: 16, color: "#573353" }}>
               Continue with Facebook
             </Text>
@@ -94,10 +89,12 @@ const Login = () => {
           <View
             style={{
               height: "100%",
-              marginTop: 8,
+              marginTop: 20,
               backgroundColor: "#FFF",
               paddingHorizontal: 10,
               paddingVertical: 8,
+              borderTopStartRadius: 16,
+              borderTopEndRadius: 16,
               gap: 5,
             }}
           >
@@ -144,16 +141,19 @@ const Login = () => {
             >
               비밀번호 찾기
             </Text>
-            <View
+            <TouchableOpacity
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
                 paddingBottom: 20,
               }}
+              onPress={() => {
+                navigation.replace("Signup");
+              }}
             >
-              <Text>아직 회원이 아니세요?</Text>
-              <Text>회원가입</Text>
-            </View>
+              <Text style={styles.defaultText}>아직 회원이 아니세요?</Text>
+              <Text style={styles.boldText}>회원가입</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -161,6 +161,13 @@ const Login = () => {
   );
 };
 const styles = StyleSheet.create({
+  defaultText: {
+    color: "#573353",
+  },
+  boldText: {
+    color: "#573353",
+    fontWeight: "700",
+  },
   wrapper: {
     flex: 1,
     backgroundColor: "white",
@@ -186,6 +193,16 @@ const styles = StyleSheet.create({
     left: 0,
     backgroundColor: "#FFF3E9",
     zIndex: -1,
+  },
+  helpWrapper: {
+    marginTop: 30,
+    marginRight: 20,
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: "rgba(87, 51, 83, 0.2)",
   },
 });
 

@@ -14,7 +14,6 @@ const splashScreen = require("@/assets/images/SplashScreen.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-// 2초 후 바텀 네비게이터로 이동
 const Splash = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   useEffect(() => {
