@@ -7,7 +7,6 @@ interface Input {
   placeholder?: string;
   multiline?: boolean;
   numberOfLines?: number;
-  secureTextEntry?: boolean;
   isBgWhite?: boolean;
 }
 const Input = ({
@@ -16,7 +15,6 @@ const Input = ({
   placeholder,
   multiline = false,
   numberOfLines = 1,
-  secureTextEntry = false,
   isBgWhite = true,
 }: Input) => {
   return (
@@ -29,7 +27,6 @@ const Input = ({
           multiline && styles.textarea,
           isBgWhite && styles.bgWhite,
         ]}
-        secureTextEntry={secureTextEntry}
         placeholder={placeholder}
         multiline={multiline}
         numberOfLines={numberOfLines}
