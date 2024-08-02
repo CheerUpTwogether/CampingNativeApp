@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
   textInput: {
     width: "100%",
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 10,
     fontSize: 16,
     color: "#FDA758",
     backgroundColor: "#FFF6ED",
   },
   textarea: {
-    height: 150,
+    height: "100%",
     color: "#FDA758",
   },
   bgWhite: {

@@ -19,5 +19,6 @@ module.exports = {
         alias: { "@": "./src" },
       },
     ],
+    ["module:react-native-dotenv"],
   ],
 };
