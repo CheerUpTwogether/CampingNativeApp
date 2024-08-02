@@ -54,6 +54,8 @@ const CheckBox: React.FC<CheckBoxProps> = ({
       style={{
         width: 30,
         height: 30,
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <View
