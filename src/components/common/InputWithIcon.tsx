@@ -5,8 +5,8 @@ interface InputWithIconProps {
   value: string;
   setValue: (text: string) => void;
   placeholder: string;
+  icon: React.ReactNode;
   isBgWhite?: boolean;
-  icon: any;
 }
 
 const InputWithIcon = ({
