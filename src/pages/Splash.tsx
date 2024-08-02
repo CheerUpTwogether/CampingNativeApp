@@ -1,9 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import {
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "../components/router/Router";
 
+const splashScreen = require("@/assets/images/SplashScreen.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
@@ -17,12 +24,23 @@ const Splash = () => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Splash</Text>
-      </View>
+    <SafeAreaView style={styles.wrapper}>
+      <ImageBackground style={styles.backgroundImage} source={splashScreen} />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  backgroundImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default Splash;
