@@ -37,19 +37,19 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
 
             {/* 컨텐츠 영역 */}
             <View style={styles.faclContainer}>
-              <View style={styles.divNmContainer}>
-                <Text>{el.facltDivNm}</Text>
-                <Text style={styles.mangeDivNm}>{el.mangeDivNm}</Text>
-              </View>
+              <Text style={styles.addr}>
+                {el.addr1} {el.addr2}
+              </Text>
               <Text style={styles.facltNm} numberOfLines={1}>
                 {el.facltNm}
               </Text>
             </View>
 
             <View style={styles.faclDetailContainer}>
-              <Text style={styles.addr}>
-                {el.addr1} {el.addr2}
-              </Text>
+              <View style={styles.divNmContainer}>
+                <Text style={styles.mangeDivNm}>{el.facltDivNm}</Text>
+                <Text style={styles.mangeDivNm}>{el.mangeDivNm}</Text>
+              </View>
               <Text style={styles.resveCl}>{el.resveCl}</Text>
             </View>
           </TouchableOpacity>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   induty: {
     position: "absolute",
     top: 12,
-    left: 12,
+    right: 12,
     backgroundColor: "#FFF3E9",
     borderRadius: 100,
     padding: 4,
@@ -93,7 +93,12 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   mangeDivNm: {
-    paddingLeft: 4,
+    marginRight: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 100,
+    backgroundColor: "rgba(87, 51, 83, 0.2)",
+    color: "#573353",
   },
   faclDetailContainer: {
     paddingHorizontal: 8,
@@ -103,11 +108,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   addr: {
-    fontSize: 12,
+    fontSize: 14,
   },
   resveCl: {
-    fontSize: 16,
-    color: "#FDA758",
+    fontSize: 18,
+
+    fontWeight: "semibold",
   },
 });
 export default CampingFlatList;
