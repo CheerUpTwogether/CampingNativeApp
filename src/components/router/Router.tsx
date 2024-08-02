@@ -10,6 +10,7 @@ import Settings from "../../pages/settings/Settings";
 import Splash from "../../pages/Splash";
 import CustomBottomTab from "./CustomBottomTab";
 import Add from "../../pages/add/Add";
+import Login from "@/pages/auth/Login";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -47,7 +48,8 @@ const BottomTab = () => {
 const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
-      <StackTab.Screen name="Splash" component={Splash} />
+      {/* <StackTab.Screen name="Splash" component={Splash} /> */}
+      <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
     </StackTab.Navigator>
