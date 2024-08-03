@@ -52,14 +52,24 @@ export const addSignUpApi = async (
     throw error;
   }
 };
+
+type addLoginApiResopnseType = {
+  success: boolean;
+};
+
 // 로그인 API 함수
 export const addLoginApi = async (
   user: User
-): Promise<ApiResponse<any> | void> => {
+): Promise<{ success: boolean }> => {
   try {
-    const res = await API.post<ApiResponse<any>>("/auth", user);
+    const res = await API.post<{ success: boolean }>("/auth", user);
+    Toast.show({
+      type: "success",
+      text1: "로그인에 성공하였습니다.",
+    });
     return res.data;
   } catch (error) {
     showToastApiError();
+    return { success: false };
   }
 };

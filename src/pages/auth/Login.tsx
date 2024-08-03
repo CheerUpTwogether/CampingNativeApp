@@ -9,7 +9,6 @@ import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import Toast from "react-native-toast-message";
 
 const helpIcon = require("@/assets/icons/Help.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
@@ -141,7 +140,7 @@ const Login = () => {
                   email,
                   password,
                 });
-                if (data.success) {
+                if (data?.success) {
                   AsyncStorage.getItem(
                     "userData",
                     JSON.stringify({
@@ -149,10 +148,6 @@ const Login = () => {
                       password: password,
                     })
                   );
-                  Toast.show({
-                    type: "success",
-                    text1: "로그인에 성공하였습니다.",
-                  });
                   navigation.replace("BottomTab");
                 }
               }}
