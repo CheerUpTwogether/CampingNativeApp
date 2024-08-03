@@ -16,8 +16,11 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const Signup = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState(
+    Math.random().toString().substr(2, 7)
+  );
+  const [phoneNumber, setPhoneNumber] = useState("01012341231");
   const [password, setPassword] = useState("");
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
@@ -33,9 +36,9 @@ const Signup = () => {
       <Text style={styles.signupTitle}>회원가입 </Text>
       <View style={styles.formWrapper}>
         <Input
-          value={name}
+          value={nickname}
           setValue={(text) => {
-            setName(text);
+            setNickname(text);
           }}
           placeholder="이름을 입력해주세요."
           isBgWhite={true}
@@ -70,8 +73,17 @@ const Signup = () => {
       <View style={styles.button}>
         <Button
           label="회원가입하기"
-          onPress={() => {
-            addSignUpApi({ email, password });
+          onPress={async () => {
+            const data = await addSignUpApi({
+              email,
+              password,
+              nickname,
+              phoneNumber,
+            });
+
+            if (data.success) {
+              navigation.replace("Login");
+            }
           }}
         />
       </View>

@@ -1,12 +1,15 @@
+import { addLoginApi } from "@/apis/account";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { RootStackParamList } from "@/components/router/Router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import Toast from "react-native-toast-message";
 
 const helpIcon = require("@/assets/icons/Help.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
@@ -131,7 +134,29 @@ const Login = () => {
               placeholder="비밀번호"
               isBgWhite={false}
             />
-            <Button label="로그인" onPress={() => {}} />
+            <Button
+              label="로그인"
+              onPress={async () => {
+                const data = await addLoginApi({
+                  email,
+                  password,
+                });
+                if (data.success) {
+                  AsyncStorage.getItem(
+                    "userData",
+                    JSON.stringify({
+                      email: email,
+                      password: password,
+                    })
+                  );
+                  Toast.show({
+                    type: "success",
+                    text1: "로그인에 성공하였습니다.",
+                  });
+                  navigation.replace("BottomTab");
+                }
+              }}
+            />
             <Text
               style={{
                 textAlign: "center",

@@ -13,6 +13,8 @@ interface User {
 interface UserDetail {
   email: string;
   password: string;
+  nickname: string;
+  phoneNumber: string;
 }
 
 // 에러 응답 인터페이스 정의
@@ -55,7 +57,8 @@ export const addLoginApi = async (
   user: User
 ): Promise<ApiResponse<any> | void> => {
   try {
-    return await API.post<ApiResponse<any>>("/auth", user);
+    const res = await API.post<ApiResponse<any>>("/auth", user);
+    return res.data;
   } catch (error) {
     showToastApiError();
   }
