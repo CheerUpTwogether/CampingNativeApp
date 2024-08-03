@@ -1,9 +1,17 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Linking,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
 import CheckCircle from "@/assets/icons/CheckCircle.svg";
+import Button from "@/components/common/Button";
 const backIcon = require("@/assets/icons/Back.png");
 
 interface CampingType {
@@ -17,12 +25,17 @@ interface CampingType {
   resveCl: string;
   intro: string;
   caravInnerFclty: string;
+  tel: string;
 }
 
 const Camping = () => {
   const navigation = useNavigation<NavigationProp<any>>();
   const route = useRoute();
   const { campingInfo } = route.params as { campingInfo: CampingType };
+  const moveCall = (number: string) => {
+    Linking.openURL(`tel:${number.split("-").join("")}`);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -79,10 +92,11 @@ const Camping = () => {
           ) : (
             <></>
           )}
-
-          <Text style={styles.intro}>{campingInfo.intro}</Text>
         </View>
       </ScrollView>
+      <View style={styles.btnWrapper}>
+        <Button label="전화걸기" onPress={() => moveCall(campingInfo.tel)} />
+      </View>
     </View>
   );
 };
@@ -129,6 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     fontSize: 16,
     color: "#555",
+    marginBottom: 30,
   },
   caravInnerFcltyContainer: {
     paddingTop: 16,
@@ -148,6 +163,15 @@ const styles = StyleSheet.create({
   },
   resveCl: {
     paddingHorizontal: 16,
+  },
+  btnWrapper: {
+    backgroundColor: "#FFF3E9",
+    height: 88,
+    position: "static",
+    bottom: 0,
+    paddingHorizontal: 12,
+    //marginVertical: 8,
+    paddingBottom: 8,
   },
 });
 export default Camping;
