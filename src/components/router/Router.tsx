@@ -7,6 +7,7 @@ import Home from "../../pages/home/Home";
 import Articles from "../../pages/articles/Articles";
 import Community from "../../pages/community/Community";
 import Settings from "../../pages/settings/Settings";
+import SettingDetail from "@/pages/settings/SettingDetail";
 import Splash from "../../pages/Splash";
 import CustomBottomTab from "./CustomBottomTab";
 import Add from "../../pages/add/Add";
@@ -30,6 +31,8 @@ export type RootStackParamList = {
   Splash: undefined;
   BottomTab: undefined;
   Add: undefined;
+  Camping: undefined;
+  SettingDetail: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -59,6 +62,7 @@ const Router = () => {
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
       <StackTab.Screen name="Camping" component={Camping} />
+      <StackTab.Screen name="SettingDetail" component={SettingDetail} />
     </StackTab.Navigator>
   );
 };

@@ -26,7 +26,7 @@ const DetailBox: React.FC<DetailBoxProps> = ({
   const navigation = useNavigation<NavigationProp<any>>();
 
   const handlePress = () => {
-    navigation.navigate(page);
+    navigation.navigate(page, { title });
   };
 
   return (

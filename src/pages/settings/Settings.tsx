@@ -26,7 +26,7 @@ const settingIconData = [
     title: "알람",
     description: "마케팅 알람 받아줘...",
     icon: alram,
-    page: "TODO 이동할 페이지 명",
+    page: "SettingDetail",
   },
   {
     title: "자주 묻는 질문",
@@ -55,7 +55,7 @@ const settingData = [
   {
     title: "앱 정보",
     icon: appInfo,
-    page: "TODO 이동할 페이지 명",
+    page: "SettingDetail",
   },
 ];
 
