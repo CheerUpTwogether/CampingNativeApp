@@ -27,7 +27,7 @@ interface ApiResponse<T> {
 // 캠핑장 API 함수
 export const getCampingsApi = async (
   obj: object
-): Promise<ApiResponse<object[]>> => {
+): Promise<ApiResponse<object[]> | void> => {
   try {
     const res = await OPENAPI.get<ApiResponse<object[]>>(
       `/basedList${makeQueryString(obj)}`
@@ -35,6 +35,5 @@ export const getCampingsApi = async (
     return res.data;
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
