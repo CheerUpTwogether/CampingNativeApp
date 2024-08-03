@@ -25,7 +25,7 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
         <View key={el.firstImageUrl} style={styles.container}>
           {/* 사진 */}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Camping", { id: el.facltNm })}
+            onPress={() => navigation.navigate("Camping", { campingInfo: el })}
           >
             <Image
               source={{ uri: `${el.firstImageUrl}` }}
@@ -77,14 +77,15 @@ const styles = StyleSheet.create({
     right: 12,
     backgroundColor: "#FFF3E9",
     borderRadius: 100,
-    padding: 4,
+    padding: 8,
   },
   indutyText: {
     color: "#FDA758",
+    fontSize: 14,
   },
   facltNm: {
     fontSize: 18,
-    fontWeight: "bold",
+    color: "#000",
   },
   divNmContainer: {
     flexDirection: "row",
@@ -112,8 +113,6 @@ const styles = StyleSheet.create({
   },
   resveCl: {
     fontSize: 18,
-
-    fontWeight: "semibold",
   },
 });
 export default CampingFlatList;
