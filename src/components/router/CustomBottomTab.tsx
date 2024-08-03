@@ -84,8 +84,8 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
         <Animated.Image
           source={addButton}
           style={{
-            width: 80,
-            height: 80,
+            width: 60,
+            height: 60,
             transform: [
               {
                 translateY: addAnimation.interpolate({
@@ -110,32 +110,32 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
             case "Home":
               return (
                 <HomeIcon
-                  width={40}
-                  height={40}
+                  width={28}
+                  height={28}
                   color={bool ? "#FC9D45" : "#ddd"}
                 />
               );
             case "Articles":
               return (
                 <ArticleIcon
-                  width={40}
-                  height={40}
+                  width={28}
+                  height={28}
                   color={bool ? "#FC9D45" : "#ddd"}
                 />
               );
             case "Community":
               return (
                 <CommunityIcon
-                  width={40}
-                  height={40}
+                  width={28}
+                  height={28}
                   color={bool ? "#FC9D45" : "#ddd"}
                 />
               );
             default:
               return (
                 <SettingIcon
-                  width={40}
-                  height={40}
+                  width={28}
+                  height={28}
                   color={bool ? "#FC9D45" : "#ddd"}
                 />
               );
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   addButtonWrapper: {
     width: 80,
-    height: 80,
+    height: 50,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",

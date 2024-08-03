@@ -58,9 +58,9 @@ const BottomTab = () => {
 const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
-      <StackTab.Screen name="Splash" component={Splash} />
+      {/* <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
-      <StackTab.Screen name="Signup" component={Signup} />
+      <StackTab.Screen name="Signup" component={Signup} /> */}
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
       <StackTab.Screen name="Camping" component={CampingDetail} />
