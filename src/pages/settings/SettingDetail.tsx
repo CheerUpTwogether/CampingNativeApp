@@ -5,7 +5,8 @@ import TopBar from "@/components/common/TopBar";
 import SettingBox from "@/components/common/SettingBox";
 import ToggleButton from "@/components/common/ToggleButton";
 import { useRoute } from "@react-navigation/native";
-const backButton = require("@/assets/icons/Back.png");
+
+const backIcon = require("@/assets/icons/Back.png");
 
 type RootStackParamList = {
   SettingDetail: { title: string };
@@ -30,7 +31,7 @@ const SettingDetail = () => {
     <SafeAreaView style={styles.wrapper}>
       <TopBar
         title={title === "알람" ? "알람 설정" : "앱정보"}
-        leftIcon={backButton}
+        leftIcon={backIcon}
         leftClick={handleLeftPress}
       />
       <View>
