@@ -21,6 +21,21 @@ const chat = require("@/assets/icons/ChatPhone.png");
 const privacy = require("@/assets/icons/Privacy.png");
 const appInfo = require("@/assets/icons/Info.png");
 
+const settingIconData = [
+  {
+    title: "알람",
+    description: "마케팅 알람 받아줘...",
+    icon: alram,
+    page: "TODO 이동할 페이지 명",
+  },
+  {
+    title: "자주 묻는 질문",
+    description: "마케팅 알람 받아줘...",
+    icon: etc,
+    page: "TODO 이동할 페이지 명",
+  },
+];
+
 const settingData = [
   {
     title: "문의하기",
@@ -70,18 +85,16 @@ const Settings = () => {
         <View>
           <Text style={styles.subTitle}>일반</Text>
           <View style={{ gap: 8 }}>
-            <DetailBox
-              title="알람"
-              description="마케팅 알람 받아줘..."
-              icon={alram}
-              page="TODO"
-            />
-            <DetailBox
-              title="기타"
-              description="그외 여러 일반적인 설정들..."
-              icon={etc}
-              page="TODO"
-            />
+            {settingIconData.map((data) => (
+              <View id={data.title} style={{ marginBottom: 8 }}>
+                <DetailBox
+                  title={data.title}
+                  description={data.description}
+                  icon={data.icon}
+                  page={data.page}
+                />
+              </View>
+            ))}
           </View>
         </View>
 
