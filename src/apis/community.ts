@@ -20,7 +20,6 @@ export const getCommunitysApi = async () => {
     return await API.get(`/community`);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -30,7 +29,6 @@ export const getCommunityApi = async (communityId: string) => {
     return await API.get(`/community/${communityId}`);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -40,7 +38,6 @@ export const addCommunityApi = async (communityData: Community) => {
     return await API.post("/community", communityData);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -50,7 +47,6 @@ export const setCommunityApi = async (communityData: Community) => {
     return API.put(`/feed/${communityData.communityId}`);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -60,7 +56,6 @@ export const deleteCommunityApi = async (communityId: string) => {
     return await API.delete(`/community/${communityId}`);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -70,7 +65,6 @@ export const addCommunityCommentApi = async (communityId: string) => {
     return await API.post(`/community/${communityId}/replays`, communityId);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -80,7 +74,6 @@ export const addCommunityLikeApi = async (communityId: string) => {
     return await API.post(`/community/${communityId}/lick`, communityId);
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
 
@@ -95,6 +88,5 @@ export const setCommunityCommentApi = async (
     );
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };
