@@ -7,9 +7,19 @@ import {
   View,
   Image,
 } from "react-native";
+import {
+  useNavigation,
+  CompositeNavigationProp,
+} from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
 import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { StackNavigationProp } from "@react-navigation/stack";
+import {
+  RootBottomParamList,
+  RootStackParamList,
+} from "@/components/router/Router";
 
 const more = require("@/assets/icons/menu.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -59,7 +69,18 @@ const settingData = [
   },
 ];
 
+type SettingsScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<RootBottomParamList, "Settings">,
+  StackNavigationProp<RootStackParamList>
+>;
+
 const Settings = () => {
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
+
+  const handleMove = () => {
+    navigation.navigate("ProfileDetail");
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       {/* TODO - leftClick 전달(이동할 페이지) */}
@@ -73,10 +94,7 @@ const Settings = () => {
             </View>
 
             <View style={styles.buttonWrapper}>
-              <Button
-                label="View"
-                onPress={() => console.log("TODO: 마이페이지 이동")}
-              />
+              <Button label="View" onPress={handleMove} />
             </View>
           </View>
           <Image source={profileImage} style={styles.profileImage} />
@@ -86,7 +104,7 @@ const Settings = () => {
           <Text style={styles.subTitle}>일반</Text>
           <View style={{ gap: 8 }}>
             {settingIconData.map((data) => (
-              <View id={data.title} style={{ marginBottom: 8 }}>
+              <View key={data.title} style={{ marginBottom: 8 }}>
                 <DetailBox
                   title={data.title}
                   description={data.description}
@@ -101,7 +119,7 @@ const Settings = () => {
         <View>
           <Text style={styles.subTitle}>Support</Text>
           {settingData.map((data) => (
-            <View id={data.title} style={{ marginBottom: 8 }}>
+            <View key={data.title} style={{ marginBottom: 8 }}>
               <DetailBox title={data.title} icon={data.icon} page={data.page} />
             </View>
           ))}
@@ -115,6 +133,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
+    marginBottom: 40,
   },
   scrollViewContent: {
     flexGrow: 1,
