@@ -3,11 +3,15 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import TopBar from "@/components/common/TopBar";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootBottomParamList } from "@/components/router/Router";
+import {
+  RootBottomParamList,
+  RootStackParamList,
+} from "../../components/router/Router";
 import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import { ScrollView } from "react-native-gesture-handler";
 import CampingFlatList from "@/components/home/CampingFlatList";
+
 
 const menu = require("../../assets/icons/menu.png");
 
@@ -77,6 +81,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
+    marginHorizontal: 20,
   },
   campingContainer: {
     flex: 1,

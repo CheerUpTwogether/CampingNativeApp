@@ -8,9 +8,6 @@ import {
   View,
 } from "react-native";
 import CustomCurveUi from "./CustomCurveUi";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootStackParamList } from "./Router";
-import { useNavigation } from "@react-navigation/native";
 
 const homeOn = require("../../assets/icons/bottomTab/home.png");
 const articlesOn = require("../../assets/icons/bottomTab/articles.png");
