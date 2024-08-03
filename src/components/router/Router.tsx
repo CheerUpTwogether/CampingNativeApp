@@ -57,7 +57,6 @@ const Router = () => {
       <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
-      <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Add" component={Add} />
       <StackTab.Screen name="Camping" component={Camping} />
     </StackTab.Navigator>
