@@ -12,7 +12,6 @@ import { OPENAPI_SERVICE_KEY } from "@env";
 import { ScrollView } from "react-native-gesture-handler";
 import CampingFlatList from "@/components/home/CampingFlatList";
 
-
 const menu = require("../../assets/icons/menu.png");
 
 const profile = { uri: "https://picsum.photos/200/300" };
@@ -81,7 +80,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginHorizontal: 20,
   },
   campingContainer: {
     flex: 1,

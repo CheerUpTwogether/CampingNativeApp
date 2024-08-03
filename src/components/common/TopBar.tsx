@@ -2,19 +2,6 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-/*
-interface TopBarProps {
-  leftIcon : 좌측 아이콘 이미지 전달
-  leftClick : 좌측 아이콘 핸들러 전달
-  leftIsProfile : 좌측 아이콘 프로필 인지 여부 
-  title : 제목 ( 필수 )
-  rightIcon : 우측 아이콘 이미지 전달
-  rightClick : 우측 아이콘 핸들러 전달
-  rightIsProfile : 우측 아이콘 프로필 인지 여부 
-  bgColor 아이콘 배경 색상 지정
-}
-*/
-
 interface TopBarProps {
   leftIcon?: { uri: string } | undefined;
   leftClick?: () => void;
@@ -78,7 +65,7 @@ const TopBar: React.FC<TopBarProps> = ({
           {rightIsProfile ? (
             <Image
               source={rightIcon}
-              style={[styles.icon, { width: 54, height: 54 }]}
+              style={[styles.icon, { width: 40, height: 40 }]}
             />
           ) : (
             <Image source={rightIcon} style={styles.icon} />
@@ -93,16 +80,16 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 28,
-    marginHorizontal: 27,
+    marginVertical: 24,
+    marginHorizontal: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     gap: 10,
   },
   iconWrapper: {
-    width: 54,
-    height: 55,
+    width: 40,
+    height: 40,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
