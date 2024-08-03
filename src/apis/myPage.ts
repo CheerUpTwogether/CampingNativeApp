@@ -9,10 +9,16 @@ interface UserDetail {
   password: string;
 }
 
+interface getUserApiResponse {
+  result: {
+    nickName: string;
+  };
+}
+
 // 회원 정보 조회 API 함수
-export const getUserApi = async (): Promise<ApiResponse<any> | void> => {
+export const getUserApi = async (): Promise<getUserApiResponse | void> => {
   try {
-    const res = await API.get<ApiResponse<any>>("/accounts/info");
+    const res = await API.get<getUserApiResponse>("/accounts/info");
     return res.data;
   } catch (error) {
     showToastApiError();

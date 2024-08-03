@@ -36,9 +36,7 @@ const Login = () => {
     navigation.replace("Signup");
   };
 
-  const iconColor = (text: string) => {
-    return !!text ? "#FDA758" : "#999";
-  };
+  const iconColor = (text: string) => (!!text ? "#FDA758" : "#999");
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -146,9 +144,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "rgba(87, 51, 83, 0.2)",
   },
-  helpIcon: { width: 22, height: 22 },
-  welcomeWrapper: { alignItems: "center", marginTop: 230, marginBottom: 60 },
-  welcomeText: { fontSize: 32, fontWeight: "700", color: "#573353" },
+  helpIcon: {
+    width: 22,
+    height: 22,
+  },
+  welcomeWrapper: {
+    alignItems: "center",
+    marginTop: 230,
+    marginBottom: 60,
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#573353",
+  },
   socialWrapper: {
     flexDirection: "row",
     alignItems: "center",
@@ -160,8 +169,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 8,
   },
-  socialImg: { width: 23, height: 23 },
-  socialText: { fontSize: 16, color: "#573353" },
+  socialImg: {
+    width: 23,
+    height: 23,
+  },
+  socialText: {
+    fontSize: 16,
+    color: "#573353",
+  },
   formWrapper: {
     height: "100%",
     backgroundColor: "#FFF",
@@ -191,6 +206,10 @@ const styles = StyleSheet.create({
   boldText: {
     color: "#573353",
     fontWeight: "700",
+  },
+  socialContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
   },
 });
 
