@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import CustomCurveUi from "./CustomCurveUi";
 
-const homeOn = require("../../../assets/icons/bottomTab/home.png");
-const articlesOn = require("../../../assets/icons/bottomTab/articles.png");
-const addButton = require("../../../assets/icons/bottomTab/add.png");
-const communityOn = require("../../../assets/icons/bottomTab/community.png");
-const settingsOn = require("../../../assets/icons/bottomTab/settings.png");
+const homeOn = require("../../assets/icons/bottomTab/home.png");
+const articlesOn = require("../../assets/icons/bottomTab/articles.png");
+const addButton = require("../../assets/icons/bottomTab/add.png");
+const communityOn = require("../../assets/icons/bottomTab/community.png");
+const settingsOn = require("../../assets/icons/bottomTab/settings.png");
 
 const CustomBottomTab: React.FC<BottomTabBarProps> = ({
   state,
