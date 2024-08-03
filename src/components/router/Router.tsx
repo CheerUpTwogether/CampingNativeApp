@@ -13,7 +13,7 @@ import CustomBottomTab from "./CustomBottomTab";
 import Add from "../../pages/add/Add";
 import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
-import Camping from "@/pages/home/Camping";
+import CampingDetail from "@/pages/home/CampingDetail";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -61,7 +61,7 @@ const Router = () => {
       <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
-      <StackTab.Screen name="Camping" component={Camping} />
+      <StackTab.Screen name="Camping" component={CampingDetail} />
       <StackTab.Screen name="SettingDetail" component={SettingDetail} />
     </StackTab.Navigator>
   );
