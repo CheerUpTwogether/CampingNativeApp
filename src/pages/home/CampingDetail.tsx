@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import TopBar from "@/components/common/TopBar";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-const backIcon = require("@/assets/icons/Back.png");
+import TopBar from "@/components/common/TopBar";
 import CheckCircle from "@/assets/icons/CheckCircle.svg";
-import { ScrollView } from "react-native-gesture-handler";
+const backIcon = require("@/assets/icons/Back.png");
+
 interface CampingType {
   firstImageUrl: string;
   facltNm: string;
@@ -27,9 +27,9 @@ const Camping = () => {
     <View style={styles.container}>
       <View style={styles.topBar}>
         <TopBar
-          title="캠핑장 상세 정보"
           leftIcon={backIcon}
           leftClick={navigation.goBack}
+          title="캠핑장 상세 정보"
         />
       </View>
 
@@ -48,25 +48,37 @@ const Camping = () => {
             {campingInfo.addr1} {campingInfo.addr2}
           </Text>
           <Text style={styles.facltNm}>{campingInfo.facltNm}</Text>
-          <View style={styles.caravInnerFcltyContainer}>
-            <View style={styles.caravInnerFcltyTitle}>
-              <CheckCircle color="#555" width={20} height={20} />
-              <Text style={styles.caravInnerFcltyTitleText}>
-                편의 시설/서비스
+          {campingInfo.caravInnerFclty.length ? (
+            <View style={styles.caravInnerFcltyContainer}>
+              <View style={styles.caravInnerFcltyTitle}>
+                <CheckCircle color="#555" width={20} height={20} />
+                <Text style={styles.caravInnerFcltyTitleText}>
+                  편의 시설/서비스
+                </Text>
+              </View>
+              <Text style={styles.caravInnerFclty}>
+                {campingInfo.caravInnerFclty.split(",").join(" ")}
               </Text>
             </View>
-            <Text style={styles.caravInnerFclty}>
-              {campingInfo.caravInnerFclty.split(",").join(" ")}
-            </Text>
-          </View>
+          ) : (
+            <></>
+          )}
 
-          <View style={styles.caravInnerFcltyContainer}>
-            <View style={styles.caravInnerFcltyTitle}>
-              <CheckCircle color="#555" width={20} height={20} />
-              <Text style={styles.caravInnerFcltyTitleText}>예약 방법</Text>
-            </View>
-            <Text style={styles.caravInnerFclty}>{campingInfo.resveCl}</Text>
-          </View>
+          {campingInfo.resveCl.length ? (
+            <>
+              <View style={styles.caravInnerFcltyContainer}>
+                <View style={styles.caravInnerFcltyTitle}>
+                  <CheckCircle color="#555" width={20} height={20} />
+                  <Text style={styles.caravInnerFcltyTitleText}>예약 방법</Text>
+                </View>
+                <Text style={styles.caravInnerFclty}>
+                  {campingInfo.resveCl}
+                </Text>
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
 
           <Text style={styles.intro}>{campingInfo.intro}</Text>
         </View>

@@ -37,7 +37,7 @@ const TopBar: React.FC<TopBarProps> = ({
           {leftIsProfile ? (
             <Image
               source={leftIcon}
-              style={[styles.icon, { width: 54, height: 54 }]}
+              style={[styles.icon, { width: 40, height: 40 }]}
             />
           ) : (
             <Image source={leftIcon} style={styles.icon} />
