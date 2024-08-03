@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
+import InputWithIcon from "@/components/common/InputWithIcon";
 import LinearGradient from "react-native-linear-gradient";
 import { addLoginApi } from "@/apis/account";
 import { setUserToken } from "@/apis/cookie";
@@ -14,6 +14,8 @@ const helpIcon = require("@/assets/icons/Help.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
 const facebookIcon = require("@/assets/icons/FacebookIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
+import UserIcon from "@/assets/icons/User.svg";
+import LockIcon from "@/assets/icons/Lock.svg";
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -32,6 +34,10 @@ const Login = () => {
 
   const moveSignup = () => {
     navigation.replace("Signup");
+  };
+
+  const iconColor = (text: string) => {
+    return !!text ? "#FDA758" : "#999";
   };
 
   return (
@@ -71,17 +77,24 @@ const Login = () => {
 
           <Text style={styles.formTitle}>이메일로 로그인하기</Text>
           <View style={styles.formWrapper}>
-            <Input
+            <InputWithIcon
               value={email}
               setValue={setEmail}
               placeholder="이메일을 입력해주세요."
               isBgWhite={false}
+              icon={
+                <UserIcon width={50} height={25} color={iconColor(email)} />
+              }
             />
-            <Input
+            <InputWithIcon
               value={password}
               setValue={setPassword}
               placeholder="비밀번호"
               isBgWhite={false}
+              secureTextEntry={true}
+              icon={
+                <LockIcon width={50} height={22} color={iconColor(password)} />
+              }
             />
             <Button label="로그인" onPress={clickLoginBtn} />
             <Text style={styles.formTitle}>비밀번호 찾기</Text>
