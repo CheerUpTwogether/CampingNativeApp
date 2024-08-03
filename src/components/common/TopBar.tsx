@@ -21,7 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({
   rightIcon,
   rightClick,
   rightIsProfile = false,
-  bgColor = "#e5ddff",
+  bgColor = "rgba(87, 51, 83, 0.2)",
 }) => {
   return (
     <View style={styles.wrapper}>
