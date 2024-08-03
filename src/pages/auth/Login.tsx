@@ -1,8 +1,8 @@
 import { addLoginApi } from "@/apis/account";
+import { setUserToken } from "@/apis/cookie";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { RootStackParamList } from "@/components/router/Router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
@@ -22,6 +22,17 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+
+  const clickLoginBtn = async () => {
+    const data = await addLoginApi({
+      email,
+      password,
+    });
+    if (data?.success) {
+      setUserToken("userData", { email, password });
+      navigation.replace("BottomTab");
+    }
+  };
   return (
     <SafeAreaView style={styles.wrapper}>
       <ScrollView style={styles.wrapper} showsHorizontalScrollIndicator={false}>
@@ -119,9 +130,7 @@ const Login = () => {
             ></View>
             <Input
               value={email}
-              setValue={(text) => {
-                setEmail(text);
-              }}
+              setValue={setEmail}
               placeholder="이메일을 입력해주세요."
               isBgWhite={false}
             />
@@ -133,25 +142,7 @@ const Login = () => {
               placeholder="비밀번호"
               isBgWhite={false}
             />
-            <Button
-              label="로그인"
-              onPress={async () => {
-                const data = await addLoginApi({
-                  email,
-                  password,
-                });
-                if (data?.success) {
-                  AsyncStorage.getItem(
-                    "userData",
-                    JSON.stringify({
-                      email: email,
-                      password: password,
-                    })
-                  );
-                  navigation.replace("BottomTab");
-                }
-              }}
-            />
+            <Button label="로그인" onPress={clickLoginBtn} />
             <Text
               style={{
                 textAlign: "center",

@@ -53,10 +53,6 @@ export const addSignUpApi = async (
   }
 };
 
-type addLoginApiResopnseType = {
-  success: boolean;
-};
-
 // 로그인 API 함수
 export const addLoginApi = async (
   user: User
