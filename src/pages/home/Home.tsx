@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import TopBar from "@/components/common/TopBar";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -8,7 +8,6 @@ import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import { ScrollView } from "react-native-gesture-handler";
 import CampingFlatList from "@/components/home/CampingFlatList";
-import Camping from "./Camping";
 
 const menu = require("../../assets/icons/menu.png");
 
