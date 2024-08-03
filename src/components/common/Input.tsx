@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet } from "react-native";
 
 interface Input {
   value: string;
@@ -30,6 +30,8 @@ const Input = ({
         placeholder={placeholder}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        autoCapitalize="none"
+        autoComplete="off"
       />
     </View>
   );

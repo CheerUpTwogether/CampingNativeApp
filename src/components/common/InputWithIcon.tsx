@@ -29,6 +29,8 @@ const InputWithIcon = ({
         style={[styles.textInput, isBgWhite && styles.bgWhite]}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
+        autoCapitalize="none"
+        autoComplete="off"
       />
     </View>
   );
