@@ -1,13 +1,13 @@
-import { addLoginApi } from "@/apis/account";
-import { setUserToken } from "@/apis/cookie";
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { RootStackParamList } from "@/components/router/Router";
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import Button from "@/components/common/Button";
+import Input from "@/components/common/Input";
 import LinearGradient from "react-native-linear-gradient";
+import { addLoginApi } from "@/apis/account";
+import { setUserToken } from "@/apis/cookie";
+import { RootStackParamList } from "@/components/router/Router";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 const helpIcon = require("@/assets/icons/Help.png");
@@ -19,20 +19,21 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const Login = () => {
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   const clickLoginBtn = async () => {
-    const data = await addLoginApi({
-      email,
-      password,
-    });
-    if (data?.success) {
-      setUserToken("userData", { email, password });
-      navigation.replace("BottomTab");
-    }
+    const data = await addLoginApi({ email, password });
+    if (!data.success) return;
+    setUserToken("userData", { email, password });
+    navigation.replace("BottomTab");
   };
+
+  const moveSignup = () => {
+    navigation.replace("Signup");
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <ScrollView style={styles.wrapper} showsHorizontalScrollIndicator={false}>
@@ -48,86 +49,28 @@ const Login = () => {
         />
         <View style={styles.subGradient} />
 
-        <View style={{ alignItems: "flex-end" }}>
+        <View style={styles.helpContainer}>
           <TouchableOpacity style={styles.helpWrapper}>
-            <Image source={helpIcon} style={{ width: 22, height: 22 }} />
+            <Image source={helpIcon} style={styles.helpIcon} />
           </TouchableOpacity>
         </View>
-        <View
-          style={{ alignItems: "center", marginTop: 230, marginBottom: 60 }}
-        >
-          <Text style={{ fontSize: 32, fontWeight: "700", color: "#573353" }}>
-            환영해요!
-          </Text>
+        <View style={styles.welcomeWrapper}>
+          <Text style={styles.welcomeText}>환영해요!</Text>
         </View>
 
         <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 29,
-              backgroundColor: "#FFF",
-              paddingVertical: 17,
-              marginHorizontal: 20,
-              borderRadius: 12,
-              marginBottom: 8,
-            }}
-          >
-            <Image source={googleIcon} style={{ width: 23, height: 23 }} />
-            <Text style={{ fontSize: 16, color: "#573353" }}>
-              Continue with Google
-            </Text>
+          <View style={styles.socialWrapper}>
+            <Image source={googleIcon} style={styles.socialImg} />
+            <Text style={styles.socialText}>Continue with Google</Text>
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 29,
-              backgroundColor: "#FFF",
-              paddingVertical: 17,
-              marginHorizontal: 20,
-              borderRadius: 12,
-            }}
-          >
-            <Image source={facebookIcon} style={{ width: 23, height: 23 }} />
-            <Text style={{ fontSize: 16, color: "#573353" }}>
-              Continue with Facebook
-            </Text>
+          <View style={styles.socialWrapper}>
+            <Image source={facebookIcon} style={styles.socialImg} />
+            <Text style={styles.socialText}>Continue with Facebook</Text>
           </View>
 
-          <View
-            style={{
-              height: "100%",
-              marginTop: 20,
-              backgroundColor: "#FFF",
-              paddingHorizontal: 10,
-              paddingVertical: 8,
-              borderTopStartRadius: 16,
-              borderTopEndRadius: 16,
-              gap: 5,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                color: "#573353",
-                textAlign: "center",
-                marginBottom: 4,
-              }}
-            >
-              이메일로 로그인하기
-            </Text>
-            <View
-              style={{
-                height: 1,
-                backgroundColor: "#FFF3E9",
-                marginBottom: 4,
-              }}
-            ></View>
+          <Text style={styles.formTitle}>이메일로 로그인하기</Text>
+          <View style={styles.formWrapper}>
             <Input
               value={email}
               setValue={setEmail}
@@ -136,32 +79,13 @@ const Login = () => {
             />
             <Input
               value={password}
-              setValue={(text) => {
-                setPassword(text);
-              }}
+              setValue={setPassword}
               placeholder="비밀번호"
               isBgWhite={false}
             />
             <Button label="로그인" onPress={clickLoginBtn} />
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#573353",
-                textDecorationLine: "underline",
-              }}
-            >
-              비밀번호 찾기
-            </Text>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                paddingBottom: 20,
-              }}
-              onPress={() => {
-                navigation.replace("Signup");
-              }}
-            >
+            <Text style={styles.formTitle}>비밀번호 찾기</Text>
+            <TouchableOpacity style={styles.signupBtn} onPress={moveSignup}>
               <Text style={styles.defaultText}>아직 회원이 아니세요?</Text>
               <Text style={styles.boldText}>회원가입</Text>
             </TouchableOpacity>
@@ -172,13 +96,6 @@ const Login = () => {
   );
 };
 const styles = StyleSheet.create({
-  defaultText: {
-    color: "#573353",
-  },
-  boldText: {
-    color: "#573353",
-    fontWeight: "700",
-  },
   wrapper: {
     flex: 1,
     backgroundColor: "white",
@@ -205,6 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF3E9",
     zIndex: -1,
   },
+  helpContainer: { alignItems: "flex-end" },
   helpWrapper: {
     marginTop: 30,
     marginRight: 20,
@@ -214,6 +132,52 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     backgroundColor: "rgba(87, 51, 83, 0.2)",
+  },
+  helpIcon: { width: 22, height: 22 },
+  welcomeWrapper: { alignItems: "center", marginTop: 230, marginBottom: 60 },
+  welcomeText: { fontSize: 32, fontWeight: "700", color: "#573353" },
+  socialWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 29,
+    backgroundColor: "#FFF",
+    paddingVertical: 16,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  socialImg: { width: 23, height: 23 },
+  socialText: { fontSize: 16, color: "#573353" },
+  formWrapper: {
+    height: "100%",
+    backgroundColor: "#FFF",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 5,
+  },
+  formTitle: {
+    fontSize: 16,
+    color: "#573353",
+    textAlign: "center",
+    backgroundColor: "#fff",
+    marginTop: 20,
+    paddingVertical: 12,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginBottom: 1,
+  },
+  signupBtn: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingBottom: 20,
+  },
+  defaultText: {
+    color: "#573353",
+  },
+  boldText: {
+    color: "#573353",
+    fontWeight: "700",
   },
 });
 
