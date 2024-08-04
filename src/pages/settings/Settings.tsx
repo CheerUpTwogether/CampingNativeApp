@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   buttonWrapper: {
-    width: 120,
-    height: 40,
+    width: 100,
+    height: 68,
   },
   profileImage: {
     width: 200,
