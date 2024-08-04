@@ -20,7 +20,6 @@ export const getArticlesApi = async (
   try {
     return await API.get(`/article?sortType=${sortType}`);
   } catch (error) {
-    console.log(error);
     showToastApiError();
   }
 };
