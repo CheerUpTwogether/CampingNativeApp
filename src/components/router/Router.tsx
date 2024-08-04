@@ -10,6 +10,9 @@ import Settings from "../../pages/settings/Settings";
 import Splash from "../../pages/Splash";
 import CustomBottomTab from "./CustomBottomTab";
 import Add from "../../pages/add/Add";
+import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
+import Camping from "@/pages/home/Camping";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -22,8 +25,11 @@ export type RootBottomParamList = {
 };
 
 export type RootStackParamList = {
+  Login: undefined;
+  Signup: undefined;
   Splash: undefined;
   BottomTab: undefined;
+  Add: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -48,8 +54,12 @@ const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
       <StackTab.Screen name="Splash" component={Splash} />
+      <StackTab.Screen name="Login" component={Login} />
+      <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
+      <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Add" component={Add} />
+      <StackTab.Screen name="Camping" component={Camping} />
     </StackTab.Navigator>
   );
 };
