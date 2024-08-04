@@ -41,7 +41,7 @@ const boxData = [
 ];
 
 const ProfileDetail = () => {
-  const [userData, setUserData] = useState<UserData[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const navigation = useNavigation();
 
   const baseUrl = "http://13.209.27.220:8080";
@@ -59,6 +59,10 @@ const ProfileDetail = () => {
     navigation.goBack();
   };
 
+  if (!userData) {
+    return null;
+  }
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="Profile" leftIcon={backIcon} leftClick={handlePrev} />
@@ -67,14 +71,20 @@ const ProfileDetail = () => {
           <View style={styles.profileWrapper}>
             <View style={styles.imageWrapper}>
               <Image
-                source={userData.profileImagePath || profileImage}
+                source={
+                  userData.profileImagePath
+                    ? { uri: userData.profileImagePath }
+                    : profileImage
+                }
                 style={styles.profileImage}
               />
             </View>
             <View style={styles.introduceWrapper}>
               <Text style={styles.name}>{userData.nickName}</Text>
               <Text style={styles.subText}>
-                {userData.introduce || "소개를 입력해주세요"}
+                {userData.introduce
+                  ? baseUrl + userData.introduce
+                  : "소개를 입력해주세요"}
               </Text>
             </View>
           </View>
@@ -104,7 +114,7 @@ const ProfileDetail = () => {
           </View>
         </View>
         {boxData.map((box) => (
-          <View id={box.title} style={{ marginBottom: 8 }}>
+          <View key={box.title} style={{ marginBottom: 8 }}>
             <DetailBox
               title={box.title}
               icon={box.icon}
