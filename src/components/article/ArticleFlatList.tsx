@@ -5,7 +5,10 @@ import { getMonthValue, padZero } from "@/utils/date";
 import StarIcon from "@/assets/icons/Star.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const ArticleFlatList: React.FC<ArticleFlatListProps> = ({ articles }) => {
+const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
+  articles,
+  setFavorite,
+}) => {
   const formatDate = (createDate: string) => {
     const date = new Date(createDate);
     const year = date.getFullYear();
@@ -35,8 +38,12 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({ articles }) => {
             </Text>
             <View style={styles.etc}>
               <Text style={styles.createDate}>{formatDate(el.createDate)}</Text>
-              <TouchableOpacity>
-                <StarIcon color={"#ddd"} width={24} height={24} />
+              <TouchableOpacity onPress={() => setFavorite(el.id)}>
+                <StarIcon
+                  color={el.isFavorite ? "#FFD73F" : "#ddd"}
+                  width={24}
+                  height={24}
+                />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>

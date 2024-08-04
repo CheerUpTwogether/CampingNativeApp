@@ -1,5 +1,5 @@
 type Article = {
-  id: string;
+  id: number;
   title: string;
   content: string;
   createDate: string;
@@ -9,8 +9,14 @@ type Article = {
 
 interface ArticleFlatListProps {
   articles: Article[];
+  setFavorite: (id: number) => void;
 }
 
 interface ArticlesReponse {
   result: Article[];
+}
+
+interface ArticleFavoriteResponse {
+  success: boolean;
+  result: Article;
 }

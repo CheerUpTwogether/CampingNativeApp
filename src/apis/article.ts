@@ -3,9 +3,9 @@ import { API } from ".";
 import { showToastApiError } from "../utils/apiHelper";
 
 // 아티클 추가
-export const addArticleApi = async (
+export const setFavoriteApi = async (
   articleId: number
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticleFavoriteResponse> | void> => {
   try {
     return await API.post(`/article/favorite/${articleId}`);
   } catch (error) {

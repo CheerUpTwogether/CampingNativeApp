@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { getArticlesApi } from "@/apis/article";
+import { getArticlesApi, setFavoriteApi } from "@/apis/article";
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
@@ -34,6 +34,17 @@ const Articles = () => {
     res?.data?.result && setArticles(res?.data?.result);
   };
 
+  const setFavorite = async (id: number) => {
+    const res = await setFavoriteApi(id);
+    res?.data?.success &&
+      setArticles((prev) =>
+        prev.map((el) => {
+          if (el.id === id) return { ...el, isFavorite: !el.isFavorite };
+          return el;
+        })
+      );
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
@@ -57,7 +68,7 @@ const Articles = () => {
           />
         </View>
 
-        <ArticleFlatList articles={articles} />
+        <ArticleFlatList articles={articles} setFavorite={setFavorite} />
       </ScrollView>
     </SafeAreaView>
   );
