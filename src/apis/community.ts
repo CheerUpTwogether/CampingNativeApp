@@ -1,7 +1,6 @@
-import { showToastApiError } from "@/utils/apiHelper";
 import { API } from ".";
-import { ApiResponse } from "@/types/api";
-
+import Community from "../pages/community/Community";
+import { showToastApiError } from "@/utils/apiHelper";
 // 커뮤니티 타입
 interface Community {
   communityId: number;
