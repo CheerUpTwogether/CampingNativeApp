@@ -14,6 +14,7 @@ import { addLoginApi } from "@/apis/account";
 import { getUserApi } from "@/apis/myPage";
 import useStore from "@/store/store";
 import Toast from "react-native-toast-message";
+import { getUserToken } from "@/apis/cookie";
 
 const splashScreen = require("@/assets/images/SplashScreen.png");
 type SettingsScreenNavigationProp =
