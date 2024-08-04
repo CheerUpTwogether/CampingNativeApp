@@ -1,17 +1,5 @@
 import { OPENAPI } from ".";
 import { showToastApiError, makeQueryString } from "../utils/apiHelper";
-import { ApiResponse } from "@/types/api";
-
-// // API 응답 인터페이스 정의
-type CampingsApiResponse = {
-  response: {
-    body: {
-      items: {
-        item: CampingsType;
-      };
-    };
-  };
-};
 
 // 캠핑장 API 함수
 export const getCampingsApi = async (obj: {
