@@ -4,11 +4,15 @@ import { getMonthValue, padZero } from "@/utils/date";
 
 import StarIcon from "@/assets/icons/Star.svg";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RootStackParamList } from "../router/Router";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
   setFavorite,
 }) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   const formatDate = (createDate: string) => {
     const date = new Date(createDate);
     const year = date.getFullYear();
@@ -25,7 +29,11 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
     <>
       {articles.length ? (
         articles.map((el) => (
-          <TouchableOpacity key={el.title} style={styles.container}>
+          <TouchableOpacity
+            key={el.title}
+            style={styles.container}
+            onPress={() => navigation.navigate("ArticleDetail", { id: el.id })}
+          >
             <Image
               source={{
                 uri: `http://${el?.articleImages?.[0]?.imgPath}`,
