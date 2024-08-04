@@ -6,11 +6,13 @@ import {
   Text,
   View,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import {
   useNavigation,
   CompositeNavigationProp,
 } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailBox from "@/components/common/DetailBox";
 import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
@@ -124,6 +126,18 @@ const Settings = () => {
             </View>
           ))}
         </View>
+
+        <View style={styles.logoutButtonWrapper}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => {
+              AsyncStorage.removeItem("userData");
+              navigation.replace("Login");
+            }}
+          >
+            <Text style={{ color: "#573353" }}>로그아웃</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -181,6 +195,19 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
     marginTop: 16,
     marginBottom: 20,
+  },
+  logoutButtonWrapper: {
+    alignItems: "center",
+    marginHorizontal: "4%",
+    marginVertical: 20,
+  },
+  logoutButton: {
+    width: "100%",
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(87, 51, 83, 0.3)",
+    borderRadius: 12,
   },
 });
 
