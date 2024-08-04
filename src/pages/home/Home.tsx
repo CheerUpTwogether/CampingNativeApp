@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   campingContainer: {
     flex: 1,
   },
-  scrollAreaContainer: { flexGrow: 1 },
+  scrollAreaContainer: { flexGrow: 1, paddingBottom: 100 },
 });
 
 export default Home;
