@@ -4,7 +4,14 @@ import Input from "@/components/common/Input";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
@@ -30,89 +37,91 @@ const Signup = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <View style={styles.signupImageWrapper}>
-        <Image style={styles.signupImage} source={signupImage} />
-      </View>
-      <Text style={styles.signupTitle}>회원가입 </Text>
-      <View style={styles.formWrapper}>
-        <Input
-          value={nickname}
-          setValue={(text) => {
-            setNickname(text);
-          }}
-          placeholder="이름을 입력해주세요."
-          isBgWhite={true}
-        />
-        <Input
-          value={email}
-          setValue={(text) => {
-            setEmail(text);
-          }}
-          placeholder="이메일을 입력해주세요."
-          isBgWhite={true}
-        />
-        <Input
-          value={password}
-          setValue={(text) => {
-            setPassword(text);
-          }}
-          placeholder="비밀번호를 입력해주세요."
-          isBgWhite={true}
-        />
-      </View>
-      <View style={styles.checkboxGroupWrapper}>
-        <View style={styles.checkboxWrapper}>
-          <View style={styles.checkbox}></View>
-          <Text>자동 로그인</Text>
+      <ScrollView>
+        <View style={styles.signupImageWrapper}>
+          <Image style={styles.signupImage} source={signupImage} />
         </View>
-        <View style={styles.checkboxWrapper}>
-          <View style={styles.checkbox}></View>
-          <Text>약관 동의</Text>
+        <Text style={styles.signupTitle}>회원가입 </Text>
+        <View style={styles.formWrapper}>
+          <Input
+            value={nickname}
+            setValue={(text) => {
+              setNickname(text);
+            }}
+            placeholder="이름을 입력해주세요."
+            isBgWhite={true}
+          />
+          <Input
+            value={email}
+            setValue={(text) => {
+              setEmail(text);
+            }}
+            placeholder="이메일을 입력해주세요."
+            isBgWhite={true}
+          />
+          <Input
+            value={password}
+            setValue={(text) => {
+              setPassword(text);
+            }}
+            placeholder="비밀번호를 입력해주세요."
+            isBgWhite={true}
+          />
         </View>
-      </View>
-      <View style={styles.button}>
-        <Button
-          label="회원가입하기"
-          onPress={async () => {
-            const data = await addSignUpApi({
-              email,
-              password,
-              nickname,
-              phoneNumber,
-            });
+        <View style={styles.checkboxGroupWrapper}>
+          <View style={styles.checkboxWrapper}>
+            <View style={styles.checkbox}></View>
+            <Text>자동 로그인</Text>
+          </View>
+          <View style={styles.checkboxWrapper}>
+            <View style={styles.checkbox}></View>
+            <Text>약관 동의</Text>
+          </View>
+        </View>
+        <View style={styles.button}>
+          <Button
+            label="회원가입하기"
+            onPress={async () => {
+              const data = await addSignUpApi({
+                email,
+                password,
+                nickname,
+                phoneNumber,
+              });
 
-            if (data.success) {
-              navigation.replace("Login");
-            }
-          }}
-        />
-      </View>
-      <View style={styles.socialGroupBar}>
-        <View style={styles.socialBar}></View>
-        <Text style={styles.socialTitle}>Or sign in with</Text>
-        <View style={styles.socialBar}></View>
-      </View>
-
-      <View style={styles.socialButtonGroupWrapper}>
-        <View style={styles.socialButtonWrapper}>
-          <Image source={googleIcon} style={{ width: 23, height: 23 }} />
-          <Text style={styles.socialButtonTitle}>Google</Text>
+              if (data.success) {
+                navigation.replace("Login");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.socialGroupBar}>
+          <View style={styles.socialBar}></View>
+          <Text style={styles.socialTitle}>Or sign in with</Text>
+          <View style={styles.socialBar}></View>
         </View>
 
-        <View style={styles.socialButtonWrapper}>
-          <Image source={facebookIcon} style={{ width: 23, height: 23 }} />
-          <Text style={styles.socialButtonTitle}>Facebook</Text>
+        <View style={styles.socialButtonGroupWrapper}>
+          <View style={styles.socialButtonWrapper}>
+            <Image source={googleIcon} style={{ width: 23, height: 23 }} />
+            <Text style={styles.socialButtonTitle}>Google</Text>
+          </View>
+
+          <View style={styles.socialButtonWrapper}>
+            <Image source={facebookIcon} style={{ width: 23, height: 23 }} />
+            <Text style={styles.socialButtonTitle}>Facebook</Text>
+          </View>
         </View>
-      </View>
-      <TouchableOpacity
-        style={styles.navigateLoginWrapper}
-        onPress={() => {
-          navigation.replace("Login");
-        }}
-      >
-        <Text style={styles.defaultText}>회원이세요?</Text>
-        <Text style={styles.boldText}>로그인</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navigateLoginWrapper}
+          onPress={() => {
+            navigation.replace("Login");
+          }}
+        >
+          <Text style={styles.defaultText}>회원이세요?</Text>
+          <Text style={styles.boldText}>로그인</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };

@@ -7,6 +7,7 @@ interface InputWithIconProps {
   placeholder: string;
   icon: React.ReactNode;
   isBgWhite?: boolean;
+  secureTextEntry?: boolean;
 }
 
 const InputWithIcon = ({
@@ -14,16 +15,22 @@ const InputWithIcon = ({
   setValue,
   placeholder,
   isBgWhite = true,
+  secureTextEntry = false,
   icon,
 }: InputWithIconProps) => {
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>{icon}</View>
+      <View style={[styles.iconContainer, isBgWhite && styles.bgWhite]}>
+        {icon}
+      </View>
       <TextInput
         onChangeText={setValue}
         value={value}
         style={[styles.textInput, isBgWhite && styles.bgWhite]}
         placeholder={placeholder}
+        secureTextEntry={secureTextEntry}
+        autoCapitalize="none"
+        autoComplete="off"
       />
     </View>
   );
@@ -35,12 +42,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   iconContainer: {
-    backgroundColor: "white",
     marginRight: 2,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#FFF6ED",
   },
   textInput: {
     padding: 12,

@@ -25,30 +25,28 @@ const Splash = () => {
 
   const getUserData = async () => {
     try {
+      // 저장된 정보가 없을 경우
       const userData = await AsyncStorage.getItem("userData");
-      console.log(userData);
-      if (userData !== null) {
-        const { email, password } = JSON.parse(userData);
-        const data = await addLoginApi({
-          email,
-          password,
-        });
-        console.log(data);
-        if (data.success) {
-          const userInfo = await getUserApi();
-          console.log(userInfo);
-          setUserData(userInfo);
-
-          Toast.show({
-            type: "success",
-            text1: `${userInfo.result.nickName} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
-          });
-
-          navigation.replace("BottomTab");
-        }
-      } else {
+      if (!userData) {
         navigation.replace("Login");
+        return;
       }
+
+      // 로그인 재시도...?
+      // password 저장을 암호화 없이 하면 위험하지 않을까용...?
+      const { email, password } = JSON.parse(userData);
+      const data = await addLoginApi({ email, password });
+      if (!data.success) return;
+
+      // 로그인 api 성공 시 수행 로직
+      const userInfo = await getUserApi();
+      setUserData(userInfo);
+      Toast.show({
+        type: "success",
+        text1: `${userInfo?.result?.nickName} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
+      });
+
+      navigation.replace("BottomTab");
     } catch (e) {}
   };
 

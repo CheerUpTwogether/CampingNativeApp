@@ -9,11 +9,12 @@ import {
 } from "react-native";
 import CustomCurveUi from "./CustomCurveUi";
 
-const homeOn = require("../../assets/icons/bottomTab/home.png");
-const articlesOn = require("../../assets/icons/bottomTab/articles.png");
 const addButton = require("../../assets/icons/bottomTab/add.png");
-const communityOn = require("../../assets/icons/bottomTab/community.png");
 const settingsOn = require("../../assets/icons/bottomTab/settings.png");
+import HomeIcon from "@/assets/icons/Home.svg";
+import ArticleIcon from "@/assets/icons/Article.svg";
+import CommunityIcon from "@/assets/icons/Community.svg";
+import SettingIcon from "@/assets/icons/Setting.svg";
 
 const CustomBottomTab: React.FC<BottomTabBarProps> = ({
   state,
@@ -83,8 +84,8 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
         <Animated.Image
           source={addButton}
           style={{
-            width: 80,
-            height: 80,
+            width: 60,
+            height: 60,
             transform: [
               {
                 translateY: addAnimation.interpolate({
@@ -107,24 +108,37 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
         const iconFlag = (bool: Boolean) => {
           switch (label) {
             case "Home":
-              return homeOn;
+              return (
+                <HomeIcon
+                  width={28}
+                  height={28}
+                  color={bool ? "#FC9D45" : "#ddd"}
+                />
+              );
             case "Articles":
-              return articlesOn;
+              return (
+                <ArticleIcon
+                  width={28}
+                  height={28}
+                  color={bool ? "#FC9D45" : "#ddd"}
+                />
+              );
             case "Community":
-              return communityOn;
+              return (
+                <CommunityIcon
+                  width={28}
+                  height={28}
+                  color={bool ? "#FC9D45" : "#ddd"}
+                />
+              );
             default:
-              return settingsOn;
-
-            // case "홈":
-            //   return bool ? homeOn : homeOff;
-            // case "스토리":
-            //   return bool ? communityOn : communityOff;
-            // case "내 근처":
-            //   return bool ? nearOn : nearOff;
-            // case "채팅":
-            //   return bool ? chatOn : chatOff;
-            // default:
-            //   return bool ? mypageOn : mypageOff;
+              return (
+                <SettingIcon
+                  width={28}
+                  height={28}
+                  color={bool ? "#FC9D45" : "#ddd"}
+                />
+              );
           }
         };
         {
@@ -164,7 +178,8 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
             activeOpacity={0.7}
             onPress={onPress}
           >
-            <Animated.Image
+            {iconFlag(isFocused)}
+            {/* <Animated.Image
               source={iconFlag(isFocused)}
               style={{
                 width: 40,
@@ -178,7 +193,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                   },
                 ],
               }}
-            />
+            /> */}
           </TouchableOpacity>
         );
       })}
@@ -198,7 +213,7 @@ const styles = StyleSheet.create({
   },
   addButtonWrapper: {
     width: 80,
-    height: 80,
+    height: 50,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",

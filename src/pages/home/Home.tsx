@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import {
-  RootBottomParamList,
-  RootStackParamList,
-} from "../../components/router/Router";
+import { RootBottomParamList } from "../../components/router/Router";
 import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import { ScrollView } from "react-native-gesture-handler";
 import CampingFlatList from "@/components/home/CampingFlatList";
-
 
 const menu = require("../../assets/icons/menu.png");
 
@@ -37,25 +33,23 @@ const Home = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const handleLeft = () => navigation.navigate("Settings");
 
-  useEffect(() => {
-    getCampings();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getCampings();
+    }, [])
+  );
 
   const getCampings = async () => {
-    const {
-      response: {
-        body: {
-          items: { item },
-        },
-      },
-    } = await getCampingsApi({
+    const serviceKey = OPENAPI_SERVICE_KEY;
+    const data = await getCampingsApi({
       MobileOS: "AND",
       MobileApp: "캠핑 투게더",
-      serviceKey: OPENAPI_SERVICE_KEY,
+      serviceKey,
       _type: "json",
     });
 
-    setCampings(item);
+    const campingList = data?.response?.body?.items?.item;
+    if (campingList) setCampings(campingList);
   };
 
   return (
@@ -81,7 +75,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginHorizontal: 20,
   },
   campingContainer: {
     flex: 1,

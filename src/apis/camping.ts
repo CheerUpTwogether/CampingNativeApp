@@ -1,5 +1,6 @@
 import { OPENAPI } from ".";
 import { showToastApiError, makeQueryString } from "./utils";
+import { ApiResponse } from "@/types/api";
 
 interface CampingType {
   firstImageUrl: string;
@@ -11,10 +12,10 @@ interface CampingType {
   induty: string;
   resveCl: string;
 }
-type CampingsType = CampingType[] | null;
+type CampingsType = CampingType[];
 
-// API 응답 인터페이스 정의
-interface ApiResponse<T> {
+// // API 응답 인터페이스 정의
+type CampingsApiResponse = {
   response: {
     body: {
       items: {
@@ -22,19 +23,21 @@ interface ApiResponse<T> {
       };
     };
   };
-}
+};
 
 // 캠핑장 API 함수
-export const getCampingsApi = async (
-  obj: object
-): Promise<ApiResponse<object[]>> => {
+export const getCampingsApi = async (obj: {
+  MobileOS: string;
+  MobileApp: string;
+  serviceKey: string;
+  _type: string;
+}): Promise<CampingsApiResponse | void> => {
   try {
-    const res = await OPENAPI.get<ApiResponse<object[]>>(
+    const res = await OPENAPI.get<CampingsApiResponse>(
       `/basedList${makeQueryString(obj)}`
     );
     return res.data;
   } catch (error) {
     showToastApiError();
-    throw error;
   }
 };

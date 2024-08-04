@@ -40,9 +40,7 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
               <Text style={styles.addr}>
                 {el.addr1} {el.addr2}
               </Text>
-              <Text style={styles.facltNm} numberOfLines={1}>
-                {el.facltNm}
-              </Text>
+              <Text style={styles.facltNm}>{el.facltNm}</Text>
             </View>
 
             <View style={styles.faclDetailContainer}>
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   indutyText: {
-    color: "#FDA758",
+    color: "#FC9D45",
     fontSize: 14,
   },
   facltNm: {
