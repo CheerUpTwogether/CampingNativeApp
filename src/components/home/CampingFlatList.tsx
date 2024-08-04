@@ -2,30 +2,18 @@ import React from "react";
 import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-}
-
-interface CampingFlatListProps {
-  campings: CampingType[] | null;
-}
+import { RootStackParamList } from "../router/Router";
 
 const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return campings && campings?.length
     ? campings.map((el) => (
         <View key={el.firstImageUrl} style={styles.container}>
           {/* 사진 */}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Camping", { campingInfo: el })}
+            onPress={() =>
+              navigation.navigate("CampingDetail", { campingInfo: el })
+            }
           >
             <Image
               source={{ uri: `${el.firstImageUrl}` }}

@@ -14,20 +14,6 @@ import CheckCircle from "@/assets/icons/CheckCircle.svg";
 import Button from "@/components/common/Button";
 const backIcon = require("@/assets/icons/Back.png");
 
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-  intro: string;
-  caravInnerFclty: string;
-  tel: string;
-}
-
 const Camping = () => {
   const navigation = useNavigation<NavigationProp<any>>();
   const route = useRoute();
@@ -76,8 +62,7 @@ const Camping = () => {
           ) : (
             <></>
           )}
-
-          {campingInfo.resveCl.length ? (
+          {campingInfo.resveCl ? (
             <>
               <View style={styles.caravInnerFcltyContainer}>
                 <View style={styles.caravInnerFcltyTitle}>
@@ -93,6 +78,7 @@ const Camping = () => {
             <></>
           )}
         </View>
+        <Text style={styles.intro}>{campingInfo.intro}</Text>
       </ScrollView>
       <View style={styles.btnWrapper}>
         <Button label="전화걸기" onPress={() => moveCall(campingInfo.tel)} />

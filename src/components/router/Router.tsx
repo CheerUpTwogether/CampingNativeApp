@@ -35,7 +35,7 @@ export type RootStackParamList = {
   Splash: undefined;
   BottomTab: undefined;
   Add: undefined;
-  Camping: undefined;
+  CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
   CommunityDetail: undefined;
@@ -70,7 +70,7 @@ const Router = () => {
       <StackTab.Screen name="Intro" component={Intro} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
-      <StackTab.Screen name="Camping" component={CampingDetail} />
+      <StackTab.Screen name="CampingDetail" component={CampingDetail} />
       <StackTab.Screen name="SettingDetail" component={SettingDetail} />
       <StackTab.Screen name="ProfileDetail" component={ProfileDetail} />
       <StackTab.Screen name="CommunityDetail" component={CommunityDetail} />
