@@ -26,6 +26,13 @@ const Splash = () => {
 
   const getUserData = async () => {
     try {
+      const hasLaunched = await AsyncStorage.getItem("hasLaunched");
+      if (hasLaunched === null) {
+        await AsyncStorage.setItem("hasLaunched", "true");
+        navigation.replace("Intro");
+        return;
+      }
+
       // 저장된 정보가 없을 경우
       const userData = await AsyncStorage.getItem("userData");
       if (!userData) {

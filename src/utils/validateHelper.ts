@@ -88,7 +88,7 @@ export const getNicknameValid = (nickname: string): string | boolean => {
   }
 
   if (nickname.length > 8) {
-    alertMessage("error", "8글자 이상의 닉네임을 입력해주세요.");
+    alertMessage("error", "8글자 이하의 닉네임을 입력해주세요.");
     return false;
   }
 

@@ -81,6 +81,7 @@ const Signup = () => {
             setValue={setPassword}
             placeholder="비밀번호를 입력해주세요."
             isBgWhite={true}
+            secureTextEntry={true}
             icon={<LockIcon width={50} height={25} color={"#999"} />}
           />
         </View>
