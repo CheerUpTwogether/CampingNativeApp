@@ -7,6 +7,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   useNavigation,
@@ -22,6 +23,7 @@ import {
   RootBottomParamList,
   RootStackParamList,
 } from "@/components/router/Router";
+import { removeUserToken } from "@/apis/cookie";
 
 const more = require("@/assets/icons/menu.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -83,6 +85,17 @@ const Settings = () => {
     navigation.navigate("ProfileDetail");
   };
 
+  const handleLogout = async () => {
+    try {
+      await removeUserToken("userToken");
+      Alert.alert("로그아웃 성공", "로그아웃이 완료되었습니다.", [
+        { text: "확인", onPress: () => navigation.navigate("Login") },
+      ]);
+    } catch (error) {
+      Alert.alert("오류", "로그아웃 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       {/* TODO - leftClick 전달(이동할 페이지) */}
@@ -128,13 +141,7 @@ const Settings = () => {
         </View>
 
         <View style={styles.logoutButtonWrapper}>
-          <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={() => {
-              AsyncStorage.removeItem("userData");
-              navigation.replace("Login");
-            }}
-          >
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={{ color: "#573353" }}>로그아웃</Text>
           </TouchableOpacity>
         </View>
