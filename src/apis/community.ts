@@ -1,5 +1,4 @@
 import { API } from ".";
-import Community from "../pages/community/Community";
 import { showToastApiError } from "@/utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 // 커뮤니티 타입
