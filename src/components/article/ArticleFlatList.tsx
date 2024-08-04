@@ -1,29 +1,16 @@
 import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { getMonthValue, padZero } from "@/utils/date";
-
-import StarIcon from "@/assets/icons/Star.svg";
+import { formatDate, getMonthValue, padZero } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
+import StarIcon from "@/assets/icons/Star.svg";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
   setFavorite,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-  const formatDate = (createDate: string) => {
-    const date = new Date(createDate);
-    const year = date.getFullYear();
-    const month = getMonthValue(date.getMonth());
-    const day = padZero(date.getDate());
-    const hour = padZero(date.getHours());
-    const minute = padZero(date.getMinutes());
-
-    return `${year}-${month}-${day} ${hour}:${minute}
-    `;
-  };
 
   return (
     <>
@@ -34,13 +21,18 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
             style={styles.container}
             onPress={() => navigation.navigate("ArticleDetail", { id: el.id })}
           >
-            <Image
-              source={{
-                uri: `http://${el?.articleImages?.[0]?.imgPath}`,
-              }}
-              style={styles.thumbImage}
-            />
-            <Text style={styles.title}>{el.title}</Text>
+            {el?.articleImages?.[0]?.imgPath ? (
+              <Image
+                source={{
+                  uri: el?.articleImages?.[0]?.imgPath,
+                }}
+                style={styles.thumbImage}
+              />
+            ) : (
+              <View style={styles.thumbImage}></View>
+            )}
+
+            <Text style={styles.title}></Text>
             <Text numberOfLines={2} style={styles.content}>
               {el.content}
             </Text>

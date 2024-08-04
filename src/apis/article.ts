@@ -2,7 +2,7 @@ import { ApiResponse } from "@/types/api";
 import { API } from ".";
 import { showToastApiError } from "../utils/apiHelper";
 
-// 아티클 추가
+// 아티클 좋아요
 export const setFavoriteApi = async (
   articleId: number
 ): Promise<ApiResponse<ArticleFavoriteResponse> | void> => {
@@ -27,7 +27,7 @@ export const getArticlesApi = async (
 // 아티클 상세
 export const getArticleApi = async (
   articleId: number
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticleFavoriteResponse> | void> => {
   try {
     return await API.get(`/article/${articleId}`);
   } catch (error) {
