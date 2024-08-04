@@ -15,7 +15,7 @@ import {
 } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
 import Carousel from "react-native-snap-carousel";
-import { getArticleApi } from "@/apis/article";
+import { getArticleApi, setFavoriteApi } from "@/apis/article";
 import { formatDate } from "@/utils/date";
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -45,6 +45,12 @@ export const ArticleDetail = () => {
   const getArticle = async () => {
     const res = await getArticleApi(id);
     res?.data?.result && setArticle(res?.data?.result);
+  };
+
+  const setFavorite = async () => {
+    const res = await setFavoriteApi(article.id);
+    res?.data?.success &&
+      setArticle((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
   };
 
   const renderItem = ({
@@ -84,7 +90,7 @@ export const ArticleDetail = () => {
         </View>
 
         <View style={styles.info}>
-          <TouchableOpacity style={styles.starBtn}>
+          <TouchableOpacity style={styles.starBtn} onPress={setFavorite}>
             <StarIcon
               color={article.isFavorite ? "#FFD73F" : "#ddd"}
               width={24}
@@ -92,7 +98,7 @@ export const ArticleDetail = () => {
             />
           </TouchableOpacity>
           <Text style={styles.title}>{article.title}</Text>
-          <Text style={styles.date}>{formatDate(article.createDate)}</Text>
+          <Text>{formatDate(article.createDate)}</Text>
           <Text style={styles.content}>{article.content}</Text>
         </View>
       </ScrollView>
@@ -127,8 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   starBtn: {
-    // padding: 12,
     alignItems: "flex-end",
-    paddingBottom: 12,
+    marginBottom: 12,
   },
 });
