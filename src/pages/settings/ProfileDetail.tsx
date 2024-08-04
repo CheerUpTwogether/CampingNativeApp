@@ -1,23 +1,25 @@
 import TopBar from "@/components/common/TopBar";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
+import { getUserApi } from "@/apis/myPage";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
 const favoriteIcon = require("@/assets/icons/Privacy.png");
 const timeIcon = require("@/assets/icons/Time.png");
 const cardIcon = require("@/assets/icons/Card.png");
+const infoIcon = require("@/assets/icons/Info.png");
 
-const userData = {
-  nickName: "백우최",
-  email: "test@email.com",
-  introduce: "우리 모두 화이팀~~",
-  profileImagePath: profileImage,
-  communityCount: 3,
-  favoriteCount: 7,
-};
+interface UserData {
+  nickName: string;
+  email: string;
+  introduce: string;
+  profileImagePath: string;
+  communityCount: number;
+  favoriteCount: number;
+}
 
 const boxData = [
   {
@@ -28,22 +30,38 @@ const boxData = [
   {
     title: "캠핑 기록",
     description: "20 Days",
-    icon: cardIcon,
+    icon: timeIcon,
     page: "TODO 해당 페이지로 이동",
   },
   {
     title: "그 외 메뉴들!",
-    icon: cardIcon,
+    icon: infoIcon,
     page: "TODO 해당 페이지로 이동",
   },
 ];
 
 const ProfileDetail = () => {
+  const [userData, setUserData] = useState<UserData | null>(null);
   const navigation = useNavigation();
+
+  const baseUrl = "http://13.209.27.220:8080";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getUserApi();
+      setUserData(res.result);
+    };
+
+    fetchData();
+  }, []);
 
   const handlePrev = () => {
     navigation.goBack();
   };
+
+  if (!userData) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -53,13 +71,21 @@ const ProfileDetail = () => {
           <View style={styles.profileWrapper}>
             <View style={styles.imageWrapper}>
               <Image
-                source={userData.profileImagePath}
+                source={
+                  userData.profileImagePath
+                    ? { uri: userData.profileImagePath }
+                    : profileImage
+                }
                 style={styles.profileImage}
               />
             </View>
             <View style={styles.introduceWrapper}>
               <Text style={styles.name}>{userData.nickName}</Text>
-              <Text style={styles.subText}>{userData.introduce}</Text>
+              <Text style={styles.subText}>
+                {userData.introduce
+                  ? baseUrl + userData.introduce
+                  : "소개를 입력해주세요"}
+              </Text>
             </View>
           </View>
         </View>
@@ -88,7 +114,7 @@ const ProfileDetail = () => {
           </View>
         </View>
         {boxData.map((box) => (
-          <View id={box.title} style={{ marginBottom: 8 }}>
+          <View key={box.title} style={{ marginBottom: 8 }}>
             <DetailBox
               title={box.title}
               icon={box.icon}
