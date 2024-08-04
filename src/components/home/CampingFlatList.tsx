@@ -32,7 +32,9 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
               style={styles.thumbImage}
             />
             <View style={styles.induty}>
-              <Text style={styles.indutyText}>{el.induty}</Text>
+              <Text style={styles.indutyText}>
+                {el?.induty?.split(",").join(" ")}
+              </Text>
             </View>
 
             {/* 컨텐츠 영역 */}
@@ -73,13 +75,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#FC9D45",
     borderRadius: 100,
     padding: 8,
   },
   indutyText: {
-    color: "#FC9D45",
+    color: "#FFF3E9",
     fontSize: 14,
+    fontWeight: "bold",
   },
   facltNm: {
     fontSize: 18,
