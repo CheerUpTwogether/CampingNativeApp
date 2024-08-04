@@ -1,3 +1,4 @@
+import axios from "axios";
 import { API } from ".";
 import { showToastApiError } from "../utils/apiHelper";
 
@@ -27,8 +28,10 @@ export const getArticlesApi = async (
   sortType: string
 ): Promise<ApiResponse<any> | void> => {
   try {
-    return await API.get(`/article${sortType ? `?sortType=${sortType}` : ""}`);
+    console.log(`/article?sortType=${sortType}`);
+    return await API.get(`/article?sortType=${sortType}`);
   } catch (error) {
+    console.log(error);
     showToastApiError();
   }
 };
