@@ -15,6 +15,7 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import CampingDetail from "@/pages/home/CampingDetail";
 import ProfileDetail from "@/pages/settings/ProfileDetail";
+import CommunityDetail from "@/pages/community/CommunityDetail";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   Camping: undefined;
   SettingDetail: undefined;
   ProfileDetail: undefined;
+  CommunityDetail: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -66,6 +68,7 @@ const Router = () => {
       <StackTab.Screen name="Camping" component={CampingDetail} />
       <StackTab.Screen name="SettingDetail" component={SettingDetail} />
       <StackTab.Screen name="ProfileDetail" component={ProfileDetail} />
+      <StackTab.Screen name="CommunityDetail" component={CommunityDetail} />
     </StackTab.Navigator>
   );
 };
