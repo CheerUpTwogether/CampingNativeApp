@@ -19,6 +19,7 @@ const leftIcon = require("@/assets/icons/menu.png");
 const shareIcon = require("@/assets/icons/Share.png");
 const heartIcon = require("@/assets/icons/Heart.png");
 const chatIcon = require("@/assets/icons/Chat.png");
+const profileImage = require("@/assets/images/Introduce1.png");
 
 interface Community {
   id: number;
@@ -34,6 +35,7 @@ interface Community {
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
+// TODO: 댓글 API 연동
 const Community = () => {
   const [dataList, setDataList] = useState([]);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -47,14 +49,24 @@ const Community = () => {
     fetchData();
   }, []);
 
+  const handleMove = (id: number) => {
+    navigation.navigate("CommunityDetail", { CommunityId: id });
+  };
+
   const renderItem: ListRenderItem<Community> = ({ item }) => (
-    <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={{ marginHorizontal: "4%", marginVertical: "2%" }}
+      onPress={() => handleMove(item.id)}
+    >
       <View style={styles.userWrapper}>
         <View style={styles.topWrapper}>
-          <Text>사진?</Text>
+          <View style={styles.imageWrapper}>
+            <Image style={styles.profileImage} source={profileImage} />
+          </View>
           <Text style={styles.nickName}>{item.nickname}</Text>
         </View>
-        <TouchableOpacity style={styles.iconWrapper}>
+        <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
           <Image source={shareIcon} style={styles.icon1} />
         </TouchableOpacity>
       </View>
@@ -72,7 +84,7 @@ const Community = () => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -91,6 +103,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
+    marginBottom: 80,
   },
   topWrapper: {
     flexDirection: "row",
@@ -159,6 +172,18 @@ const styles = StyleSheet.create({
   },
   reactionText: {
     fontSize: 12,
+  },
+  imageWrapper: {
+    overflow: "hidden",
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  profileImage: {
+    width: 70,
+    height: 130,
   },
 });
 

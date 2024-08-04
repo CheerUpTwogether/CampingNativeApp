@@ -2,8 +2,23 @@ import { API } from ".";
 import { showToastApiError } from "@/utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 // 커뮤니티 타입
-interface Community {
-  communityId: number;
+
+export interface Community {
+  id: number;
+  subject: string;
+  content: string;
+  nickname: string;
+  like: number;
+  likeCheck: boolean;
+  replyCount: number;
+  replys: Reply[];
+}
+
+interface Reply {
+  replyId: number;
+  nickname: string;
+  reply: string;
+  createDate: string;
 }
 
 // 커뮤니티 생성 타입
@@ -30,7 +45,7 @@ export const getCommunitysApi = async (): Promise<ApiResponse<any> | void> => {
 
 // 커뮤니티 상세 조회
 export const getCommunityApi = async (
-  communityId: string
+  communityId: number
 ): Promise<ApiResponse<any> | void> => {
   try {
     return await API.get(`/community/${communityId}`);
@@ -55,10 +70,7 @@ export const setCommunityApi = async (
   communityData: Community
 ): Promise<ApiResponse<any> | void> => {
   try {
-    return await API.put(
-      `/community/${communityData.communityId}`,
-      communityData
-    );
+    return await API.put(`/community/${communityData.id}`, communityData);
   } catch (error) {
     showToastApiError();
   }
