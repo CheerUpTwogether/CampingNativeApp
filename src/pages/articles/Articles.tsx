@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
-
+import { useFocusEffect } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
+import { getArticlesApi } from "@/apis/article";
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
-import { useFocusEffect } from "@react-navigation/native";
-import { getArticlesApi } from "@/apis/article";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
 
 const menu = require("@/assets/icons/menu.png");
@@ -16,7 +16,7 @@ const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const orderList = [
     { title: "최신순", value: "LATEST" },
-    { title: "즐겨찾기순", value: "FAVORITE" },
+    { title: "좋아요순", value: "FAVORITE" },
   ];
 
   useFocusEffect(
@@ -42,7 +42,10 @@ const Articles = () => {
         rightIsProfile={true}
         rightIcon={profile}
       />
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollAreaContainer}
+      >
         <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
         <View style={{ alignItems: "flex-end", marginVertical: 12 }}>
           <Dropdown
@@ -55,7 +58,7 @@ const Articles = () => {
         </View>
 
         <ArticleFlatList articles={articles} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 12,
+  },
+  scrollAreaContainer: {
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   ArticleInfoImg: {
     height: 150,

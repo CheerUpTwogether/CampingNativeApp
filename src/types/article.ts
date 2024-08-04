@@ -4,7 +4,7 @@ type Article = {
   content: string;
   createDate: string;
   isFavorite: boolean;
-  articleImages: { id: number; imgPath: string }[];
+  articleImages?: { id: number; imgPath: string }[];
 };
 
 interface ArticleFlatListProps {
