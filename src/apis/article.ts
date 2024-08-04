@@ -1,16 +1,6 @@
-import axios from "axios";
+import { ApiResponse } from "@/types/api";
 import { API } from ".";
 import { showToastApiError } from "../utils/apiHelper";
-
-interface ApiResponse<T> {
-  response: {
-    body: {
-      items: {
-        item: T;
-      };
-    };
-  };
-}
 
 // 아티클 추가
 export const addArticleApi = async (
@@ -26,9 +16,8 @@ export const addArticleApi = async (
 // 아티클 리스트 가져오기
 export const getArticlesApi = async (
   sortType: string
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticlesReponse> | void> => {
   try {
-    console.log(`/article?sortType=${sortType}`);
     return await API.get(`/article?sortType=${sortType}`);
   } catch (error) {
     console.log(error);
