@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import { useFocusEffect } from "@react-navigation/native";
 import { getArticlesApi } from "@/apis/article";
+import ArticleFlatList from "@/components/article/ArticleFlatList";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
 const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 
 const Articles = () => {
-  const [sortType, setSortType] = useState("LATEST");
+  const [sortType, setSortType] = useState<string>("LATEST");
+  const [articles, setArticles] = useState<Article[]>([]);
   const orderList = [
     { title: "최신순", value: "LATEST" },
     { title: "즐겨찾기순", value: "FAVORITE" },
@@ -23,10 +25,15 @@ const Articles = () => {
     }, [])
   );
 
+  useEffect(() => {
+    getArticles();
+  }, [sortType]);
+
   const getArticles = async () => {
     const res = await getArticlesApi(sortType);
-    console.log(res);
+    res?.data?.result && setArticles(res?.data?.result);
   };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
@@ -46,6 +53,8 @@ const Articles = () => {
             defaultValue={orderList[0]}
           />
         </View>
+
+        <ArticleFlatList articles={articles} />
       </View>
     </SafeAreaView>
   );
