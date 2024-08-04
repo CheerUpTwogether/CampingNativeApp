@@ -1,5 +1,5 @@
 import { OPENAPI } from ".";
-import { showToastApiError, makeQueryString } from "./utils";
+import { showToastApiError, makeQueryString } from "../utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 
 interface CampingType {

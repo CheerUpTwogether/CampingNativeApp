@@ -1,6 +1,6 @@
 import { API } from ".";
 import Toast from "react-native-toast-message";
-import { showToastApiError } from "./utils";
+import { showToastApiError } from "../utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 
 // 사용자 인터페이스 정의

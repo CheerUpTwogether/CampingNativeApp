@@ -89,6 +89,7 @@ const Signup = () => {
                 phoneNumber,
               });
 
+              console.log(data);
               if (data.success) {
                 navigation.replace("Login");
               }

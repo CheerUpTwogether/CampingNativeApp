@@ -1,5 +1,5 @@
 import { API } from ".";
-import { showToastApiError } from "./utils";
+import { showToastApiError } from "../utils/apiHelper";
 import Toast from "react-native-toast-message";
 import { AxiosError } from "axios";
 
