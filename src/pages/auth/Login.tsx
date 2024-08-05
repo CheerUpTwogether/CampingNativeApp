@@ -33,7 +33,7 @@ const Login = () => {
       const data = await addLoginApi({ email, password });
       if (!data.success) return;
       setUserToken("userData", { email, password });
-      navigation.replace("BottomTab");
+      navigation.replace("BottomTab", { screen: "Home" });
     }
   };
 
