@@ -6,7 +6,6 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootBottomParamList } from "../../components/router/Router";
 import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
