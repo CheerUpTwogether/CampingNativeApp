@@ -20,6 +20,7 @@ import CommunityDetail from "@/pages/community/CommunityDetail";
 import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "../../pages/articles/ArticleDetail";
 import Test from "@/supaBase/Test";
+import TestCommunity from "@/supaBase/TestCommunity";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -32,6 +33,7 @@ export type RootBottomParamList = {
 };
 
 export type RootStackParamList = {
+  TestCommunity: undefined;
   Test: undefined;
   Login: undefined;
   Signup: undefined;
@@ -79,6 +81,7 @@ const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
       <StackTab.Screen name="Test" component={Test} />
+      <StackTab.Screen name="TestCommunity" component={TestCommunity} />
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Signup" component={Signup} />

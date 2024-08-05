@@ -3,10 +3,17 @@ import { useState } from "react";
 import Button from "@/components/common/Button";
 import supabase from "./supabaseClient";
 import Toast from "react-native-toast-message";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import { RootStackParamList } from "@/components/router/Router";
+import { useNavigation } from "@react-navigation/native";
+
+type SettingsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const Test = () => {
-  const [nickname, setNickname] = useState("testac");
-  const [email, setEmail] = useState("test@naver.com");
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const [nickname, setNickname] = useState("testac2");
+  const [email, setEmail] = useState("test2@naver.com");
   const [password, setPassword] = useState("123456");
 
   const handleSignup = async () => {
@@ -45,6 +52,8 @@ const Test = () => {
 
     console.log(data);
     console.log(error);
+
+    navigation.replace("TestCommunity");
   };
 
   const handleLogout = async () => {
