@@ -9,7 +9,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import { useNavigation, RouteProp } from "@react-navigation/native";
+import { useNavigation, RouteProp, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
@@ -24,22 +24,20 @@ const chatIcon = require("@/assets/icons/Chat.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-interface CommunityDetailRouteProp {
-  route: RouteProp<RootStackParamList, "CommunityDetail">;
-}
-
-const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
-  const [communityData, setCommunityData] = useState<Community | null>();
-  const communityId = route.params.CommunityId;
+const CommunityDetail = () => {
+  const [communityData, setCommunityData] = useState<Community>();
+  const route = useRoute();
+  const { CommunityId } = route.params as { CommunityId: number };
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getCommunityApi(communityId);
-      setCommunityData(res?.data?.result);
+      const res = await getCommunityApi(CommunityId);
+      res?.data?.result?.content &&
+        setCommunityData(res?.data?.result?.content);
     };
     fetchData();
-  }, [communityId]);
+  }, [CommunityId]);
 
   const handlePrev = () => {
     navigation.goBack();

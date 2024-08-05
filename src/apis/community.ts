@@ -3,19 +3,20 @@ import { showToastApiError } from "@/utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 
 // 커뮤니티 조회
-export const getCommunitysApi =
-  async (): Promise<ApiResponse<CommunityResponse> | void> => {
-    try {
-      return await API.get(`/community`);
-    } catch (error) {
-      showToastApiError();
-    }
-  };
+export const getCommunitysApi = async (): Promise<ApiResponse<
+  CommunityResponse<Community[]>
+> | void> => {
+  try {
+    return await API.get(`/community`);
+  } catch (error) {
+    showToastApiError();
+  }
+};
 
 // 커뮤니티 상세 조회
 export const getCommunityApi = async (
   communityId: number
-): Promise<ApiResponse<CommunityResponse> | void> => {
+): Promise<ApiResponse<CommunityResponse<Community>> | void> => {
   try {
     return await API.get(`/community/${communityId}`);
   } catch (error) {

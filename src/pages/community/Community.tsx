@@ -32,7 +32,7 @@ const Community = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getCommunitysApi();
-      setDataList(res?.data?.result?.content);
+      res?.data?.result?.content && setDataList(res?.data?.result?.content);
     };
 
     fetchData();
