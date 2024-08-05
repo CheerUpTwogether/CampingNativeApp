@@ -50,7 +50,7 @@ const ProfileDetail = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userData]);
 
   const handlePrev = () => {
     navigation.goBack();
