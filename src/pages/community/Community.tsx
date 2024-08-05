@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   profileImage: {
-    width: 70,
+    width: 100,
     height: 130,
   },
 });

@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   profileImage: {
-    width: 78,
+    width: 160,
     height: 190,
   },
   name: {
