@@ -1,9 +1,9 @@
 import { addSignUpApi } from "@/apis/account";
 import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
 import { RootStackParamList } from "@/components/router/Router";
+import { registValid } from "@/utils/validateHelper";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -14,6 +14,11 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+
+import UserIcon from "@/assets/icons/User.svg";
+import MailIcon from "@/assets/icons/Mail.svg";
+import LockIcon from "@/assets/icons/Lock.svg";
+import InputWithIcon from "@/components/common/InputWithIcon";
 
 const signupImage = require("@/assets/images/Regist.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
@@ -29,11 +34,24 @@ const Signup = () => {
   );
   const [phoneNumber, setPhoneNumber] = useState("01012341231");
   const [password, setPassword] = useState("");
+
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  //   const handleSubmit = () =>{
+  const handleSubmit = async () => {
+    if (registValid({ email, password, passwordCheck: password, nickname })) {
+      const data = await addSignUpApi({
+        email,
+        password,
+        nickname,
+        phoneNumber,
+      });
 
-  //   }
+      console.log(data);
+      if (data.success) {
+        navigation.replace("Login");
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -43,57 +61,33 @@ const Signup = () => {
         </View>
         <Text style={styles.signupTitle}>회원가입 </Text>
         <View style={styles.formWrapper}>
-          <Input
+          <InputWithIcon
             value={nickname}
-            setValue={(text) => {
-              setNickname(text);
-            }}
+            setValue={setNickname}
             placeholder="이름을 입력해주세요."
             isBgWhite={true}
+            icon={<UserIcon width={50} height={25} color={"#999"} />}
           />
-          <Input
+
+          <InputWithIcon
             value={email}
-            setValue={(text) => {
-              setEmail(text);
-            }}
+            setValue={setEmail}
             placeholder="이메일을 입력해주세요."
             isBgWhite={true}
+            icon={<MailIcon width={50} height={25} color={"#999"} />}
           />
-          <Input
+          <InputWithIcon
             value={password}
-            setValue={(text) => {
-              setPassword(text);
-            }}
+            setValue={setPassword}
             placeholder="비밀번호를 입력해주세요."
             isBgWhite={true}
+            secureTextEntry={true}
+            icon={<LockIcon width={50} height={25} color={"#999"} />}
           />
         </View>
-        <View style={styles.checkboxGroupWrapper}>
-          <View style={styles.checkboxWrapper}>
-            <View style={styles.checkbox}></View>
-            <Text>자동 로그인</Text>
-          </View>
-          <View style={styles.checkboxWrapper}>
-            <View style={styles.checkbox}></View>
-            <Text>약관 동의</Text>
-          </View>
-        </View>
-        <View style={styles.button}>
-          <Button
-            label="회원가입하기"
-            onPress={async () => {
-              const data = await addSignUpApi({
-                email,
-                password,
-                nickname,
-                phoneNumber,
-              });
 
-              if (data.success) {
-                navigation.replace("Login");
-              }
-            }}
-          />
+        <View style={styles.button}>
+          <Button label="회원가입하기" onPress={handleSubmit} />
         </View>
         <View style={styles.socialGroupBar}>
           <View style={styles.socialBar}></View>
@@ -140,7 +134,8 @@ const styles = StyleSheet.create({
   },
   signupTitle: {
     textAlign: "center",
-    marginVertical: 16,
+    marginTop: 32,
+    marginBottom: 64,
     fontSize: 24,
     fontWeight: "700",
     color: "#573353",
@@ -161,17 +156,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginVertical: 10,
     gap: 12,
-  },
-  checkboxWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    backgroundColor: "#FDA758",
-    borderRadius: 4,
   },
   button: {
     marginHorizontal: 12,

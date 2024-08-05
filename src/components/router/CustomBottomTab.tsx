@@ -10,7 +10,6 @@ import {
 import CustomCurveUi from "./CustomCurveUi";
 
 const addButton = require("../../assets/icons/bottomTab/add.png");
-const settingsOn = require("../../assets/icons/bottomTab/settings.png");
 import HomeIcon from "@/assets/icons/Home.svg";
 import ArticleIcon from "@/assets/icons/Article.svg";
 import CommunityIcon from "@/assets/icons/Community.svg";

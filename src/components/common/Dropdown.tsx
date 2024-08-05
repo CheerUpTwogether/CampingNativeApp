@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface DropdownOption {
   title: string;
+  value?: string;
 }
 interface DropdownProps {
   options: DropdownOption[];

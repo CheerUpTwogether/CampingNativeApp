@@ -1,29 +1,5 @@
 import { OPENAPI } from ".";
-import { showToastApiError, makeQueryString } from "./utils";
-import { ApiResponse } from "@/types/api";
-
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-}
-type CampingsType = CampingType[];
-
-// // API 응답 인터페이스 정의
-type CampingsApiResponse = {
-  response: {
-    body: {
-      items: {
-        item: CampingsType;
-      };
-    };
-  };
-};
+import { showToastApiError, makeQueryString } from "../utils/apiHelper";
 
 // 캠핑장 API 함수
 export const getCampingsApi = async (obj: {

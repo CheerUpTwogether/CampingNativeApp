@@ -1,12 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
+import { getArticlesApi, setFavoriteApi } from "@/apis/article";
 import TopBar from "@/components/common/TopBar";
+import Dropdown from "@/components/common/Dropdown";
+import ArticleFlatList from "@/components/article/ArticleFlatList";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
 const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 
 const Articles = () => {
+  const [sortType, setSortType] = useState<string>("LATEST");
+  const [articles, setArticles] = useState<Article[]>([]);
+  const orderList = [
+    { title: "최신순", value: "LATEST" },
+    { title: "좋아요순", value: "FAVORITE" },
+  ];
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getArticles();
+    }, [])
+  );
+
+  useEffect(() => {
+    getArticles();
+  }, [sortType]);
+
+  const getArticles = async () => {
+    const res = await getArticlesApi(sortType);
+    res?.data?.result && setArticles(res?.data?.result);
+  };
+
+  const setFavorite = async (id: number) => {
+    const res = await setFavoriteApi(id);
+    res?.data?.success &&
+      setArticles((prev) =>
+        prev.map((el) => {
+          if (el.id === id) return { ...el, isFavorite: !el.isFavorite };
+          return el;
+        })
+      );
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
@@ -15,10 +53,23 @@ const Articles = () => {
         rightIsProfile={true}
         rightIcon={profile}
       />
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollAreaContainer}
+      >
         <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
-        <Text>Articles</Text>
-      </View>
+        <View style={{ alignItems: "flex-end", marginVertical: 12 }}>
+          <Dropdown
+            options={orderList}
+            onSelect={(selectedItem) =>
+              setSortType(selectedItem?.value || "LATEST")
+            }
+            defaultValue={orderList[0]}
+          />
+        </View>
+
+        <ArticleFlatList articles={articles} setFavorite={setFavorite} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -30,6 +81,10 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 12,
+  },
+  scrollAreaContainer: {
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   ArticleInfoImg: {
     height: 150,

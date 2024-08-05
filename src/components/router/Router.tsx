@@ -15,6 +15,9 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import CampingDetail from "@/pages/home/CampingDetail";
 import ProfileDetail from "@/pages/settings/ProfileDetail";
+import Intro from "@/pages/auth/Intro";
+import CommunityDetail from "@/pages/community/CommunityDetail";
+import { ArticleDetail } from "../../pages/articles/ArticleDetail";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -22,7 +25,7 @@ const StackTab = createStackNavigator();
 export type RootBottomParamList = {
   Home: undefined;
   Articles: undefined;
-  Community: undefined;
+  Community: undefined | string;
   Settings: undefined;
 };
 
@@ -30,11 +33,18 @@ export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Splash: undefined;
-  BottomTab: undefined;
+  // BottomTab: undefined;
+  BottomTab: {
+    screen: keyof RootBottomParamList;
+  };
   Add: undefined;
-  Camping: undefined;
+  CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
+  CommunityDetail: { CommunityId: number };
+  Intro: undefined;
+  ArticleDetail: { id: number };
+  Community: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -61,11 +71,14 @@ const Router = () => {
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Signup" component={Signup} />
+      <StackTab.Screen name="Intro" component={Intro} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />
-      <StackTab.Screen name="Camping" component={CampingDetail} />
+      <StackTab.Screen name="CampingDetail" component={CampingDetail} />
       <StackTab.Screen name="SettingDetail" component={SettingDetail} />
       <StackTab.Screen name="ProfileDetail" component={ProfileDetail} />
+      <StackTab.Screen name="CommunityDetail" component={CommunityDetail} />
+      <StackTab.Screen name="ArticleDetail" component={ArticleDetail} />
     </StackTab.Navigator>
   );
 };

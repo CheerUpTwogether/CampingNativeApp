@@ -1,20 +1,11 @@
+import { ApiResponse } from "@/types/api";
 import { API } from ".";
-import { showToastApiError } from "./utils";
+import { showToastApiError } from "../utils/apiHelper";
 
-interface ApiResponse<T> {
-  response: {
-    body: {
-      items: {
-        item: T;
-      };
-    };
-  };
-}
-
-// 아티클 추가
-export const addArticleApi = async (
+// 아티클 좋아요
+export const setFavoriteApi = async (
   articleId: number
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticleFavoriteResponse> | void> => {
   try {
     return await API.post(`/article/favorite/${articleId}`);
   } catch (error) {
@@ -25,9 +16,9 @@ export const addArticleApi = async (
 // 아티클 리스트 가져오기
 export const getArticlesApi = async (
   sortType: string
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticlesReponse> | void> => {
   try {
-    return await API.get(`/article${sortType ? `?sortType=${sortType}` : ""}`);
+    return await API.get(`/article?sortType=${sortType}`);
   } catch (error) {
     showToastApiError();
   }
@@ -36,7 +27,7 @@ export const getArticlesApi = async (
 // 아티클 상세
 export const getArticleApi = async (
   articleId: number
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<ArticleFavoriteResponse> | void> => {
   try {
     return await API.get(`/article/${articleId}`);
   } catch (error) {

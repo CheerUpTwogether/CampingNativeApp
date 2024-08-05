@@ -7,29 +7,14 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
 import CheckCircle from "@/assets/icons/CheckCircle.svg";
 import Button from "@/components/common/Button";
 const backIcon = require("@/assets/icons/Back.png");
 
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-  intro: string;
-  caravInnerFclty: string;
-  tel: string;
-}
-
 const Camping = () => {
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation();
   const route = useRoute();
   const { campingInfo } = route.params as { campingInfo: CampingType };
   const moveCall = (number: string) => {
@@ -76,8 +61,7 @@ const Camping = () => {
           ) : (
             <></>
           )}
-
-          {campingInfo.resveCl.length ? (
+          {campingInfo.resveCl ? (
             <>
               <View style={styles.caravInnerFcltyContainer}>
                 <View style={styles.caravInnerFcltyTitle}>
@@ -93,6 +77,7 @@ const Camping = () => {
             <></>
           )}
         </View>
+        <Text style={styles.intro}>{campingInfo.intro}</Text>
       </ScrollView>
       <View style={styles.btnWrapper}>
         <Button label="전화걸기" onPress={() => moveCall(campingInfo.tel)} />
@@ -124,9 +109,9 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   facltNm: {
-    fontSize: 18,
+    fontSize: 20,
     paddingHorizontal: 16,
-    paddingTop: 4,
+    paddingVertical: 4,
     color: "#000",
   },
   mangeDivNm: {

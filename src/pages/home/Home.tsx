@@ -13,18 +13,6 @@ const menu = require("../../assets/icons/menu.png");
 
 const profile = { uri: "https://picsum.photos/200/300" };
 
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-}
-type CampingsType = CampingType[] | null;
-
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootBottomParamList>;
 
@@ -79,7 +67,7 @@ const styles = StyleSheet.create({
   campingContainer: {
     flex: 1,
   },
-  scrollAreaContainer: { flexGrow: 1 },
+  scrollAreaContainer: { flexGrow: 1, paddingBottom: 100 },
 });
 
 export default Home;

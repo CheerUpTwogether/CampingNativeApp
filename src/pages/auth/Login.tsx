@@ -5,7 +5,7 @@ import Button from "@/components/common/Button";
 import InputWithIcon from "@/components/common/InputWithIcon";
 import LinearGradient from "react-native-linear-gradient";
 import { addLoginApi } from "@/apis/account";
-import { setUserToken } from "@/apis/cookie";
+import { getUserToken, setUserToken } from "@/apis/cookie";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -14,8 +14,10 @@ const helpIcon = require("@/assets/icons/Help.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
 const facebookIcon = require("@/assets/icons/FacebookIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
-import UserIcon from "@/assets/icons/User.svg";
 import LockIcon from "@/assets/icons/Lock.svg";
+import MailIcon from "@/assets/icons/Mail.svg";
+import { loginValid } from "@/utils/validateHelper";
+import CheckBox from "@/components/common/CheckBox";
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -24,12 +26,15 @@ const Login = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isAutoLogin, setIsAutoLogin] = useState(false);
 
   const clickLoginBtn = async () => {
-    const data = await addLoginApi({ email, password });
-    if (!data.success) return;
-    setUserToken("userData", { email, password });
-    navigation.replace("BottomTab");
+    if (loginValid({ email, password })) {
+      const data = await addLoginApi({ email, password });
+      if (!data.success) return;
+      setUserToken("userData", { email, password });
+      navigation.replace("BottomTab");
+    }
   };
 
   const moveSignup = () => {
@@ -81,7 +86,7 @@ const Login = () => {
               placeholder="이메일을 입력해주세요."
               isBgWhite={false}
               icon={
-                <UserIcon width={50} height={25} color={iconColor(email)} />
+                <MailIcon width={50} height={25} color={iconColor(email)} />
               }
             />
             <InputWithIcon
@@ -94,6 +99,16 @@ const Login = () => {
                 <LockIcon width={50} height={22} color={iconColor(password)} />
               }
             />
+            <View style={styles.CheckBoxGroupContainer}>
+              <View style={styles.CheckBoxContainer}>
+                <CheckBox
+                  isChecked={isAutoLogin}
+                  setIsChecked={setIsAutoLogin}
+                />
+                <Text>자동 로그인</Text>
+              </View>
+            </View>
+
             <Button label="로그인" onPress={clickLoginBtn} />
             <Text style={styles.formTitle}>비밀번호 찾기</Text>
             <TouchableOpacity style={styles.signupBtn} onPress={moveSignup}>
@@ -210,6 +225,15 @@ const styles = StyleSheet.create({
   socialContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
+  },
+  CheckBoxGroupContainer: {
+    gap: 10,
+  },
+  CheckBoxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+
+    gap: 10,
   },
 });
 

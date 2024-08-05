@@ -2,37 +2,27 @@ import React from "react";
 import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-
-interface CampingType {
-  firstImageUrl: string;
-  facltNm: string;
-  addr1: string;
-  addr2: string;
-  facltDivNm: string;
-  mangeDivNm: string;
-  induty: string;
-  resveCl: string;
-}
-
-interface CampingFlatListProps {
-  campings: CampingType[] | null;
-}
+import { RootStackParamList } from "../router/Router";
 
 const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return campings && campings?.length
     ? campings.map((el) => (
         <View key={el.firstImageUrl} style={styles.container}>
           {/* 사진 */}
           <TouchableOpacity
-            onPress={() => navigation.navigate("Camping", { campingInfo: el })}
+            onPress={() =>
+              navigation.navigate("CampingDetail", { campingInfo: el })
+            }
           >
             <Image
               source={{ uri: `${el.firstImageUrl}` }}
               style={styles.thumbImage}
             />
             <View style={styles.induty}>
-              <Text style={styles.indutyText}>{el.induty}</Text>
+              <Text style={styles.indutyText}>
+                {el?.induty?.split(",").join(" ")}
+              </Text>
             </View>
 
             {/* 컨텐츠 영역 */}
@@ -58,7 +48,8 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({ campings }) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 16,
+    marginVertical: 16,
+    marginHorizontal: 24,
     padding: 12,
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -73,13 +64,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#FC9D45",
     borderRadius: 100,
     padding: 8,
   },
   indutyText: {
-    color: "#FC9D45",
+    color: "#FFF3E9",
     fontSize: 14,
+    fontWeight: "bold",
   },
   facltNm: {
     fontSize: 18,
