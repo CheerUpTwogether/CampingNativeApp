@@ -62,14 +62,19 @@ const Community = () => {
     >
       <View style={styles.userWrapper}>
         <View style={styles.topWrapper}>
-          <View style={styles.imageWrapper}>
-            <Image style={styles.profileImage} source={profileImage} />
+          <View>
+            <View style={styles.imageWrapper}>
+              <Image style={styles.profileImage} source={profileImage} />
+            </View>
+            <Text style={styles.nickName}>{item.nickname}</Text>
           </View>
-          <Text style={styles.nickName}>{item.nickname}</Text>
+          <View style={styles.subjectWrapper}>
+            <Text style={styles.subject}>{item.subject}</Text>
+          </View>
+          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
+            <Image source={shareIcon} style={styles.icon1} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-          <Image source={shareIcon} style={styles.icon1} />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.contentWrapper}>
@@ -114,8 +119,10 @@ const styles = StyleSheet.create({
   },
   topWrapper: {
     flexDirection: "row",
-    gap: 4,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 6,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   userWrapper: {
     flexDirection: "row",
@@ -191,6 +198,16 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 100,
     height: 130,
+  },
+  subjectWrapper: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  subject: {
+    color: "#FDA758",
+    fontWeight: "600",
+    fontSize: 16,
   },
 });
 
