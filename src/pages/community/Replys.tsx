@@ -9,55 +9,127 @@ import {
   FlatList,
   ListRenderItem,
 } from "react-native";
-import { getCommunityApi, addCommunityCommentApi } from "@/apis/community";
+import {
+  getCommunityApi,
+  addCommunityCommentApi,
+  setCommunityCommentApi,
+} from "@/apis/community";
 import Input from "@/components/common/Input";
-import { useRoute } from "@react-navigation/native";
+import { formatDate } from "@/utils/date";
+import { getStorage } from "@/utils/storage";
+import { getUserApi } from "@/apis/myPage";
 
 const profileImage = require("@/assets/images/Introduce1.png");
 
 const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   const [inputText, setInputText] = useState("");
   const [replys, setReplys] = useState<Reply[]>([]);
+  const [nickName, setNickName] = useState("");
+  const [replyId, setReplyId] = useState(0);
+  const [replyContent, setReplyContent] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getCommunityApi(CommunityId);
-      if (res?.data?.result) {
-        setReplys(res.data.result.replys);
-        console.log(CommunityId);
-      }
-    };
-    fetchData();
+    getReplys();
+    getUserInfo();
+    // userData;
   }, [CommunityId]);
 
+  const getUserInfo = async () => {
+    const userInfo = await getUserApi();
+    userInfo?.result?.nickName && setNickName(userInfo?.result?.nickName);
+  };
+
+  const getReplys = async () => {
+    const res = await getCommunityApi(CommunityId);
+    console.log(res?.data?.result);
+    res?.data?.result && setReplys(res.data.result.replys);
+  };
+
   const handleSend = async () => {
-    const res = await addCommunityCommentApi(CommunityId.toString(), inputText);
-    if (inputText.trim() === "" || !res?.success) console.log("error =>");
+    await addCommunityCommentApi(CommunityId.toString(), inputText);
     setInputText("");
     const updatedRes = await getCommunityApi(CommunityId);
-    if (updatedRes?.data?.result) {
-      setReplys(updatedRes.data.result.replys);
-    }
+    updatedRes?.data?.result && setReplys(updatedRes.data.result.replys);
+  };
+
+  const showReplyForm = async (reply: Reply) => {
+    setReplyId(reply.replyId);
+    setReplyContent(reply.reply);
+  };
+
+  const udpateReply = async (replyId: string) => {
+    const param = {
+      communityId: String(CommunityId),
+      replyId,
+      reply: replyContent,
+    };
+    const res = await setCommunityCommentApi(param);
+    if (!res?.data?.success) return;
+
+    setReplys((prev) =>
+      prev.map((el) => {
+        if (String(el.replyId) === replyId) {
+          return { ...el, reply: replyContent };
+        }
+        return el;
+      })
+    );
+    setReplyContent("");
+    setReplyId(0);
   };
 
   const renderItem: ListRenderItem<Reply> = ({ item }) => (
     <View style={{ marginBottom: 8 }}>
       <View style={styles.commentWrapper}>
-        <View style={styles.otherProfileWrapper}>
-          <Image source={profileImage} style={styles.otherProfile} />
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.otherProfileWrapper}>
+            <Image source={profileImage} style={styles.otherProfile} />
+          </View>
+
+          <View style={{ paddingTop: 10, paddingLeft: 12 }}>
+            <Text style={styles.nickName}>{item.nickname}</Text>
+            <Text style={styles.id}>{formatDate(item.createDate)}</Text>
+          </View>
         </View>
-        <View style={styles.nameWrapper}>
-          <Text style={styles.nickName}>{item.nickname}</Text>
-          <Text style={styles.id}>{item.createDate}</Text>
-        </View>
-        <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
-          <Text style={styles.editText}>수정</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
-          <Text style={styles.editText}>삭제</Text>
-        </TouchableOpacity>
+
+        {nickName === item.nickname ? (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.editWrapper}
+              onPress={() => showReplyForm(item)}
+            >
+              <Text style={styles.editText}>수정</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
+              <Text style={styles.editText}>삭제</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
-      <Text style={styles.commentText}>{item.reply}</Text>
+
+      {replyId === item.replyId ? (
+        <View style={styles.inputContainer}>
+          <View style={styles.inputWrapper}>
+            <Input
+              value={replyContent}
+              setValue={setReplyContent}
+              placeholder="댓글을 입력해주세요."
+              isBgWhite={false}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={() => udpateReply(String(item.replyId))}
+          >
+            <Text style={styles.content}>등록</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <Text style={styles.commentText}>{item.reply}</Text>
+      )}
     </View>
   );
 
@@ -99,15 +171,15 @@ const styles = StyleSheet.create({
   commentWrapper: {
     flexDirection: "row",
     marginHorizontal: "4%",
-    marginVertical: 12,
-    gap: 10,
+    marginTop: 12,
+    justifyContent: "space-between",
+    alignItems: "flex-start",
   },
   otherProfileWrapper: {
     width: 40,
     height: 40,
     overflow: "hidden",
     alignItems: "center",
-
     borderRadius: 30,
   },
   otherProfile: {
@@ -116,10 +188,10 @@ const styles = StyleSheet.create({
   },
   commentText: {
     marginHorizontal: "4%",
-    marginTop: 4,
+    marginBottom: 12,
     color: "#573353",
   },
-  editText: { color: "#999", fontSize: 10 },
+  editText: { color: "#999", fontSize: 10, paddingTop: 8, paddingLeft: 8 },
   inputContainer: {
     width: "100%",
     height: 60,
@@ -231,6 +303,7 @@ const styles = StyleSheet.create({
 
   inputWrapper: {
     width: "80%",
+    padding: 8,
     marginLeft: 4,
   },
   sendButton: {
