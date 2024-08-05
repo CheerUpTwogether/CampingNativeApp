@@ -100,7 +100,7 @@ const Settings = () => {
     <SafeAreaView style={styles.wrapper}>
       {/* TODO - leftClick 전달(이동할 페이지) */}
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <TopBar title="Settings" leftIcon={more} />
+        <TopBar title="설정" leftIcon={more} />
         <View style={styles.userView}>
           <View style={styles.userContainer}>
             <View style={styles.userWrapper}>
