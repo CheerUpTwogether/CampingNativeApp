@@ -42,7 +42,7 @@ const entries: Entry[] = [
 
 const renderItem = ({ item }: { item: Entry; index: number }) => {
   return (
-    <View style={styles.itemContainer}>
+    <View>
       <Image
         source={item.img}
         style={{
