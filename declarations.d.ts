@@ -7,4 +7,6 @@ declare module "*.svg" {
 
 declare module "@env" {
   export const OPENAPI_SERVICE_KEY: string;
+  export const SUPABASE_URL: string;
+  export const SUPABASE_KEY: string;
 }
