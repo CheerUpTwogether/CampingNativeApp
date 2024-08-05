@@ -34,6 +34,8 @@ const boxData = [
   },
 ];
 
+const baseUrl = "http://13.209.27.220:8080";
+
 type StackNavProp = StackNavigationProp<RootStackParamList, "EditProfile">;
 
 const ProfileDetail = () => {
@@ -89,7 +91,7 @@ const ProfileDetail = () => {
                 <Text style={styles.name}>{userData.nickName}</Text>
                 <Text style={styles.subText}>
                   {userData.introduce
-                    ? baseUrl + userData.introduce
+                    ? userData.introduce
                     : "소개를 입력해주세요"}
                 </Text>
               </View>

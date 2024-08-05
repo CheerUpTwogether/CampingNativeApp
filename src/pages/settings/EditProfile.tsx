@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
   Text,
   StyleSheet,
   ScrollView,
@@ -10,7 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { setProfileApi, setUserApi } from "@/apis/myPage";
+import { RootStackParamList } from "@/components/router/Router";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import { setProfileApi, setUserApi, getUserApi } from "@/apis/myPage";
 import TopBar from "@/components/common/TopBar";
 
 const backIcon = require("@/assets/icons/Back.png");
@@ -18,21 +19,48 @@ const ProfileIcon = require("@/assets/icons/Profile.png");
 
 const baseUrl = "http://13.209.27.220:8080";
 
+type SettingsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
 const EditProfile = () => {
-  const [userInfo, setUserInfo] = useState({
-    nickname: "",
-    name: "",
+  const [userInfo, setUserInfo] = useState<UserEditData>({
+    nickname: { value: "" },
     introduce: "",
     profileImagePath: "",
   });
-  const navigation = useNavigation();
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getUserApi();
+      if (!res) return;
+      setUserInfo({
+        nickname: { value: res.result.nickName },
+        introduce: res.result.introduce,
+        profileImagePath: res.result.profileImagePath,
+      });
+    };
+
+    fetchData();
+  }, []);
 
   const handlePrev = () => {
     navigation.goBack();
   };
 
+  const patchAccountsData = async () => {
+    const data: Partial<User> = {
+      nickname: userInfo.nickname.value,
+      introduce: userInfo.introduce,
+      profileImagePath: userInfo.profileImagePath,
+    };
+
+    await setUserApi(data);
+  };
+
   const handleSave = async () => {
-    // await setUserApi(userInfo);
+    await patchAccountsData();
+    navigation.navigate("ProfileDetail");
   };
 
   return (
@@ -50,26 +78,14 @@ const EditProfile = () => {
 
       <View>
         <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>이름</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="이름을 입력해주세요"
-            placeholderTextColor="#999"
-            value={userInfo.name}
-            onChangeText={(text) => setUserInfo({ ...userInfo, name: text })}
-            autoCapitalize="none"
-          />
-        </View>
-
-        <View style={styles.inputWrapper}>
           <Text style={styles.textStyle}>닉네임</Text>
           <TextInput
             style={styles.inputStyle}
             placeholder="닉네임을 입력해주세요."
             placeholderTextColor="#999"
-            value={userInfo.nickname}
+            value={userInfo.nickname.value}
             onChangeText={(text) =>
-              setUserInfo({ ...userInfo, nickname: text })
+              setUserInfo({ ...userInfo, nickname: { value: text } })
             }
             autoCapitalize="none"
             maxLength={12}
@@ -121,7 +137,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  profileImage: { width: 90, height: 90 },
+  profileImage: { width: 100, height: 100 },
   profileChangeWrapper: {
     borderRadius: 16,
     backgroundColor: "rgba(87, 51, 83, 0.3)",
@@ -139,17 +155,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingLeft: 8,
     borderRadius: 8,
-    color: "#FDA758",
+    color: "#573353",
+    fontWeight: "500",
   },
   buttonWrapper: { alignItems: "center", marginVertical: 20 },
   btnStyle: {
     borderWidth: 1,
-    borderRadius: 14,
+    borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 4,
     marginVertical: 6,
-    borderColor: "#EAEAEA",
-    color: "#4AABFF",
+    borderColor: "rgba(87, 51, 83, 0.3)",
+    color: "#FFF",
+    backgroundColor: "rgba(87, 51, 83, 0.3)",
   },
   saveButton: {
     padding: 12,

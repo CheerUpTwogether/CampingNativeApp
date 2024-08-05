@@ -9,20 +9,12 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import {
-  useNavigation,
-  CompositeNavigationProp,
-} from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import DetailBox from "@/components/common/DetailBox";
 import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { StackNavigationProp } from "@react-navigation/stack";
-import {
-  RootBottomParamList,
-  RootStackParamList,
-} from "@/components/router/Router";
+import { RootStackParamList } from "@/components/router/Router";
 import { removeUserToken } from "@/apis/cookie";
 
 const more = require("@/assets/icons/menu.png");
@@ -73,10 +65,8 @@ const settingData = [
   },
 ];
 
-type SettingsScreenNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<RootBottomParamList, "Settings">,
-  StackNavigationProp<RootStackParamList>
->;
+type SettingsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const Settings = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -98,7 +88,6 @@ const Settings = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      {/* TODO - leftClick 전달(이동할 페이지) */}
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <TopBar title="설정" leftIcon={more} />
         <View style={styles.userView}>

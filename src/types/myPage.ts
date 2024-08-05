@@ -10,9 +10,23 @@ interface UserApiResponse {
 
 interface UserData {
   nickName: string;
-  email: string;
+  email?: string;
   introduce: string;
   profileImagePath: string;
-  communityCount: number;
-  favoriteCount: number;
+  communityCount?: number;
+  favoriteCount?: number;
+}
+
+interface User {
+  nickname: string;
+  introduce: string;
+  profileImagePath: string;
+}
+
+interface UserEditData {
+  nickname: {
+    value: string;
+  };
+  introduce: string;
+  profileImagePath: string;
 }
