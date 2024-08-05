@@ -1,41 +1,11 @@
 import { API } from ".";
 import { showToastApiError } from "@/utils/apiHelper";
 import { ApiResponse } from "@/types/api";
-// 커뮤니티 타입
-
-export interface Community {
-  id: number;
-  subject: string;
-  content: string;
-  nickname: string;
-  like: number;
-  likeCheck: boolean;
-  replyCount: number;
-  replys: Reply[];
-}
-
-interface Reply {
-  replyId: number;
-  nickname: string;
-  reply: string;
-  createDate: string;
-}
-
-// 커뮤니티 생성 타입
-interface AddCommunity {
-  title: string;
-  content: string;
-}
-
-// 커뮤니티 댓글 타입
-interface CommunityReply {
-  communityId: string;
-  replyId: string;
-  reply: string;
-}
 
 // 커뮤니티 조회
-export const getCommunitysApi = async (): Promise<ApiResponse<any> | void> => {
+export const getCommunitysApi = async (): Promise<
+  ApiResponse<CommunityResponse>
+> => {
   try {
     return await API.get(`/community`);
   } catch (error) {
@@ -46,7 +16,7 @@ export const getCommunitysApi = async (): Promise<ApiResponse<any> | void> => {
 // 커뮤니티 상세 조회
 export const getCommunityApi = async (
   communityId: number
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<CommunityResponse> | void> => {
   try {
     return await API.get(`/community/${communityId}`);
   } catch (error) {
@@ -56,8 +26,8 @@ export const getCommunityApi = async (
 
 // 커뮤니티 생성(post)
 export const addCommunityApi = async (
-  communityData: AddCommunity
-): Promise<ApiResponse<any> | void> => {
+  communityData: EditCommunity
+): Promise<ApiResponse<EditCommunity> | void> => {
   try {
     return await API.post("/community", communityData);
   } catch (error) {
@@ -68,7 +38,7 @@ export const addCommunityApi = async (
 // 커뮤니티 수정(put)
 export const setCommunityApi = async (
   communityData: Community
-): Promise<ApiResponse<any> | void> => {
+): Promise<ApiResponse<EditCommunity> | void> => {
   try {
     return await API.put(`/community/${communityData.id}`, communityData);
   } catch (error) {

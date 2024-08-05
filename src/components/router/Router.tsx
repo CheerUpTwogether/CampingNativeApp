@@ -25,7 +25,7 @@ const StackTab = createStackNavigator();
 export type RootBottomParamList = {
   Home: undefined;
   Articles: undefined;
-  Community: undefined;
+  Community: undefined | string;
   Settings: undefined;
 };
 
@@ -33,14 +33,18 @@ export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Splash: undefined;
-  BottomTab: undefined;
+  // BottomTab: undefined;
+  BottomTab: {
+    screen: keyof RootBottomParamList;
+  };
   Add: undefined;
   CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
-  CommunityDetail: undefined;
+  CommunityDetail: { CommunityId: number };
   Intro: undefined;
   ArticleDetail: { id: number };
+  Community: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (

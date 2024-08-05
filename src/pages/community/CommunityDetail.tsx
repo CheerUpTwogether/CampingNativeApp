@@ -12,7 +12,7 @@ import { useNavigation, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
-import { getCommunityApi, Community } from "@/apis/community";
+import { getCommunityApi } from "@/apis/community";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -23,16 +23,11 @@ const chatIcon = require("@/assets/icons/Chat.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-type CommunityDetailRouteProp = RouteProp<
-  RootStackParamList,
-  "CommunityDetail"
->;
-
-interface CommunityDetailProps {
-  route: CommunityDetailRouteProp;
+interface CommunityDetailRouteProp {
+  route: RouteProp<RootStackParamList, "CommunityDetail">;
 }
 
-const CommunityDetail: React.FC<CommunityDetailProps> = ({ route }) => {
+const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
   const [communityData, setCommunityData] = useState<Community | null>();
   const communityId = route.params.CommunityId;
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -40,7 +35,7 @@ const CommunityDetail: React.FC<CommunityDetailProps> = ({ route }) => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getCommunityApi(communityId);
-      setCommunityData(res.data.result);
+      setCommunityData(res?.data?.result);
     };
     fetchData();
   }, [communityId]);

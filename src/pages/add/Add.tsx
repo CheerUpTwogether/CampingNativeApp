@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
@@ -13,21 +13,20 @@ const addButton = require("@/assets/icons/bottomTab/add.png");
 type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;
 
 const Add: React.FC = () => {
-  const [title, setTitle] = useState<string>("");
+  const [subject, setSubject] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const navigation = useNavigation<AddScreenNavigationProp>();
 
   const handleSubmit = async () => {
     const res = await addCommunityApi({
-      title,
+      subject,
       content,
     });
-    // TODO 타입 설정
-    if (res.success) {
-      console.log("res ++==>", res);
+
+    if (res?.success) {
       return;
     }
-    navigation.replace("CommunityDetail");
+    navigation.navigate("BottomTab", { screen: "Community" });
   };
 
   const handleLeftPress = () => {
@@ -47,8 +46,8 @@ const Add: React.FC = () => {
         style={{ width: "80%", marginHorizontal: "4%", marginBottom: "2%" }}
       >
         <Input
-          value={title}
-          setValue={setTitle}
+          value={subject}
+          setValue={setSubject}
           placeholder="제목을 입력해주세요."
         />
       </View>

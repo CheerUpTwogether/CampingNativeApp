@@ -21,29 +21,18 @@ const heartIcon = require("@/assets/icons/Heart.png");
 const chatIcon = require("@/assets/icons/Chat.png");
 const profileImage = require("@/assets/images/Introduce1.png");
 
-interface Community {
-  id: number;
-  subject: string;
-  content: string;
-  nickname: string;
-  like: number;
-  lickCheck: boolean;
-  replyCount: number;
-  replays: [];
-}
-
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 // TODO: 댓글 API 연동
 const Community = () => {
-  const [dataList, setDataList] = useState([]);
+  const [dataList, setDataList] = useState<Community[]>([]);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await getCommunitysApi();
-      setDataList(res.data.result.content);
+      setDataList(res?.data?.result?.content);
     };
 
     fetchData();
