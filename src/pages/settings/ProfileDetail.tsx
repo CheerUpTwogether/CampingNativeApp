@@ -49,6 +49,7 @@ const ProfileDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getUserApi();
+      if (!res) return;
       setUserData(res.result);
     };
 

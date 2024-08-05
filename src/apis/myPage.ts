@@ -3,23 +3,21 @@ import Toast from "react-native-toast-message";
 import { showToastApiError } from "../utils/apiHelper";
 import { ApiResponse } from "@/types/api";
 
-// 사용자 인터페이스 정의
-interface UserDetail {
-  email: string;
-  password: string;
-}
-
-interface getUserApiResponse {
-  result: {
-    nickName: string;
-  };
-}
-
 // 회원 정보 조회 API 함수
-export const getUserApi = async (): Promise<getUserApiResponse | void> => {
+export const getUserApi = async (): Promise<UserApiResponse | void> => {
   try {
-    const res = await API.get<getUserApiResponse>("/accounts/info");
+    const res = await API.get<UserApiResponse>("/accounts/info");
     return res.data;
+  } catch (error) {
+    showToastApiError();
+  }
+};
+
+export const getCommunitysApi = async (): Promise<ApiResponse<
+  CommunityResponse<Community[]>
+> | void> => {
+  try {
+    return await API.get(`/community`);
   } catch (error) {
     showToastApiError();
   }
