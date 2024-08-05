@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootBottomParamList } from "../../components/router/Router";
 import { getCampingsApi } from "@/apis/camping";
@@ -10,15 +14,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import CampingFlatList from "@/components/home/CampingFlatList";
 
 const menu = require("../../assets/icons/menu.png");
-
 const profile = { uri: "https://picsum.photos/200/300" };
-
-type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootBottomParamList>;
 
 const Home = () => {
   const [campings, setCampings] = useState<CampingsType>([]);
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const navigation = useNavigation<NavigationProp<RootBottomParamList>>();
   const handleLeft = () => navigation.navigate("Settings");
 
   useFocusEffect(
