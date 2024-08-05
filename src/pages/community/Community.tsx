@@ -24,7 +24,6 @@ const profileImage = require("@/assets/images/Introduce1.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-// TODO: 댓글 API 연동
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
   const navigation = useNavigation<SettingsScreenNavigationProp>();

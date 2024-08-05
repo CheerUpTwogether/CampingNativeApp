@@ -15,8 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
-import { getCommunityApi } from "@/apis/community";
-import { ApiResponse } from "@/types/api";
+import { getCommunityApi, addCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
 
 const backIcon = require("@/assets/icons/Back.png");
@@ -42,6 +41,7 @@ const CommunityDetail = () => {
       if (res?.data?.result) {
         setCommunityData(res?.data?.result);
         setReplys(res.data.result.replys);
+        console.log(CommunityId);
       }
     };
     fetchData();
@@ -49,6 +49,16 @@ const CommunityDetail = () => {
 
   const handlePrev = () => {
     navigation.goBack();
+  };
+
+  const handleSend = async () => {
+    const res = await addCommunityCommentApi(CommunityId.toString(), inputText);
+    if (inputText.trim() === "" || !res?.success) console.log("error =>");
+    setInputText("");
+    const updatedRes = await getCommunityApi(CommunityId);
+    if (updatedRes?.data?.result) {
+      setReplys(updatedRes.data.result.replys);
+    }
   };
 
   const renderItem: ListRenderItem<Reply> = ({ item }) => (
@@ -61,6 +71,12 @@ const CommunityDetail = () => {
           <Text style={styles.nickName}>{item.nickname}</Text>
           <Text style={styles.id}>{item.createDate}</Text>
         </View>
+        <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
+          <Text style={styles.editText}>수정</Text>
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
+          <Text style={styles.editText}>삭제</Text>
+        </TouchableOpacity>
       </View>
       <Text style={styles.commentText}>{item.reply}</Text>
     </View>
@@ -130,7 +146,10 @@ const CommunityDetail = () => {
                     isBgWhite={false}
                   />
                 </View>
-                <TouchableOpacity style={styles.sendButton}>
+                <TouchableOpacity
+                  style={styles.sendButton}
+                  onPress={handleSend}
+                >
                   <Text style={styles.content}>등록</Text>
                 </TouchableOpacity>
               </View>
@@ -287,6 +306,8 @@ const styles = StyleSheet.create({
     width: "20%",
     alignItems: "center",
   },
+  editWrapper: {},
+  editText: { color: "#999", fontSize: 10 },
 });
 
 export default CommunityDetail;
