@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Toast from "react-native-toast-message";
 import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
 import { addCommunityApi } from "@/apis/community";
@@ -24,7 +25,10 @@ const Add: React.FC = () => {
     });
 
     if (res?.success) {
-      return;
+      Toast.show({
+        type: "success",
+        text1: "커뮤니티를 생성했습니다.",
+      });
     }
     navigation.navigate("BottomTab", { screen: "Community" });
   };

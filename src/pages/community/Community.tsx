@@ -10,6 +10,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  RefreshControl,
+  ScrollView,
 } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
@@ -26,19 +28,30 @@ type SettingsScreenNavigationProp =
 
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
+  const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await getCommunitysApi();
-      res?.data?.result?.content && setDataList(res?.data?.result?.content);
-    };
+  const fetchData = async () => {
+    const res = await getCommunitysApi();
+    if (res?.data?.result?.content) {
+      const sortedData = res.data.result.content.sort(
+        (a: Community, b: Community) => b.id - a.id
+      );
+      setDataList(sortedData);
+    }
+    setRefresh(false);
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [dataList]);
+  }, [refresh, dataList]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
+  };
+
+  const pullDown = () => {
+    setRefresh(true);
   };
 
   const renderItem: ListRenderItem<Community> = ({ item }) => (
@@ -78,11 +91,17 @@ const Community = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="커뮤니티" leftIcon={leftIcon} />
-      <FlatList
-        data={dataList}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={() => pullDown()} />
+        }
+      >
+        <FlatList
+          data={dataList}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
