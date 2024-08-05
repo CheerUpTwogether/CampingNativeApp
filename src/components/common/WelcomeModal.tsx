@@ -8,11 +8,11 @@ const WelcomeModal = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     if (isVisible && animationRef.current) {
-      animationRef.current.play();
+      animationRef.current;
     }
     const timer = setTimeout(() => {
       onClose();
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [isVisible]);
@@ -27,7 +27,7 @@ const WelcomeModal = ({ isVisible, onClose }) => {
           loop={false}
           style={styles.animation}
         />
-        <Text style={styles.welcomText}>가입을 환영합니다!</Text>
+        <Text style={styles.welcomText}>반갑습니다!</Text>
       </View>
     </Modal>
   );

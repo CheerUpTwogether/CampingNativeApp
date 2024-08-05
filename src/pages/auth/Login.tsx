@@ -19,6 +19,8 @@ import MailIcon from "@/assets/icons/Email.svg";
 import { loginValid } from "@/utils/validateHelper";
 import CheckBox from "@/components/common/CheckBox";
 
+import WelcomeModal from "@/components/common/WelcomeModal";
+
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
@@ -27,11 +29,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAutoLogin, setIsAutoLogin] = useState(false);
+  const [isVisibleModal, setisVisibleModal] = useState(false);
 
   const clickLoginBtn = async () => {
     if (loginValid({ email, password })) {
       const data = await addLoginApi({ email, password });
       if (!data.success) return;
+      setisVisibleModal(true);
       setUserToken("userData", { email, password });
       navigation.replace("BottomTab", { screen: "Home" });
     }
@@ -115,6 +119,10 @@ const Login = () => {
               <Text style={styles.defaultText}>아직 회원이 아니세요?</Text>
               <Text style={styles.boldText}>회원가입</Text>
             </TouchableOpacity>
+            <WelcomeModal
+              isVisible={isVisibleModal}
+              onClose={() => setisVisibleModal(false)}
+            />
           </View>
         </View>
       </ScrollView>
