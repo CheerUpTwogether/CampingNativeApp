@@ -5,7 +5,7 @@ import Button from "@/components/common/Button";
 import InputWithIcon from "@/components/common/InputWithIcon";
 import LinearGradient from "react-native-linear-gradient";
 import { addLoginApi } from "@/apis/account";
-import { getUserToken, setUserToken } from "@/apis/cookie";
+import { setUserToken } from "@/apis/cookie";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -15,7 +15,7 @@ const googleIcon = require("@/assets/icons/GoogleIcon.png");
 const facebookIcon = require("@/assets/icons/FacebookIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
 import LockIcon from "@/assets/icons/Lock.svg";
-import MailIcon from "@/assets/icons/Mail.svg";
+import MailIcon from "@/assets/icons/Email.svg";
 import { loginValid } from "@/utils/validateHelper";
 import CheckBox from "@/components/common/CheckBox";
 
@@ -86,7 +86,7 @@ const Login = () => {
               placeholder="이메일을 입력해주세요."
               isBgWhite={false}
               icon={
-                <MailIcon width={50} height={25} color={iconColor(email)} />
+                <MailIcon width={50} height={20} color={iconColor(email)} />
               }
             />
             <InputWithIcon
