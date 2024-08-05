@@ -31,7 +31,6 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   useEffect(() => {
     getReplys();
     getUserInfo();
-    // userData;
   }, [CommunityId]);
 
   const getUserInfo = async () => {
@@ -41,7 +40,6 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const getReplys = async () => {
     const res = await getCommunityApi(CommunityId);
-    console.log(res?.data?.result);
     res?.data?.result && setReplys(res.data.result.replys);
   };
 
@@ -96,13 +94,12 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={styles.editWrapper}
               onPress={() => showReplyForm(item)}
             >
               <Text style={styles.editText}>수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.editWrapper}>
-              <Text style={styles.editText}>삭제</Text>
+            <TouchableOpacity activeOpacity={0.8}>
+              <Text style={styles.deleteText}>삭제</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -191,6 +188,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: "#573353",
   },
+
+  deleteText: { color: "#F44336", fontSize: 10, paddingTop: 8, paddingLeft: 8 },
   editText: { color: "#999", fontSize: 10, paddingTop: 8, paddingLeft: 8 },
   inputContainer: {
     width: "100%",
@@ -310,6 +309,5 @@ const styles = StyleSheet.create({
     width: "20%",
     alignItems: "center",
   },
-  editWrapper: {},
 });
 export default Replys;

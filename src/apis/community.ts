@@ -7,7 +7,7 @@ export const getCommunitysApi = async (): Promise<ApiResponse<
   CommunityResponse<Community[]>
 > | void> => {
   try {
-    return await API.get(`/community`);
+    return await API.get(`/community?page=0&pageSize=200`);
   } catch (error) {
     showToastApiError();
   }

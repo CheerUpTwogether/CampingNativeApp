@@ -35,7 +35,7 @@ const Community = () => {
     };
 
     fetchData();
-  }, []);
+  }, [dataList]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginBottom: 80,
+    marginBottom: 100,
   },
   topWrapper: {
     flexDirection: "row",

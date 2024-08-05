@@ -9,11 +9,14 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import { getCommunityApi } from "@/apis/community";
 import Replys from "./Replys";
+import { getUserApi } from "@/apis/myPage";
+import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -26,6 +29,7 @@ type SettingsScreenNavigationProp =
 
 const CommunityDetail = () => {
   const [communityData, setCommunityData] = useState<Community | null>(null);
+  const [nickName, setNickName] = useState("");
 
   const route = useRoute();
   const { CommunityId } = route.params as { CommunityId: number };
@@ -36,14 +40,53 @@ const CommunityDetail = () => {
       const res = await getCommunityApi(CommunityId);
       if (res?.data?.result) {
         setCommunityData(res?.data?.result);
-        console.log(CommunityId);
       }
     };
+
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserApi();
+      if (userInfo?.result?.nickName) {
+        setNickName(userInfo.result.nickName);
+      }
+    };
+
     fetchData();
+    fetchUserInfo();
   }, [CommunityId]);
 
   const handlePrev = () => {
     navigation.goBack();
+  };
+
+  const handleEdit = () => {
+    // 수정 로직
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await deleteCommunityApi(CommunityId.toString());
+      if (res) {
+        Toast.show({
+          type: "success",
+          text1: "커뮤니티를 삭제했습니다.",
+        });
+        navigation.navigate("Community");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: "error",
+          text1: "다시 시도해주세요.",
+          text2: error.message,
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "삭제에 실패했습니다.",
+          text2: "알 수 없는 오류가 발생했습니다.",
+        });
+      }
+    }
   };
 
   return (
@@ -65,12 +108,31 @@ const CommunityDetail = () => {
                     <Text style={styles.id}>{communityData.id}</Text>
                   </View>
                 </View>
-                <TouchableOpacity
-                  style={styles.iconWrapper}
-                  activeOpacity={0.8}
-                >
-                  <Image source={shareIcon} style={styles.icon1} />
-                </TouchableOpacity>
+
+                <View style={styles.rightTopContainer}>
+                  {nickName === communityData.nickname && (
+                    <View style={styles.editButtonContainer}>
+                      <TouchableOpacity
+                        onPress={handleEdit}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.editText}>수정</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={handleDelete}
+                      >
+                        <Text style={styles.deleteText}>삭제</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  <TouchableOpacity
+                    style={styles.iconWrapper}
+                    activeOpacity={0.8}
+                  >
+                    <Image source={shareIcon} style={styles.icon1} />
+                  </TouchableOpacity>
+                </View>
               </View>
 
               <View style={styles.contentWrapper}>
@@ -189,6 +251,30 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 70,
     height: 100,
+  },
+  editButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 10,
+  },
+  editText: {
+    color: "#999",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  deleteText: {
+    color: "#F44336",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  rightTopContainer: {
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: 6,
+    marginRight: 8,
+    marginBottom: 18,
   },
 });
 
