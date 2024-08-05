@@ -63,7 +63,7 @@ export const addCommunityCommentApi = async (
   reply: string
 ): Promise<ApiResponse<any> | void> => {
   try {
-    return await API.post(`/community/${communityId}/replies`, { reply });
+    return await API.post(`/community/${communityId}/reply`, { reply });
   } catch (error) {
     showToastApiError();
     console.error("API 호출 중 오류 발생");
