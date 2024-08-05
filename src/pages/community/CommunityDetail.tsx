@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  TextInput,
 } from "react-native";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -56,7 +57,12 @@ const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
                   <View style={styles.imageWrapper}>
                     <Image style={styles.profileImage} source={profileImage} />
                   </View>
-                  <Text style={styles.nickName}>{communityData.nickname}</Text>
+                  <View style={styles.nameWrapper}>
+                    <Text style={styles.name}>이름</Text>
+                    <Text style={styles.nickName}>
+                      {communityData.nickname}
+                    </Text>
+                  </View>
                 </View>
                 <TouchableOpacity
                   style={styles.iconWrapper}
@@ -83,10 +89,23 @@ const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
                   </View>
                 </View>
               </View>
-              <View style={{ backgroundColor: "#FFF" }}>
+
+              <View style={styles.commentContainer}>
                 <View style={styles.contentsWrapper}>
                   <Text style={styles.content}>댓글</Text>
                 </View>
+                {/* FlatList 시작 */}
+                <View style={{ marginBottom: 8 }}>
+                  <View style={styles.commentWrapper}>
+                    <Image source={heartIcon} style={styles.otherProfile} />
+                    <View style={styles.nameWrapper}>
+                      <Text style={styles.name}>이름</Text>
+                      <Text style={styles.nickName}>닉네임</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.commentText}>댓글 내용</Text>
+                </View>
+                {/* FlatList 종료 */}
               </View>
             </View>
           </View>
@@ -132,9 +151,16 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
   },
-
-  nickName: {
+  nameWrapper: {
+    gap: 2,
+    justifyContent: "center",
+  },
+  name: {
     color: "#573353",
+    fontWeight: "500",
+  },
+  nickName: {
+    color: "rgba(87, 51, 83, 0.4)",
     fontWeight: "500",
   },
   contentWrapper: {
@@ -177,7 +203,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     width: 70,
-    height: 130,
+    height: 100,
   },
   contentsWrapper: {
     marginTop: 50,
@@ -186,6 +212,26 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 15,
+    color: "#573353",
+  },
+  commentContainer: {
+    backgroundColor: "#FFF",
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  commentWrapper: {
+    flexDirection: "row",
+    marginHorizontal: "4%",
+    marginVertical: 12,
+    gap: 10,
+  },
+  otherProfile: {
+    width: 40,
+    height: 40,
+  },
+  commentText: {
+    marginHorizontal: "4%",
+    marginTop: 4,
     color: "#573353",
   },
 });
