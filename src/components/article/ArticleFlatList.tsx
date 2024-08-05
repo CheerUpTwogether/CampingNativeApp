@@ -23,9 +23,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
           >
             {el?.articleImages?.[0]?.imgPath ? (
               <Image
-                source={{
-                  uri: el?.articleImages?.[0]?.imgPath,
-                }}
+                source={{ uri: `${el?.articleImages?.[0]?.imgPath}` }}
                 style={styles.thumbImage}
               />
             ) : (
