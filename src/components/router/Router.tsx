@@ -33,8 +33,6 @@ export type RootBottomParamList = {
 };
 
 export type RootStackParamList = {
-  TestCommunity: undefined;
-  Test: undefined;
   Login: undefined;
   Signup: undefined;
   Splash: undefined;
@@ -80,8 +78,6 @@ const BottomTab = () => {
 const Router = () => {
   return (
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
-      <StackTab.Screen name="Test" component={Test} />
-      <StackTab.Screen name="TestCommunity" component={TestCommunity} />
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
       <StackTab.Screen name="Signup" component={Signup} />
