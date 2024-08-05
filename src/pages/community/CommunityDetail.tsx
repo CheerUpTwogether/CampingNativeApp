@@ -6,8 +6,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  FlatList,
-  ListRenderItem,
   ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -15,6 +13,7 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import { getCommunityApi } from "@/apis/community";
+import Replys from "./Replys";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -91,6 +90,8 @@ const CommunityDetail = () => {
                   </View>
                 </View>
               </View>
+
+              <Replys CommunityId={CommunityId} />
             </View>
           </View>
         )}

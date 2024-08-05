@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import { getCommunityApi, addCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
+import { useRoute } from "@react-navigation/native";
 
 const profileImage = require("@/assets/images/Introduce1.png");
 
-const Replys = ({ CommunityId }) => {
+const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   const [inputText, setInputText] = useState("");
   const [replys, setReplys] = useState<Reply[]>([]);
 
