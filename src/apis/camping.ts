@@ -9,12 +9,15 @@ export const getCampingsApi = async (obj: {
   _type: string;
   pageNo: number;
 }): Promise<CampingsApiResponse | void> => {
+  console.log(obj);
   try {
     const res = await OPENAPI.get<CampingsApiResponse>(
       `/basedList${makeQueryString(obj)}`
     );
+    console.log(res.data);
     return res.data;
   } catch (error) {
+    console.log(error);
     showToastApiError();
   }
 };

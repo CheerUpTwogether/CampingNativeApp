@@ -12,10 +12,11 @@ interface CampingType {
   tel: string;
 }
 
-type CampingsType = CampingType[] | null;
+type CampingsType = CampingType[];
 
 interface CampingFlatListProps {
   campings: CampingsType;
+  onEndReached: () => void;
 }
 // // API 응답 인터페이스 정의
 type CampingsApiResponse = {
