@@ -1,36 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Toast from "react-native-toast-message";
 import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
-import { addCommunityApi } from "@/apis/community";
+import { addCommunityApi, setCommunityApi } from "@/apis/community";
 import { RootStackParamList } from "@/components/router/Router";
 
 const backIcon = require("@/assets/icons/Back.png");
 const addButton = require("@/assets/icons/bottomTab/add.png");
 
 type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;
+type AddScreenRouteProp = RouteProp<RootStackParamList, "Add">;
 
 const Add: React.FC = () => {
   const [subject, setSubject] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const navigation = useNavigation<AddScreenNavigationProp>();
+  const route = useRoute<AddScreenRouteProp>();
+
+  const isEdit = route.params?.isEdit ?? false;
+  const communityId = route.params?.communityId ?? null;
+  const initialSubject = route.params?.subject ?? "";
+  const initialContent = route.params?.content ?? "";
+
+  useEffect(() => {
+    if (isEdit) {
+      setSubject(initialSubject ?? "");
+      setContent(initialContent ?? "");
+    }
+  }, [isEdit, initialSubject, initialContent]);
 
   const handleSubmit = async () => {
-    const res = await addCommunityApi({
-      subject,
-      content,
-    });
+    let res;
+    if (isEdit) {
+      res = await setCommunityApi(Number(communityId), {
+        subject,
+        content,
+      });
+      navigation.navigate("CommunityDetail", {
+        CommunityId: Number(communityId),
+      });
+    } else {
+      res = await addCommunityApi({
+        subject,
+        content,
+      });
+    }
 
     if (res?.success) {
       Toast.show({
         type: "success",
-        text1: "커뮤니티를 생성했습니다.",
+        text1: isEdit ? "커뮤니티를 수정했습니다." : "커뮤니티를 생성했습니다.",
       });
+      navigation.navigate("BottomTab", { screen: "Community" });
     }
-    navigation.navigate("BottomTab", { screen: "Community" });
   };
 
   const handleLeftPress = () => {
@@ -40,7 +65,7 @@ const Add: React.FC = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
-        title="새 글 쓰기"
+        title={isEdit ? "수정하기" : "새 글 쓰기"}
         leftIcon={backIcon}
         leftClick={handleLeftPress}
         rightIcon={addButton}
@@ -70,6 +95,7 @@ const Add: React.FC = () => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,

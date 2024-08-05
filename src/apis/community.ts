@@ -37,10 +37,11 @@ export const addCommunityApi = async (
 
 // 커뮤니티 수정(put)
 export const setCommunityApi = async (
-  communityData: Community
+  communityId: number,
+  communityData: EditCommunity
 ): Promise<ApiResponse<EditCommunity> | void> => {
   try {
-    return await API.put(`/community/${communityData.id}`, communityData);
+    return await API.put(`/community/${communityId}`, communityData);
   } catch (error) {
     showToastApiError();
   }

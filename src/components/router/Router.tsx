@@ -37,7 +37,14 @@ export type RootStackParamList = {
   BottomTab: {
     screen: keyof RootBottomParamList;
   };
-  Add: undefined;
+  Add: {
+    subject: string;
+    content: string;
+    isEdit: boolean;
+    communityId: string;
+    initialSubject?: string;
+    initialContent?: string;
+  };
   CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
