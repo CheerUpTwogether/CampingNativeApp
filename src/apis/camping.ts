@@ -7,6 +7,7 @@ export const getCampingsApi = async (obj: {
   MobileApp: string;
   serviceKey: string;
   _type: string;
+  pageNo: number;
 }): Promise<CampingsApiResponse | void> => {
   try {
     const res = await OPENAPI.get<CampingsApiResponse>(
