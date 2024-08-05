@@ -1,6 +1,8 @@
 import TopBar from "@/components/common/TopBar";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
 import { getUserApi } from "@/apis/myPage";
@@ -11,15 +13,7 @@ const favoriteIcon = require("@/assets/icons/Privacy.png");
 const timeIcon = require("@/assets/icons/Time.png");
 const cardIcon = require("@/assets/icons/Card.png");
 const infoIcon = require("@/assets/icons/Info.png");
-
-interface UserData {
-  nickName: string;
-  email: string;
-  introduce: string;
-  profileImagePath: string;
-  communityCount: number;
-  favoriteCount: number;
-}
+const settingIcon = require("@/assets/icons/Help.png");
 
 const boxData = [
   {
@@ -40,17 +34,17 @@ const boxData = [
   },
 ];
 
+type StackNavProp = StackNavigationProp<RootStackParamList, "EditProfile">;
+
 const ProfileDetail = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
-  const navigation = useNavigation();
-
-  const baseUrl = "http://13.209.27.220:8080";
+  const navigation = useNavigation<StackNavProp>();
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await getUserApi();
       if (!res) return;
-      setUserData(res.result);
+      setUserData(res?.result);
     };
 
     fetchData();
@@ -64,9 +58,19 @@ const ProfileDetail = () => {
     return null;
   }
 
+  const handleMove = () => {
+    navigation.navigate("EditProfile");
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar title="Profile" leftIcon={backIcon} leftClick={handlePrev} />
+      <TopBar
+        title="Profile"
+        leftIcon={backIcon}
+        leftClick={handlePrev}
+        rightIcon={settingIcon}
+        rightClick={handleMove}
+      />
       <View>
         <View style={styles.introduceContainer}>
           <View style={styles.profileWrapper}>
@@ -81,12 +85,14 @@ const ProfileDetail = () => {
               />
             </View>
             <View style={styles.introduceWrapper}>
-              <Text style={styles.name}>{userData.nickName}</Text>
-              <Text style={styles.subText}>
-                {userData.introduce
-                  ? baseUrl + userData.introduce
-                  : "소개를 입력해주세요"}
-              </Text>
+              <View>
+                <Text style={styles.name}>{userData.nickName}</Text>
+                <Text style={styles.subText}>
+                  {userData.introduce
+                    ? baseUrl + userData.introduce
+                    : "소개를 입력해주세요"}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -204,6 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 16,
   },
+  editText: { color: "#999", fontSize: 10 },
 });
 
 export default ProfileDetail;

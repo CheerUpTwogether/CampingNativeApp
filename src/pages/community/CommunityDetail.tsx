@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    height: 50,
+    height: 60,
     backgroundColor: "#FFF",
     flexDirection: "row",
     justifyContent: "space-between",
