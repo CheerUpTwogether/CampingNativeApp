@@ -25,7 +25,7 @@ export const getCommunitysApi = async (): Promise<ApiResponse<
 
 // 회원 정보 수정 API 함수
 export const setUserApi = async (
-  data: Partial<UserDetail>
+  data: Partial<User>
 ): Promise<ApiResponse<any> | void> => {
   try {
     const res = await API.patch<ApiResponse<any>>("/accounts", data);

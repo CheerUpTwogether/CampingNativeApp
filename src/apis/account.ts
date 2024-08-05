@@ -1,22 +1,7 @@
 import { API } from ".";
 import { showToastApiError } from "../utils/apiHelper";
 import Toast from "react-native-toast-message";
-// import { AxiosError } from "axios";
 import { ApiResponse } from "@/types/api";
-
-// // 에러 응답 인터페이스 정의
-// interface ErrorResponse {
-//   response?: {
-//     data?: {
-//       errors?: { reason: string }[];
-//     };
-//   };
-// }
-
-// API 응답 인터페이스 정의
-// interface ApiResponse<T> {
-//   data: T;
-// }
 
 // 회원가입 API 함수
 export const addSignUpApi = async (
@@ -33,9 +18,6 @@ export const addSignUpApi = async (
 
     return res.data;
   } catch (error) {
-    // const text1 =
-    //   axiosError?.response?.data?.errors?.[0]?.reason ||
-    //   "작성하신 내용을 다시 확인해주세요.";
     const text1 = "작성하신 내용을 다시 확인해주세요.";
     Toast.show({ type: "error", text1 });
     return { success: false };
