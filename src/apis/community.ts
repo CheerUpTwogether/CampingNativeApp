@@ -16,7 +16,7 @@ export const getCommunitysApi = async (): Promise<ApiResponse<
 // 커뮤니티 상세 조회
 export const getCommunityApi = async (
   communityId: number
-): Promise<ApiResponse<CommunityResponse<Community>> | void> => {
+): Promise<ApiResponse<ApiResponse<Community>> | void> => {
   try {
     return await API.get(`/community/${communityId}`);
   } catch (error) {

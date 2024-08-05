@@ -8,12 +8,16 @@ import {
   Image,
   FlatList,
   TextInput,
+  ListRenderItem,
+  ScrollView,
 } from "react-native";
-import { useNavigation, RouteProp, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import { getCommunityApi } from "@/apis/community";
+import { ApiResponse } from "@/types/api";
+import Input from "@/components/common/Input";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -25,7 +29,9 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const CommunityDetail = () => {
-  const [communityData, setCommunityData] = useState<Community>();
+  const [communityData, setCommunityData] = useState<Community | null>(null);
+  const [replys, setReplys] = useState<Reply[]>([]);
+  const [inputText, setInputText] = useState("");
   const route = useRoute();
   const { CommunityId } = route.params as { CommunityId: number };
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -33,8 +39,10 @@ const CommunityDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getCommunityApi(CommunityId);
-      res?.data?.result?.content &&
-        setCommunityData(res?.data?.result?.content);
+      if (res?.data?.result) {
+        setCommunityData(res?.data?.result);
+        setReplys(res.data.result.replys);
+      }
     };
     fetchData();
   }, [CommunityId]);
@@ -43,10 +51,25 @@ const CommunityDetail = () => {
     navigation.goBack();
   };
 
+  const renderItem: ListRenderItem<Reply> = ({ item }) => (
+    <View style={{ marginBottom: 8 }}>
+      <View style={styles.commentWrapper}>
+        <View style={styles.otherProfileWrapper}>
+          <Image source={profileImage} style={styles.otherProfile} />
+        </View>
+        <View style={styles.nameWrapper}>
+          <Text style={styles.nickName}>{item.nickname}</Text>
+          <Text style={styles.id}>{item.createDate}</Text>
+        </View>
+      </View>
+      <Text style={styles.commentText}>{item.reply}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="상세 보기" leftIcon={backIcon} leftClick={handlePrev} />
-      <View>
+      <ScrollView>
         {communityData && (
           <View>
             <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
@@ -56,10 +79,10 @@ const CommunityDetail = () => {
                     <Image style={styles.profileImage} source={profileImage} />
                   </View>
                   <View style={styles.nameWrapper}>
-                    <Text style={styles.name}>이름</Text>
                     <Text style={styles.nickName}>
                       {communityData.nickname}
                     </Text>
+                    <Text style={styles.id}>{communityData.id}</Text>
                   </View>
                 </View>
                 <TouchableOpacity
@@ -92,23 +115,29 @@ const CommunityDetail = () => {
                 <View style={styles.contentsWrapper}>
                   <Text style={styles.content}>댓글</Text>
                 </View>
-                {/* FlatList 시작 */}
-                <View style={{ marginBottom: 8 }}>
-                  <View style={styles.commentWrapper}>
-                    <Image source={heartIcon} style={styles.otherProfile} />
-                    <View style={styles.nameWrapper}>
-                      <Text style={styles.name}>이름</Text>
-                      <Text style={styles.nickName}>닉네임</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.commentText}>댓글 내용</Text>
+                <FlatList
+                  renderItem={renderItem}
+                  data={replys}
+                  keyExtractor={(item) => item.replyId.toString()}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <View style={styles.inputWrapper}>
+                  <Input
+                    value={inputText}
+                    setValue={setInputText}
+                    placeholder="댓글을 입력해주세요."
+                    isBgWhite={false}
+                  />
                 </View>
-                {/* FlatList 종료 */}
+                <TouchableOpacity style={styles.sendButton}>
+                  <Text style={styles.content}>등록</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -153,11 +182,11 @@ const styles = StyleSheet.create({
     gap: 2,
     justifyContent: "center",
   },
-  name: {
+  nickName: {
     color: "#573353",
     fontWeight: "500",
   },
-  nickName: {
+  id: {
     color: "rgba(87, 51, 83, 0.4)",
     fontWeight: "500",
   },
@@ -223,14 +252,40 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     gap: 10,
   },
-  otherProfile: {
+  otherProfileWrapper: {
     width: 40,
     height: 40,
+    overflow: "hidden",
+    alignItems: "center",
+
+    borderRadius: 30,
+  },
+  otherProfile: {
+    width: 140,
+    height: 160,
   },
   commentText: {
     marginHorizontal: "4%",
     marginTop: 4,
     color: "#573353",
+  },
+  inputContainer: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#FFF",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  inputWrapper: {
+    width: "80%",
+    marginLeft: 4,
+  },
+  sendButton: {
+    width: "20%",
+    alignItems: "center",
   },
 });
 

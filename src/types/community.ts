@@ -2,6 +2,11 @@ interface CommunityResponse<T> {
   result: {
     content: T;
   };
+  replys: [];
+}
+interface CommunityDetailResponse {
+  result: Community[];
+  replys: [];
 }
 
 // 커뮤니티 타입
