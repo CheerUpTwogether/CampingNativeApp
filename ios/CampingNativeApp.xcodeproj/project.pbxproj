@@ -12,9 +12,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		68B6C3A623C0858846A46873 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8D59F25D94BD8DCA65007B43 /* PrivacyInfo.xcprivacy */; };
-		7EC05D0D3E6100517C016132 /* libPods-CampingNativeApp-CampingNativeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F74B5CA9EB4F5A96204F96B2 /* libPods-CampingNativeApp-CampingNativeAppTests.a */; };
+		76CDAEFF77CACD7EE8E59631 /* libPods-CampingNativeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38C0F88F18B57B0D4EFD755E /* libPods-CampingNativeApp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		F28908C75BBC105C1DD0687D /* libPods-CampingNativeApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D5F9AF999C14A2039E8EDCC /* libPods-CampingNativeApp.a */; };
+		A93ECFD1FB7A2872A5462D1C /* libPods-CampingNativeApp-CampingNativeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B17E4E1F74B6E1C05ABA428 /* libPods-CampingNativeApp-CampingNativeAppTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +31,6 @@
 		00E356EE1AD99517003FC87E /* CampingNativeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CampingNativeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* CampingNativeAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CampingNativeAppTests.m; sourceTree = "<group>"; };
-		0826BDEFE3BDA8E28F037326 /* Pods-CampingNativeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp.release.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* CampingNativeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CampingNativeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = CampingNativeApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = CampingNativeApp/AppDelegate.mm; sourceTree = "<group>"; };
@@ -39,14 +38,15 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CampingNativeApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CampingNativeApp/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = CampingNativeApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		2FF749875DFFC1A863349370 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3D5F9AF999C14A2039E8EDCC /* libPods-CampingNativeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampingNativeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B83C1037B64E58D270B8AD6 /* Pods-CampingNativeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp.debug.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp.debug.xcconfig"; sourceTree = "<group>"; };
+		38C0F88F18B57B0D4EFD755E /* libPods-CampingNativeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampingNativeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B17E4E1F74B6E1C05ABA428 /* libPods-CampingNativeApp-CampingNativeAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampingNativeApp-CampingNativeAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CampingNativeApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		81B885F3E5F30FC0887D8BD7 /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		85D0C4B47201D415C577F23C /* Pods-CampingNativeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp.debug.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		8D59F25D94BD8DCA65007B43 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CampingNativeApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		ADD1A2F98E7E9397E4E1CAA9 /* Pods-CampingNativeApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp.release.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp.release.xcconfig"; sourceTree = "<group>"; };
+		D843368906C9232EF693EFFF /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		DF050C54A4A3968F85FB8B32 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig"; path = "Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F74B5CA9EB4F5A96204F96B2 /* libPods-CampingNativeApp-CampingNativeAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampingNativeApp-CampingNativeAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7EC05D0D3E6100517C016132 /* libPods-CampingNativeApp-CampingNativeAppTests.a in Frameworks */,
+				A93ECFD1FB7A2872A5462D1C /* libPods-CampingNativeApp-CampingNativeAppTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F28908C75BBC105C1DD0687D /* libPods-CampingNativeApp.a in Frameworks */,
+				76CDAEFF77CACD7EE8E59631 /* libPods-CampingNativeApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3D5F9AF999C14A2039E8EDCC /* libPods-CampingNativeApp.a */,
-				F74B5CA9EB4F5A96204F96B2 /* libPods-CampingNativeApp-CampingNativeAppTests.a */,
+				38C0F88F18B57B0D4EFD755E /* libPods-CampingNativeApp.a */,
+				7B17E4E1F74B6E1C05ABA428 /* libPods-CampingNativeApp-CampingNativeAppTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,10 +145,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5B83C1037B64E58D270B8AD6 /* Pods-CampingNativeApp.debug.xcconfig */,
-				0826BDEFE3BDA8E28F037326 /* Pods-CampingNativeApp.release.xcconfig */,
-				2FF749875DFFC1A863349370 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */,
-				81B885F3E5F30FC0887D8BD7 /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */,
+				85D0C4B47201D415C577F23C /* Pods-CampingNativeApp.debug.xcconfig */,
+				ADD1A2F98E7E9397E4E1CAA9 /* Pods-CampingNativeApp.release.xcconfig */,
+				DF050C54A4A3968F85FB8B32 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */,
+				D843368906C9232EF693EFFF /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -160,12 +160,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "CampingNativeAppTests" */;
 			buildPhases = (
-				E9A39E94CF7BEA67403E10FF /* [CP] Check Pods Manifest.lock */,
+				87B1F8B5148F457A3961FAC1 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				0F8D9A571FC076BA39DF3238 /* [CP] Embed Pods Frameworks */,
-				03DB1FC4866E9E8F1F8EB0FE /* [CP] Copy Pods Resources */,
+				97374317BC92403DA01D913F /* [CP] Embed Pods Frameworks */,
+				D59CC85989AADCD8A5949B73 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -181,13 +181,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CampingNativeApp" */;
 			buildPhases = (
-				415A67D2A189C2B67F7699B9 /* [CP] Check Pods Manifest.lock */,
+				228DD01A6862D4659BA5F487 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				438B0409DE618B5F5FE7BDE3 /* [CP] Embed Pods Frameworks */,
-				C1851C3E761AA1162E2D8B46 /* [CP] Copy Pods Resources */,
+				3AF8F0DDF6B0ED1B25573F6C /* [CP] Embed Pods Frameworks */,
+				95C982C4F7C5A3B5EF630BBF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -271,41 +271,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		03DB1FC4866E9E8F1F8EB0FE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0F8D9A571FC076BA39DF3238 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		415A67D2A189C2B67F7699B9 /* [CP] Check Pods Manifest.lock */ = {
+		228DD01A6862D4659BA5F487 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -327,7 +293,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		438B0409DE618B5F5FE7BDE3 /* [CP] Embed Pods Frameworks */ = {
+		3AF8F0DDF6B0ED1B25573F6C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -344,24 +310,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C1851C3E761AA1162E2D8B46 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E9A39E94CF7BEA67403E10FF /* [CP] Check Pods Manifest.lock */ = {
+		87B1F8B5148F457A3961FAC1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -381,6 +330,57 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		95C982C4F7C5A3B5EF630BBF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp/Pods-CampingNativeApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		97374317BC92403DA01D913F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D59CC85989AADCD8A5949B73 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampingNativeApp-CampingNativeAppTests/Pods-CampingNativeApp-CampingNativeAppTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -416,7 +416,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2FF749875DFFC1A863349370 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */;
+			baseConfigurationReference = DF050C54A4A3968F85FB8B32 /* Pods-CampingNativeApp-CampingNativeAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -443,7 +443,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81B885F3E5F30FC0887D8BD7 /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */;
+			baseConfigurationReference = D843368906C9232EF693EFFF /* Pods-CampingNativeApp-CampingNativeAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -467,7 +467,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B83C1037B64E58D270B8AD6 /* Pods-CampingNativeApp.debug.xcconfig */;
+			baseConfigurationReference = 85D0C4B47201D415C577F23C /* Pods-CampingNativeApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -494,7 +494,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0826BDEFE3BDA8E28F037326 /* Pods-CampingNativeApp.release.xcconfig */;
+			baseConfigurationReference = ADD1A2F98E7E9397E4E1CAA9 /* Pods-CampingNativeApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
