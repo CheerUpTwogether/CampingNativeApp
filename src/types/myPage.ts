@@ -13,8 +13,8 @@ interface UserData {
   email?: string;
   introduce: string;
   profileImagePath: string;
-  communityCount?: number;
-  favoriteCount?: number;
+  communitycount?: number;
+  favoritecount?: number;
   user_id?: string;
   id?: number;
 }
@@ -23,12 +23,12 @@ interface User {
   nickname: string;
   introduce: string;
   profileImagePath: string;
+  email: string;
 }
 
 interface UserEditData {
-  nickname: {
-    value: string;
-  };
+  nickname: string;
   introduce: string;
   profileImagePath: string;
+  email: string;
 }

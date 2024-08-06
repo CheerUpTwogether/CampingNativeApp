@@ -2,11 +2,12 @@ import { uploadImage } from "@/utils/imageHelper";
 import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 import { getSignInUserId } from "./auth";
+import useStore from "@/store/store";
 
 // 회원 정보 조회 API 함수
 export const getUserSpb = async (
   boolean: boolean = true
-): Promise<UserData | void> => {
+): Promise<UserEditData | void> => {
   try {
     const uid = await getSignInUserId();
 
@@ -34,33 +35,30 @@ export const getUserSpb = async (
   }
 };
 
-interface ProfileUpdate {
-  nickname: string;
-  name: string;
-  introduce: string;
-}
-
 // 회원 정보 수정 API 함수
 export const setUserSpb = async (
   nickname: string,
-  name: string,
-  introduce: string
+  email: string,
+  introduce: string,
+  profileImagePath: string
 ): Promise<boolean> => {
   try {
     const uid = await getSignInUserId();
+    console.log("hellowWorld");
     if (!uid) {
       showInfo("error", "uid 값을 찾지 못했습니다.");
       return false;
     }
     const { error } = await supabase
       .from("profile")
-      .update({ nickname, name, introduce })
+      .update({ nickname, email, introduce })
       .eq("user_id", uid);
 
     if (error) {
       showInfo("error", error.message);
       return false;
     }
+
     showInfo("success", "프로필 수정에 성공하였습니다.");
     return true;
   } catch (error) {

@@ -41,12 +41,22 @@ const Add: React.FC = () => {
   const handleSubmit = async () => {
     let res;
     if (isEdit) {
-      res = await setCommunitySpb(Number(communityId), subject, content);
+      res = await setCommunitySpb(
+        Number(communityId),
+        subject,
+        content,
+        userInfo.nickname
+      );
       navigation.navigate("CommunityDetail", {
         CommunityId: Number(communityId),
       });
     } else {
-      res = await addCommunitySpb(userInfo.user_id, subject, content);
+      res = await addCommunitySpb(
+        userInfo.user_id,
+        subject,
+        content,
+        userInfo.nickname
+      );
     }
 
     if (res) {

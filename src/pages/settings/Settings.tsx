@@ -16,6 +16,7 @@ import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
 import { RootStackParamList } from "@/components/router/Router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStore from "@/store/store";
 
 const more = require("@/assets/icons/menu.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -70,6 +71,8 @@ type SettingsScreenNavigationProp =
 
 const Settings = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  // const [userData, setUserData] = useStore((state) => state.userData)
+  const userData = useStore().userInfo;
 
   const handleMove = () => {
     navigation.navigate("ProfileDetail");
@@ -94,7 +97,7 @@ const Settings = () => {
           <View style={styles.userContainer}>
             <View style={styles.userWrapper}>
               <Text style={styles.title}>프로필 보기</Text>
-              <Text style={styles.email}>dummyTest@gmail.com</Text>
+              <Text style={styles.email}>{userData.email}</Text>
             </View>
 
             <View style={styles.buttonWrapper}>
