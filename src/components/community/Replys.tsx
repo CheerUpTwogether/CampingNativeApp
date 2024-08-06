@@ -11,21 +11,23 @@ import {
 import { setCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
 import { formatDate } from "@/utils/date";
-import { getUserApi } from "@/apis/myPage";
-import { getReplysSpb } from "@/supaBase/api/reply";
+import {
+  addReplySpb,
+  deleteReplySpb,
+  getReplysSpb,
+} from "@/supaBase/api/reply";
+import useStore from "@/store/store";
 
 const profileImage = require("@/assets/images/Introduce1.png");
 
 const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   const [inputText, setInputText] = useState("");
   const [replys, setReplys] = useState<ReplyType[]>([]);
-  const [nickName, setNickName] = useState("");
   const [replyId, setReplyId] = useState(0);
   const [replyContent, setReplyContent] = useState("");
-
+  const userInfo = useStore().userInfo;
   useEffect(() => {
     getReplys();
-    getUserInfo();
   }, [CommunityId]);
 
   const getUserInfo = async () => {
@@ -34,15 +36,25 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   };
 
   const getReplys = async () => {
-    setReplys(await getReplysSpb(CommunityId));
+    const data = await getReplysSpb(CommunityId);
+    setReplys(data);
   };
 
-  // const handleSend = async () => {
-  //   await addCommunityCommentApi(CommunityId.toString(), inputText);
-  //   setInputText("");
-  //   const updatedRes = await getCommunityApi(CommunityId);
-  //   updatedRes?.data?.result && setReplys(updatedRes.data.result.replys);
-  // };
+  const addReply = async () => {
+    const param = {
+      community_id: CommunityId,
+      reply: inputText,
+      user_id: userInfo.user_id,
+    };
+    const newReply = await addReplySpb(param);
+    if (newReply) setReplys((prev) => [...prev, newReply]);
+    setInputText("");
+  };
+
+  const deleteReply = async (id: number) => {
+    const removeReply = await deleteReplySpb(id);
+    setReplys((prev) => prev.filter((el) => el.id !== id));
+  };
 
   const showReplyForm = async (reply: ReplyType) => {
     setReplyId(reply.id);
@@ -84,7 +96,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
           </View>
         </View>
 
-        {nickName === item.profile.nickname ? (
+        {userInfo.nickname === item.profile.nickname ? (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -92,7 +104,10 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
             >
               <Text style={styles.editText}>수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => deleteReply(item.id)}
+            >
               <Text style={styles.deleteText}>삭제</Text>
             </TouchableOpacity>
           </View>
@@ -125,17 +140,17 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   );
 
   return (
-    <View>
-      <View style={styles.commentContainer}>
-        <View style={styles.contentsWrapper}>
-          <Text style={styles.content}>댓글</Text>
-        </View>
-        <FlatList
-          renderItem={renderItem}
-          data={replys}
-          keyExtractor={(item) => String(item.id)}
-        />
+    <View style={styles.commentContainer}>
+      <View style={styles.contentsWrapper}>
+        <Text style={styles.content}>댓글</Text>
       </View>
+
+      <FlatList
+        renderItem={renderItem}
+        data={replys}
+        keyExtractor={(item) => String(item.id)}
+      />
+
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
           <Input
@@ -145,8 +160,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
             isBgWhite={false}
           />
         </View>
-        {/* <TouchableOpacity style={styles.sendButton} onPress={handleSend}> */}
-        <TouchableOpacity style={styles.sendButton}>
+        <TouchableOpacity style={styles.sendButton} onPress={addReply}>
           <Text style={styles.content}>등록</Text>
         </TouchableOpacity>
       </View>
