@@ -47,12 +47,17 @@ const Splash = () => {
       // zustand 전역 상태 관리
       setUserData(data);
 
+      if (!data?.nickname) {
+        navigation.replace("Login");
+        return;
+      }
+
       Toast.show({
         type: "success",
         text1: `${data?.nickname} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
       });
 
-      navigation.replace("BottomTab");
+      navigation.replace("BottomTab", { screen: "Home" });
     } catch (e) {}
   };
 

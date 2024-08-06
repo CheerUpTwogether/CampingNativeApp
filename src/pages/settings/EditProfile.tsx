@@ -7,13 +7,15 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/components/router/Router";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { setProfileApi, setUserApi, getUserApi } from "@/apis/myPage";
 import TopBar from "@/components/common/TopBar";
-import { setUserSpb, getUserSpb } from "@/supaBase/api/myPage";
+import { setUserSpb, getUserSpb, setProfileSpb } from "@/supaBase/api/myPage";
+import ImagePicker from "react-native-image-crop-picker";
+import { base64ToBlob } from "../../utils/imageHelper";
 
 const backIcon = require("@/assets/icons/Back.png");
 const ProfileIcon = require("@/assets/icons/Profile.png");
@@ -48,24 +50,10 @@ const EditProfile = () => {
     });
   };
 
-  const handlePrev = () => {
-    navigation.goBack();
-  };
+  const handlePrev = () => navigation.goBack();
 
   const patchAccountsData = async () => {
-    const data = {
-      nickname: userInfo.nickname,
-      email: userInfo.email,
-      introduce: userInfo.introduce,
-      profileImagePath: userInfo.profileImagePath,
-    };
-
-    await setUserSpb(
-      data.nickname,
-      data.email,
-      data.introduce,
-      data.profileImagePath
-    );
+    await setUserSpb(userInfo);
   };
 
   const handleSave = async () => {
@@ -73,81 +61,118 @@ const EditProfile = () => {
     navigation.navigate("ProfileDetail");
   };
 
+  // 이미지 URI를 Blob으로 변환하는 함수
+  const uriToBlob = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  };
+
+  const selectImage = async () => {
+    try {
+      const file = await ImagePicker.openPicker({
+        mediaType: "photo",
+        multiple: false,
+        base64ToBlob,
+      });
+
+      // const formData = new FormData();
+      // formData.append("image", {
+      //   uri: file.path,
+      //   type: file.mime,
+      //   fileName: `image_${file.path.substring(
+      //     file.path.indexOf("picker/") + 7
+      //   )}`,
+      // });
+      console.log(file);
+      setProfileSpb(file);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
-    <ScrollView style={styles.wrapper}>
-      <TopBar title="내 정보 수정" leftIcon={backIcon} leftClick={handlePrev} />
-      <View style={styles.profileImageWrapper}>
-        <Image source={ProfileIcon} style={styles.profileImage} />
-        <TouchableOpacity
-          style={styles.profileChangeWrapper}
-          activeOpacity={0.8}
-        >
-          <Text style={{ color: "#FFF" }}>프로필 변경</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>닉네임</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="닉네임을 입력해주세요."
-            placeholderTextColor="#999"
-            value={userInfo.nickname}
-            onChangeText={(text) =>
-              setUserInfo({ ...userInfo, nickname: text })
-            }
-            autoCapitalize="none"
-            maxLength={12}
-          />
-          <Text style={{ color: "#FDA758", fontSize: 8 }}>
-            * 닉네임은 12자까지 입력할 수 있습니다.
-          </Text>
+    <SafeAreaView style={styles.wrapper}>
+      <ScrollView style={styles.wrapper}>
+        <TopBar
+          title="내 정보 수정"
+          leftIcon={backIcon}
+          leftClick={handlePrev}
+        />
+        <View style={styles.profileImageWrapper}>
+          <Image source={ProfileIcon} style={styles.profileImage} />
+          <TouchableOpacity
+            style={styles.profileChangeWrapper}
+            activeOpacity={0.8}
+            onPress={selectImage}
+          >
+            <Text style={{ color: "#FFF" }}>프로필 변경</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>이메일</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="이메일을 입력해주세요."
-            placeholderTextColor="#999"
-            value={userInfo.email}
-            onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
-            autoCapitalize="none"
-            maxLength={12}
-          />
-        </View>
+        <View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>닉네임</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="닉네임을 입력해주세요."
+              placeholderTextColor="#999"
+              value={userInfo.nickname}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, nickname: text })
+              }
+              autoCapitalize="none"
+              maxLength={12}
+            />
+            <Text style={{ color: "#FDA758", fontSize: 8 }}>
+              * 닉네임은 12자까지 입력할 수 있습니다.
+            </Text>
+          </View>
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>소개</Text>
-          <TextInput
-            style={[styles.inputStyle, { height: 70 }]}
-            placeholder="나를 소개해주세요."
-            placeholderTextColor="#999"
-            autoCorrect={false}
-            autoCapitalize="none"
-            value={userInfo.introduce}
-            onChangeText={(text) =>
-              setUserInfo({ ...userInfo, introduce: text })
-            }
-            multiline={true}
-            numberOfLines={3}
-            maxLength={46}
-          />
-          <Text style={{ color: "#FDA758", fontSize: 8 }}>
-            * 소개는 46자까지 입력할 수 있습니다.
-          </Text>
-        </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>이메일</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="이메일을 입력해주세요."
+              placeholderTextColor="#999"
+              value={userInfo.email}
+              onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
+              autoCapitalize="none"
+              maxLength={12}
+            />
+          </View>
 
-        <TouchableOpacity
-          style={{ marginVertical: 12, marginHorizontal: 24 }}
-          onPress={handleSave}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.btnStyle, styles.saveButton]}>저장하기</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>소개</Text>
+            <TextInput
+              style={[styles.inputStyle, { height: 70 }]}
+              placeholder="나를 소개해주세요."
+              placeholderTextColor="#999"
+              autoCorrect={false}
+              autoCapitalize="none"
+              value={userInfo.introduce}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, introduce: text })
+              }
+              multiline={true}
+              numberOfLines={3}
+              maxLength={46}
+            />
+            <Text style={{ color: "#FDA758", fontSize: 8 }}>
+              * 소개는 46자까지 입력할 수 있습니다.
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={{ marginVertical: 12, marginHorizontal: 24 }}
+            onPress={handleSave}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.btnStyle, styles.saveButton]}>저장하기</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
