@@ -38,7 +38,7 @@ const CommunityDetail = () => {
   useEffect(() => {
     fetchData();
     fetchUserInfo();
-  }, [CommunityId, communityData]);
+  }, [CommunityId]);
 
   const handlePrev = () => {
     navigation.goBack();
