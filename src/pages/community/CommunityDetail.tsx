@@ -35,7 +35,7 @@ const CommunityDetail = () => {
 
   useEffect(() => {
     fetchCommunityData();
-    setUserId(userInfo.user_is);
+    setUserId(userInfo.user_id);
     console.log(userId);
   }, [CommunityId]);
 
