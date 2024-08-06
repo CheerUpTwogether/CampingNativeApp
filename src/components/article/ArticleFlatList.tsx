@@ -24,7 +24,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
           );
           return (
             <TouchableOpacity
-              key={el.title}
+              key={el.id}
               style={styles.container}
               onPress={() =>
                 navigation.navigate("ArticleDetail", {
@@ -44,14 +44,14 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
             >
               {el?.images?.[0] ? (
                 <Image
-                  source={{ uri: "https://picsum.photos/200/300" }}
+                  source={{ uri: el.images[0] }}
                   style={styles.thumbImage}
                 />
               ) : (
                 <View style={styles.thumbImage}></View>
               )}
 
-              <Text style={styles.title}></Text>
+              <Text style={styles.title}>{el.title}</Text>
               <Text numberOfLines={2} style={styles.content}>
                 {el.content}
               </Text>
@@ -69,6 +69,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                           color={isFavorite ? "#FFD73F" : "#ddd"}
                           width={20}
                           height={20}
+                          key={Math.random()}
                         />
                       ))}
                   </View>
@@ -112,7 +113,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000",
     fontWeight: "bold",
-    paddingVertical: 8,
+    paddingTop: 16,
+    paddingBottom: 8,
   },
   content: {
     paddingBottom: 24,
