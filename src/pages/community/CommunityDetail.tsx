@@ -13,8 +13,7 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import Replys from "@/components/community/Replys";
-import { deleteCommunityApi } from "@/apis/community";
-import { getCommunitySpb } from "@/supaBase/api/community";
+import { getCommunitySpb, deleteCommunitySpb } from "@/supaBase/api/community";
 import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
@@ -69,7 +68,7 @@ const CommunityDetail = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await deleteCommunityApi(CommunityId.toString());
+      const res = await deleteCommunitySpb(CommunityId);
       if (res) {
         Toast.show({
           type: "success",
