@@ -153,11 +153,10 @@ const CommunityDetail = () => {
                 </View>
               </View>
             </View>
-
-            <Replys CommunityId={CommunityId} />
           </View>
         </View>
       )}
+      <Replys CommunityId={CommunityId} />
     </SafeAreaView>
   );
 };

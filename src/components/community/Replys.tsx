@@ -135,35 +135,42 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   );
 
   return (
-    <View style={styles.commentContainer}>
-      <View style={styles.contentsWrapper}>
-        <Text style={styles.content}>댓글</Text>
-      </View>
-
-      <FlatList
-        renderItem={renderItem}
-        data={replys}
-        keyExtractor={(item) => String(item.id)}
-      />
-
-      <View style={styles.inputContainer}>
-        <View style={styles.inputWrapper}>
-          <Input
-            value={inputText}
-            setValue={setInputText}
-            placeholder="댓글을 입력해주세요."
-            isBgWhite={false}
-          />
+    <FlatList
+      renderItem={renderItem}
+      data={replys}
+      contentContainerStyle={styles.cardcontainer}
+      keyExtractor={(item) => String(item.id)}
+      ListHeaderComponent={
+        <View style={styles.contentsWrapper}>
+          <Text style={styles.content}>댓글</Text>
         </View>
-        <TouchableOpacity style={styles.sendButton} onPress={addReply}>
-          <Text style={styles.content}>등록</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      }
+      ListFooterComponent={
+        <View style={styles.inputContainer}>
+          <View style={styles.inputWrapper}>
+            <Input
+              value={inputText}
+              setValue={setInputText}
+              placeholder="댓글을 입력해주세요."
+              isBgWhite={false}
+            />
+          </View>
+          <TouchableOpacity style={styles.sendButton} onPress={addReply}>
+            <Text style={styles.content}>등록</Text>
+          </TouchableOpacity>
+        </View>
+      }
+    />
   );
 };
 
 const styles = StyleSheet.create({
+  cardcontainer: {
+    overflow: "hidden",
+    backgroundColor: "white",
+    width: "100%",
+    borderWidth: 0,
+  },
   commentContainer: {
     backgroundColor: "#FFF",
     borderBottomLeftRadius: 12,
