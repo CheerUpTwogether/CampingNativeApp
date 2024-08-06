@@ -66,9 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF3E9",
     marginBottom: 72,
   },
-  campingContainer: {
-    flex: 1,
-  },
   scrollAreaContainer: { flexGrow: 1, paddingBottom: 100 },
 });
 
