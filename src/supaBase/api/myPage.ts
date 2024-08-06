@@ -1,8 +1,7 @@
-import { uploadImage } from "@/utils/imageHelper";
+import uuid from "react-native-uuid";
 import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 import { getSignInUserId } from "./auth";
-import useStore from "@/store/store";
 
 // 회원 정보 조회 API 함수
 export const getUserSpb = async (
@@ -69,9 +68,10 @@ export const setUserSpb = async ({
 };
 
 export const setProfileSpb = async (image): Promise<string> => {
+  const fileName = `${uuid.v4()}${image.name}`;
   const { data, error: uploadError } = await supabase.storage
     .from("profileBucket") // 버킷 이름
-    .upload(`profile-images/${image.name}`, image, {
+    .upload(`profile-images/${fileName}`, image, {
       contentType: image.type,
     });
 
@@ -83,7 +83,7 @@ export const setProfileSpb = async (image): Promise<string> => {
   // 파일의 URL 생성
   const { data: file } = supabase.storage
     .from("profileBucket")
-    .getPublicUrl(`profile-images/${image.name}`);
+    .getPublicUrl(`profile-images/${fileName}`);
 
   const uid = await getSignInUserId();
   await setProfileImagePathSpb(file.publicUrl, uid);
