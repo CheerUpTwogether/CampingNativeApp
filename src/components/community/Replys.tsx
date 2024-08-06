@@ -11,7 +11,11 @@ import {
 import { setCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
 import { formatDate } from "@/utils/date";
-import { addReplySpb, getReplysSpb } from "@/supaBase/api/reply";
+import {
+  addReplySpb,
+  deleteReplySpb,
+  getReplysSpb,
+} from "@/supaBase/api/reply";
 import useStore from "@/store/store";
 
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -40,6 +44,11 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
     const newReply = await addReplySpb(param);
     if (newReply) setReplys((prev) => [...prev, newReply]);
     setInputText("");
+  };
+
+  const deleteReply = async (id: number) => {
+    const removeReply = await deleteReplySpb(id);
+    setReplys((prev) => prev.filter((el) => el.id !== id));
   };
 
   const showReplyForm = async (reply: ReplyType) => {
@@ -90,7 +99,10 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
             >
               <Text style={styles.editText}>수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => deleteReply(item.id)}
+            >
               <Text style={styles.deleteText}>삭제</Text>
             </TouchableOpacity>
           </View>
