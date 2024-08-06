@@ -98,7 +98,7 @@ export const setReplysSpb = async ({ id, reply }: updateReplyType) => {
       showInfo("error", "로그인 후에 이용해주세요.");
       return false;
     }
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("reply")
       .update({ reply })
       .eq("id", id);
@@ -107,6 +107,7 @@ export const setReplysSpb = async ({ id, reply }: updateReplyType) => {
       showInfo("error", error.message);
       return false;
     }
+
     showInfo("success", "댓글이 성공적으로 수정되었습니다.");
 
     return true;
