@@ -138,7 +138,6 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
       <FlatList
         renderItem={renderItem}
         data={replys}
-        contentContainerStyle={styles.cardcontainer}
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={
           <View style={styles.contentsWrapper}>
