@@ -13,11 +13,10 @@ import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
-import { getCommunityApi } from "@/apis/community";
 import Replys from "@/components/community/Replys";
-import { getUserApi } from "@/apis/myPage";
-import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
+import { deleteCommunityApi } from "@/apis/community";
 import { getCommunitySpb } from "@/supaBase/api/community";
+import { getUserSpb } from "@/supaBase/api/myPage";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -36,26 +35,27 @@ const CommunityDetail = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
-    fetchData();
+    fetchCommunityData();
     fetchUserInfo();
-  }, [CommunityId, communityData]);
+  }, [CommunityId]);
 
   const handlePrev = () => {
     navigation.goBack();
   };
 
-  const fetchData = async () => {
+  const fetchCommunityData = async () => {
     const data = await getCommunitySpb(CommunityId);
-    console.log("ddd=> ", data);
     setCommunityData(data);
+    console.log("dddd", data);
   };
 
   const fetchUserInfo = async () => {
-    const userInfo = await getUserApi();
-    if (userInfo?.result?.nickName) {
-      setNickName(userInfo.result.nickName);
+    const userInfo = await getUserSpb(false);
+    if (userInfo) {
+      setNickName(userInfo.nickname);
     }
   };
+
   const handleEdit = () => {
     if (communityData) {
       navigation.navigate("Add", {

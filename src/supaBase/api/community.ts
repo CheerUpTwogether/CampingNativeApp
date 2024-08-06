@@ -3,16 +3,17 @@ import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
 export interface Communitys {
-  content: string;
   id: number;
   like: number;
   like_check?: boolean;
   nickname: string;
+  content: string;
   reply_count?: number;
   subject: string;
   user_id: string;
   profile: Profile;
 }
+
 export interface Profile {
   user_id: string;
   email: string;
@@ -21,7 +22,7 @@ export interface Profile {
 
 // 커뮤니티 조회
 export const getCommunitysSpb = async (
-  page: number,
+  page: number = 0,
   pageSize: number = 10
 ): Promise<Communitys[]> => {
   try {

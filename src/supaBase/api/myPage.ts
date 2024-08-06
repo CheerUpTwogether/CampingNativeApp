@@ -4,13 +4,15 @@ import { showInfo } from "./alert";
 import { getSignInUserId } from "./auth";
 
 // 회원 정보 조회 API 함수
-export const getUserSpb = async (): Promise<{ [key: string]: any } | null> => {
+export const getUserSpb = async (
+  boolean: boolean = true
+): Promise<UserData | void> => {
   try {
     const uid = await getSignInUserId();
 
     if (!uid) {
       showInfo("error", "uid 값을 찾지 못했습니다.");
-      return null;
+      return;
     }
     const { data, error } = await supabase
       .from("profile")
@@ -20,22 +22,23 @@ export const getUserSpb = async (): Promise<{ [key: string]: any } | null> => {
 
     if (error) {
       showInfo("error", error.message);
-      return null;
+      return;
     }
-    showInfo("success", "프로필 조회에 성공하였습니다.");
+    boolean && showInfo("success", "프로필 조회에 성공하였습니다.");
+
     return data;
   } catch (error) {
     console.log((error as Error).message);
     showInfo("error", (error as Error).message);
-    return null;
+    return;
   }
 };
 
-type ProfileUpdate = {
+interface ProfileUpdate {
   nickname: string;
   name: string;
   introduce: string;
-};
+}
 
 // 회원 정보 수정 API 함수
 export const setUserSpb = async (

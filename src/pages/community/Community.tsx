@@ -32,7 +32,11 @@ const Community = () => {
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  const fetchData = async () => {
+  useEffect(() => {
+    fetchCommunitysData();
+  }, [refresh]);
+
+  const fetchCommunitysData = async () => {
     const data = await getCommunitysSpb(0);
     setDataList(data);
 
@@ -45,10 +49,6 @@ const Community = () => {
     // }
     // setRefresh(false);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [refresh]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });

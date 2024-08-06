@@ -9,12 +9,14 @@ interface UserApiResponse {
 }
 
 interface UserData {
-  nickName: string;
+  nickname: string;
   email?: string;
   introduce: string;
   profileImagePath: string;
   communityCount?: number;
   favoriteCount?: number;
+  user_id?: string;
+  id?: number;
 }
 
 interface User {
