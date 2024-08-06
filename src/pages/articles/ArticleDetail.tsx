@@ -28,34 +28,21 @@ const backIcon = require("@/assets/icons/Back.png");
 export const ArticleDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id } = route.params as { id: number };
-  const [article, setArticle] = useState<Article>({
-    id: 0,
-    title: "",
-    content: "",
-    create_date: "",
-    images: [""],
-    article_favorite: [[""]],
-  });
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getArticle();
-    }, [])
-  );
-
-  const getArticle = async () => {
-    const data = await getArticleSpb(id);
-    data && setArticle(data);
+  const { id, iconState, data, setFavorite } = route.params as {
+    id: number;
+    iconState: boolean;
+    data: ArticleDetail;
+    setFavorite: (articleId: number, mode: boolean) => void;
+  };
+  const [isFavorite, setIsFavorite] = useState(iconState);
+  const handleFavorite = async () => {
+    setFavorite(id, isFavorite);
+    setIsFavorite(!isFavorite);
   };
 
-  const setFavorite = async () => {};
-
-  const renderItem = ({ item }) => {
-    console.log(item);
+  const renderItem = () => {
     return (
       <Image
-        // key={uuid.v4()}
         source={{
           uri: `https://picsum.photos/300/200`,
         }}
@@ -75,7 +62,7 @@ export const ArticleDetail = () => {
       <ScrollView>
         <View>
           <Carousel
-            data={article?.images ? article?.images : []}
+            data={data?.images ? data?.images : []}
             renderItem={renderItem}
             sliderWidth={screenWidth}
             itemWidth={screenWidth * 0.75}
@@ -84,16 +71,16 @@ export const ArticleDetail = () => {
         </View>
 
         <View style={styles.info}>
-          <TouchableOpacity style={styles.starBtn} onPress={setFavorite}>
+          <TouchableOpacity style={styles.starBtn} onPress={handleFavorite}>
             <StarIcon
-              color={article.isFavorite ? "#FFD73F" : "#ddd"}
+              color={isFavorite ? "#FFD73F" : "#ddd"}
               width={24}
               height={24}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>{article.title}</Text>
-          <Text>{formatDate(article.create_date)}</Text>
-          <Text style={styles.content}>{article.content}</Text>
+          <Text style={styles.title}>{data.title}</Text>
+          <Text>{formatDate(data.create_date)}</Text>
+          <Text style={styles.content}>{data.content}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -52,7 +52,7 @@ export type RootStackParamList = {
   ProfileDetail: undefined;
   CommunityDetail: { CommunityId: number };
   Intro: undefined;
-  ArticleDetail: { id: number };
+  ArticleDetail: { id: number; iconState?: boolean };
   Community: undefined;
   EditProfile: undefined;
 };

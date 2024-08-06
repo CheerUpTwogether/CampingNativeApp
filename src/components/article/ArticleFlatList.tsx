@@ -1,59 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { formatDate } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
 import StarIcon from "@/assets/icons/Star.svg";
-import useStore from "@/store/store";
+
+import UserIcon from "@/assets/icons/User.svg";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
+  myFavoriteArticles,
   setFavorite,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const userInfo = useStore((state) => {
-    state.userInfo;
-  });
+
   return (
     <>
       {articles.length ? (
-        articles.map((el) => (
-          <TouchableOpacity
-            key={el.title}
-            style={styles.container}
-            onPress={() => navigation.navigate("ArticleDetail", { id: el.id })}
-          >
-            {el?.images?.[0] ? (
-              <Image
-                source={{ uri: el?.images?.[0] }}
-                style={styles.thumbImage}
-              />
-            ) : (
-              <View style={styles.thumbImage}></View>
-            )}
-
-            <Text style={styles.title}></Text>
-            <Text numberOfLines={2} style={styles.content}>
-              {el.content}
-            </Text>
-            <View style={styles.etc}>
-              <Text style={styles.createDate}>
-                {formatDate(el.create_date)}
-              </Text>
-              <TouchableOpacity onPress={() => setFavorite(el.id)}>
-                <StarIcon
-                  color={
-                    // el.article_favorite.find((item, index) => item.user_id === userInfo.user_id)
-                    true ? "#FFD73F" : "#ddd"
-                  }
-                  width={24}
-                  height={24}
+        articles.map((el) => {
+          const isFavorite = myFavoriteArticles.find(
+            (item) => item.article_id === el.id
+          );
+          return (
+            <TouchableOpacity
+              key={el.title}
+              style={styles.container}
+              onPress={() =>
+                navigation.navigate("ArticleDetail", {
+                  id: el.id,
+                  iconState: !!isFavorite,
+                  data: {
+                    id: el.id,
+                    title: el.title,
+                    content: el.content,
+                    create_date: el.create_date,
+                    images: el.images,
+                    favorite_count: el.favorite_count,
+                  },
+                  setFavorite,
+                })
+              }
+            >
+              {el?.images?.[0] ? (
+                <Image
+                  source={{ uri: "https://picsum.photos/200/300" }}
+                  style={styles.thumbImage}
                 />
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        ))
+              ) : (
+                <View style={styles.thumbImage}></View>
+              )}
+
+              <Text style={styles.title}></Text>
+              <Text numberOfLines={2} style={styles.content}>
+                {el.content}
+              </Text>
+              <View style={styles.etc}>
+                <Text style={styles.createDate}>
+                  {formatDate(el.create_date)}
+                </Text>
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <View style={{ flexDirection: "row" }}>
+                    {Array.from({ length: el.favorite_count })
+                      .slice(0, 3)
+                      .map(() => (
+                        <UserIcon
+                          style={{ borderRadius: 10, marginRight: -12 }}
+                          color={isFavorite ? "#FFD73F" : "#ddd"}
+                          width={20}
+                          height={20}
+                        />
+                      ))}
+                  </View>
+                  <Text style={{ fontSize: 12 }}>{el.favorite_count}</Text>
+                  <TouchableOpacity
+                    onPress={() => setFavorite(el.id, !!isFavorite)}
+                  >
+                    <StarIcon
+                      color={isFavorite ? "#FFD73F" : "#ddd"}
+                      width={24}
+                      height={24}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })
       ) : (
         <></>
       )}
@@ -73,6 +106,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     borderRadius: 10,
+    marginTop: 10,
   },
   title: {
     fontSize: 18,

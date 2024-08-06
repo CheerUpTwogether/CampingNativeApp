@@ -5,7 +5,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
-import { getArticlesSpb, setFavoriteSpb } from "@/supaBase/api/article";
+import {
+  getArticlesSpb,
+  getFavoriteArticleIdSpb,
+  setFavoriteSpb,
+} from "@/supaBase/api/article";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
@@ -14,6 +18,9 @@ const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 const Articles = () => {
   const [sortType, setSortType] = useState<string>("LATEST");
   const [articles, setArticles] = useState<Article[]>([]);
+  const [myFavoriteArticles, setMyFavoriteArticles] = useState<
+    ArticleFavoriteAId[]
+  >([]);
   const orderList = [
     { title: "최신순", value: "LATEST" },
     { title: "좋아요순", value: "FAVORITE" },
@@ -22,11 +29,13 @@ const Articles = () => {
   useFocusEffect(
     React.useCallback(() => {
       getArticles();
+      getFavoriteArticles();
     }, [])
   );
 
   useEffect(() => {
     getArticles();
+    getFavoriteArticles();
   }, [sortType]);
 
   const getArticles = async () => {
@@ -34,7 +43,15 @@ const Articles = () => {
     data && setArticles(data);
   };
 
-  const setFavorite = async (id: number) => {};
+  const getFavoriteArticles = async () => {
+    const data: ArticleFavoriteAId[] = await getFavoriteArticleIdSpb();
+    data && setMyFavoriteArticles(data);
+  };
+  const setFavorite = async (articleId: number, mode: boolean) => {
+    await setFavoriteSpb(articleId, mode);
+    getArticles();
+    getFavoriteArticles();
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -59,7 +76,11 @@ const Articles = () => {
           />
         </View>
 
-        <ArticleFlatList articles={articles} setFavorite={setFavorite} />
+        <ArticleFlatList
+          articles={articles}
+          myFavoriteArticles={myFavoriteArticles}
+          setFavorite={setFavorite}
+        />
       </ScrollView>
     </SafeAreaView>
   );
