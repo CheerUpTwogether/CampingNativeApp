@@ -4,8 +4,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Button from "@/components/common/Button";
 import InputWithIcon from "@/components/common/InputWithIcon";
 import LinearGradient from "react-native-linear-gradient";
-import { addLoginApi } from "@/apis/account";
-import { setUserToken } from "@/apis/cookie";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
@@ -20,6 +18,9 @@ import { loginValid } from "@/utils/validateHelper";
 import CheckBox from "@/components/common/CheckBox";
 
 import WelcomeModal from "@/components/common/WelcomeModal";
+import { signInSpb } from "@/supaBase/api/auth";
+import { getUserSpb } from "@/supaBase/api/myPage";
+import useStore from "@/store/store";
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -30,13 +31,22 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isAutoLogin, setIsAutoLogin] = useState(false);
   const [isVisibleModal, setisVisibleModal] = useState(false);
+  const setUserData = useStore((state) => state.setUserData);
 
   const clickLoginBtn = async () => {
     if (loginValid({ email, password })) {
-      const data = await addLoginApi({ email, password });
-      if (!data.success) return;
+      // 로그인이 되어있는지 확인.
+      const isLogin = await signInSpb(email, password);
+
+      if (!isLogin) return;
+
+      // 로그인한 유저 프로필 정보
+      const data = await getUserSpb();
+
+      // zustand 전역 상태 관리
+      setUserData(data);
+
       setisVisibleModal(true);
-      setUserToken("userData", { email, password });
       navigation.replace("BottomTab", { screen: "Home" });
     }
   };

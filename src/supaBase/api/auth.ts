@@ -19,6 +19,7 @@ export const signUpSpb = async (
   const { error: profileError } = await supabase.from("profile").insert([
     {
       user_id: user?.user?.id,
+      email: user?.user?.email,
       nickname: nickname,
       introduce: "please edit your introduce",
       profileimagepath: "",
@@ -51,8 +52,12 @@ export const signInSpb = async (
   }
 
   if (user.session) {
-    const token = user.session.access_token;
-    AsyncStorage.setItem("userToken", token);
+    const access_token = user.session.access_token;
+    const refresh_token = user.session.refresh_token;
+    AsyncStorage.setItem(
+      "userToken",
+      JSON.stringify({ access_token, refresh_token })
+    );
   }
 
   showInfo("success", "로그인에 성공하셨습니다.");
@@ -60,11 +65,14 @@ export const signInSpb = async (
 };
 
 export const autoSignInSpb = async (): Promise<boolean> => {
-  const token = AsyncStorage.getItem("userToken");
+  const token = await AsyncStorage.getItem("userToken");
 
   if (token) {
+    const { access_token, refresh_token } = token && JSON.parse(token);
+
     const { data, error } = await supabase.auth.setSession({
-      access_token: token,
+      access_token,
+      refresh_token,
     });
 
     if (error) {
@@ -102,7 +110,6 @@ export const isSignInUser = async (): Promise<boolean> => {
 
 export const getSignInUserId = async (): Promise<string> => {
   const { data: userData, error } = await supabase.auth.getUser();
-
   if (error) {
     showInfo("error", error.message);
     return "";

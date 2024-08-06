@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -16,7 +15,6 @@ import {
 } from "@/apis/community";
 import Input from "@/components/common/Input";
 import { formatDate } from "@/utils/date";
-import { getStorage } from "@/utils/storage";
 import { getUserApi } from "@/apis/myPage";
 
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -188,9 +186,18 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: "#573353",
   },
-
-  deleteText: { color: "#F44336", fontSize: 10, paddingTop: 8, paddingLeft: 8 },
-  editText: { color: "#999", fontSize: 10, paddingTop: 8, paddingLeft: 8 },
+  deleteText: {
+    color: "#F44336",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  editText: {
+    color: "#999",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
   inputContainer: {
     width: "100%",
     height: 60,
@@ -201,45 +208,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 8,
   },
-  wrapper: {
-    flex: 1,
-    backgroundColor: "#FFF3E9",
-  },
-  topWrapper: {
-    flexDirection: "row",
-    gap: 4,
-    margin: 12,
-  },
-  userWrapper: {
-    flexDirection: "row",
-    backgroundColor: "#FFF",
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 3,
-  },
-  iconWrapper: {
-    width: 25,
-    height: 25,
-    backgroundColor: "rgba(87, 51, 83, 0.2)",
-    borderRadius: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 8,
-  },
-  icon1: {
-    width: 15,
-    height: 12,
-  },
-  icon2: {
-    width: 15,
-    height: 15,
-  },
-  nameWrapper: {
-    gap: 2,
-    justifyContent: "center",
-  },
   nickName: {
     color: "#573353",
     fontWeight: "500",
@@ -247,44 +215,6 @@ const styles = StyleSheet.create({
   id: {
     color: "rgba(87, 51, 83, 0.4)",
     fontWeight: "500",
-  },
-  contentWrapper: {
-    backgroundColor: "#FFF",
-    height: 80,
-    padding: 10,
-  },
-  contentText: {
-    color: "#573353",
-  },
-  reactionContainer: {
-    flexDirection: "row",
-    gap: 20,
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-  },
-  reactionWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
-  },
-  reaction: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
-  },
-  reactionText: {
-    fontSize: 12,
-  },
-  imageWrapper: {
-    overflow: "hidden",
-    width: 40,
-    height: 40,
-    borderRadius: 30,
-    alignItems: "center",
-    marginBottom: 12,
   },
   profileImage: {
     width: 70,
@@ -299,7 +229,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#573353",
   },
-
   inputWrapper: {
     width: "80%",
     padding: 8,

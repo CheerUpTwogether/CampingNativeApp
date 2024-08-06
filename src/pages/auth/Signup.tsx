@@ -1,4 +1,3 @@
-import { addSignUpApi } from "@/apis/account";
 import Button from "@/components/common/Button";
 import { RootStackParamList } from "@/components/router/Router";
 import { registValid } from "@/utils/validateHelper";
@@ -19,6 +18,7 @@ import UserIcon from "@/assets/icons/User.svg";
 import MailIcon from "@/assets/icons/Email.svg";
 import LockIcon from "@/assets/icons/Lock.svg";
 import InputWithIcon from "@/components/common/InputWithIcon";
+import { signUpSpb } from "@/supaBase/api/auth";
 
 const signupImage = require("@/assets/images/Regist.png");
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
@@ -30,23 +30,17 @@ type SettingsScreenNavigationProp =
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("01012341231");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   const handleSubmit = async () => {
     if (registValid({ email, password, passwordCheck: password, nickname })) {
-      const data = await addSignUpApi({
-        email,
-        password,
-        nickname,
-        phoneNumber,
-      });
+      const isSignup = await signUpSpb(email, password, nickname);
 
-      if (data.success) {
-        navigation.replace("Login");
-      }
+      if (!isSignup) return;
+
+      navigation.navigate("Login");
     }
   };
 
