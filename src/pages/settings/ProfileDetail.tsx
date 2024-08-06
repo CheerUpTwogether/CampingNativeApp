@@ -6,6 +6,7 @@ import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
 import { getUserApi } from "@/apis/myPage";
+import { getUserSpb } from "@/supaBase/api/myPage";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -43,15 +44,14 @@ const ProfileDetail = () => {
   const navigation = useNavigation<StackNavProp>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getUserApi();
-      if (!res) return;
-      setUserData(res?.result);
-    };
+    fetchUserData();
+  }, []);
 
-    fetchData();
-  }, [userData]);
-
+  const fetchUserData = async () => {
+    const data = await getUserSpb();
+    if (!data) return;
+    setUserData(data);
+  };
   const handlePrev = () => {
     navigation.goBack();
   };
@@ -88,7 +88,7 @@ const ProfileDetail = () => {
             </View>
             <View style={styles.introduceWrapper}>
               <View>
-                <Text style={styles.name}>{userData.nickName}</Text>
+                <Text style={styles.name}>{userData.nickname}</Text>
                 <Text style={styles.subText}>
                   {userData.introduce
                     ? userData.introduce
@@ -103,7 +103,7 @@ const ProfileDetail = () => {
           <View style={[styles.contentWrapper, { borderBottomLeftRadius: 12 }]}>
             <View style={styles.contentText}>
               <Text style={styles.subText}>내가 쓴 글</Text>
-              <Text style={styles.count}>{userData.communityCount}</Text>
+              <Text style={styles.count}>{userData.communitycount}</Text>
             </View>
             <View style={styles.iconWrapper}>
               <Image source={timeIcon} style={styles.iconStyle} />
@@ -115,7 +115,7 @@ const ProfileDetail = () => {
           >
             <View style={styles.contentText}>
               <Text style={styles.subText}>즐겨 찾기</Text>
-              <Text style={styles.count}>{userData.favoriteCount}</Text>
+              <Text style={styles.count}>{userData.favoritecount}</Text>
             </View>
             <View style={styles.iconWrapper}>
               <Image source={favoriteIcon} style={styles.iconStyle} />

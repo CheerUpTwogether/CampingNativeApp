@@ -13,6 +13,7 @@ import { RootStackParamList } from "@/components/router/Router";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { setProfileApi, setUserApi, getUserApi } from "@/apis/myPage";
 import TopBar from "@/components/common/TopBar";
+import { setUserSpb, getUserSpb } from "@/supaBase/api/myPage";
 
 const backIcon = require("@/assets/icons/Back.png");
 const ProfileIcon = require("@/assets/icons/Profile.png");
@@ -24,38 +25,47 @@ type SettingsScreenNavigationProp =
 
 const EditProfile = () => {
   const [userInfo, setUserInfo] = useState<UserEditData>({
-    nickname: { value: "" },
+    nickname: "",
+    email: "",
     introduce: "",
     profileImagePath: "",
   });
+
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getUserApi();
-      if (!res) return;
-      setUserInfo({
-        nickname: { value: res.result.nickName },
-        introduce: res.result.introduce,
-        profileImagePath: res.result.profileImagePath,
-      });
-    };
-
-    fetchData();
+    fetchUserData();
   }, []);
+
+  const fetchUserData = async () => {
+    const data = await getUserSpb();
+    if (!data) return;
+    setUserInfo({
+      email: data.email,
+      nickname: data.nickname,
+      introduce: data.introduce,
+      profileImagePath: data.profileImagePath,
+    });
+  };
 
   const handlePrev = () => {
     navigation.goBack();
   };
 
   const patchAccountsData = async () => {
-    const data: Partial<User> = {
-      nickname: userInfo.nickname.value,
+    const data = {
+      nickname: userInfo.nickname,
+      email: userInfo.email,
       introduce: userInfo.introduce,
       profileImagePath: userInfo.profileImagePath,
     };
 
-    await setUserApi(data);
+    await setUserSpb(
+      data.nickname,
+      data.email,
+      data.introduce,
+      data.profileImagePath
+    );
   };
 
   const handleSave = async () => {
@@ -83,9 +93,9 @@ const EditProfile = () => {
             style={styles.inputStyle}
             placeholder="닉네임을 입력해주세요."
             placeholderTextColor="#999"
-            value={userInfo.nickname.value}
+            value={userInfo.nickname}
             onChangeText={(text) =>
-              setUserInfo({ ...userInfo, nickname: { value: text } })
+              setUserInfo({ ...userInfo, nickname: text })
             }
             autoCapitalize="none"
             maxLength={12}
@@ -93,6 +103,19 @@ const EditProfile = () => {
           <Text style={{ color: "#FDA758", fontSize: 8 }}>
             * 닉네임은 12자까지 입력할 수 있습니다.
           </Text>
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <Text style={styles.textStyle}>이메일</Text>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="이메일을 입력해주세요."
+            placeholderTextColor="#999"
+            value={userInfo.email}
+            onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
+            autoCapitalize="none"
+            maxLength={12}
+          />
         </View>
 
         <View style={styles.inputWrapper}>
@@ -119,6 +142,7 @@ const EditProfile = () => {
         <TouchableOpacity
           style={{ marginVertical: 12, marginHorizontal: 24 }}
           onPress={handleSave}
+          activeOpacity={0.8}
         >
           <Text style={[styles.btnStyle, styles.saveButton]}>저장하기</Text>
         </TouchableOpacity>
