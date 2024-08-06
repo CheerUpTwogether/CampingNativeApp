@@ -16,16 +16,16 @@ import TopBar from "@/components/common/TopBar";
 import { setUserSpb, getUserSpb, setProfileSpb } from "@/supaBase/api/myPage";
 import ImagePicker from "react-native-image-crop-picker";
 import { base64ToBlob } from "../../utils/imageHelper";
+import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
 const ProfileIcon = require("@/assets/icons/Profile.png");
-
-const baseUrl = "http://13.209.27.220:8080";
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const EditProfile = () => {
+  const setUserData = useStore((state) => state.setUserData);
   const [userInfo, setUserInfo] = useState<UserEditData>({
     nickname: "",
     email: "",
@@ -39,6 +39,12 @@ const EditProfile = () => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    // zustand 전역 상태 관리
+    setUserData(userInfo);
+    console.log(userInfo);
+  }, [userInfo]);
+
   const fetchUserData = async () => {
     const data = await getUserSpb();
     if (!data) return;
@@ -46,7 +52,7 @@ const EditProfile = () => {
       email: data.email,
       nickname: data.nickname,
       introduce: data.introduce,
-      profileImagePath: data.profileImagePath,
+      profileImagePath: data.profileimagepath,
     });
   };
 
@@ -61,13 +67,6 @@ const EditProfile = () => {
     navigation.navigate("ProfileDetail");
   };
 
-  // 이미지 URI를 Blob으로 변환하는 함수
-  const uriToBlob = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
-
   const selectImage = async () => {
     try {
       const file = await ImagePicker.openPicker({
@@ -76,16 +75,15 @@ const EditProfile = () => {
         base64ToBlob,
       });
 
-      // const formData = new FormData();
-      // formData.append("image", {
-      //   uri: file.path,
-      //   type: file.mime,
-      //   fileName: `image_${file.path.substring(
-      //     file.path.indexOf("picker/") + 7
-      //   )}`,
-      // });
-      console.log(file);
-      setProfileSpb(file);
+      const image = {
+        uri: file.path,
+        type: file.mime,
+        name: `${file.modificationDate}${file.path.slice(-4)}`,
+      };
+      const profileImagePath = await setProfileSpb(image);
+      if (profileImagePath) {
+        setUserInfo((prev) => ({ ...prev, profileImagePath }));
+      }
     } catch (e) {
       console.log(e);
     }
@@ -100,7 +98,14 @@ const EditProfile = () => {
           leftClick={handlePrev}
         />
         <View style={styles.profileImageWrapper}>
-          <Image source={ProfileIcon} style={styles.profileImage} />
+          <Image
+            source={
+              userInfo.profileImagePath
+                ? { uri: userInfo.profileImagePath }
+                : ProfileIcon
+            }
+            style={styles.profileImage}
+          />
           <TouchableOpacity
             style={styles.profileChangeWrapper}
             activeOpacity={0.8}
