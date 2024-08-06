@@ -16,6 +16,7 @@ import {
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
 import { getCommunitysApi } from "@/apis/community";
+import { getCommunitysSpb } from "@/supaBase/api/community";
 
 const leftIcon = require("@/assets/icons/menu.png");
 const shareIcon = require("@/assets/icons/Share.png");
@@ -32,19 +33,22 @@ const Community = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   const fetchData = async () => {
-    const res = await getCommunitysApi();
-    if (res?.data?.result?.content) {
-      const sortedData = res.data.result.content.sort(
-        (a: Community, b: Community) => b.id - a.id
-      );
-      setDataList(sortedData);
-    }
-    setRefresh(false);
+    const data = await getCommunitysSpb(0);
+    setDataList(data);
+
+    // 기존 로직
+    // if (res?.data?.result?.content) {
+    //   const sortedData = res.data.result.content.sort(
+    //     (a: Community, b: Community) => b.id - a.id
+    //   );
+    //   setDataList(sortedData);
+    // }
+    // setRefresh(false);
   };
 
   useEffect(() => {
     fetchData();
-  }, [refresh, dataList]);
+  }, [refresh]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });

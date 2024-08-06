@@ -17,6 +17,7 @@ import { getCommunityApi } from "@/apis/community";
 import Replys from "@/components/community/Replys";
 import { getUserApi } from "@/apis/myPage";
 import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
+import { getCommunitySpb } from "@/supaBase/api/community";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -35,20 +36,6 @@ const CommunityDetail = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getCommunityApi(CommunityId);
-      if (res?.data?.result) {
-        setCommunityData(res?.data?.result);
-      }
-    };
-
-    const fetchUserInfo = async () => {
-      const userInfo = await getUserApi();
-      if (userInfo?.result?.nickName) {
-        setNickName(userInfo.result.nickName);
-      }
-    };
-
     fetchData();
     fetchUserInfo();
   }, [CommunityId, communityData]);
@@ -57,6 +44,18 @@ const CommunityDetail = () => {
     navigation.goBack();
   };
 
+  const fetchData = async () => {
+    const data = await getCommunitySpb(CommunityId);
+    console.log("ddd=> ", data);
+    setCommunityData(data);
+  };
+
+  const fetchUserInfo = async () => {
+    const userInfo = await getUserApi();
+    if (userInfo?.result?.nickName) {
+      setNickName(userInfo.result.nickName);
+    }
+  };
   const handleEdit = () => {
     if (communityData) {
       navigation.navigate("Add", {
