@@ -81,17 +81,3 @@ export const addCommunityLikeApi = async (
     showToastApiError();
   }
 };
-
-// 댓글 수정
-export const setCommunityCommentApi = async (
-  communityReply: CommunityReply
-): Promise<ApiResponse<any> | void> => {
-  try {
-    return await API.put(
-      `/community/${communityReply.communityId}/reply/${communityReply.replyId}`,
-      { reply: communityReply.reply }
-    );
-  } catch (error) {
-    showToastApiError();
-  }
-};

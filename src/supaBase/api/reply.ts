@@ -89,3 +89,28 @@ export const deleteReplySpb = async (id: number) => {
     console.log(e);
   }
 };
+
+export const setReplysSpb = async ({ id, reply }: updateReplyType) => {
+  try {
+    const isSignIn = await isSignInUser();
+
+    if (!isSignIn) {
+      showInfo("error", "로그인 후에 이용해주세요.");
+      return false;
+    }
+    const { data, error } = await supabase
+      .from("reply")
+      .update({ reply })
+      .eq("id", id);
+
+    if (error) {
+      showInfo("error", error.message);
+      return false;
+    }
+    showInfo("success", "댓글이 성공적으로 수정되었습니다.");
+
+    return true;
+  } catch (e) {
+    console.log(e);
+  }
+};

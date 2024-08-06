@@ -15,6 +15,7 @@ import {
   addReplySpb,
   deleteReplySpb,
   getReplysSpb,
+  setReplysSpb,
 } from "@/supaBase/api/reply";
 import useStore from "@/store/store";
 
@@ -29,11 +30,6 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   useEffect(() => {
     getReplys();
   }, [CommunityId]);
-
-  const getUserInfo = async () => {
-    const userInfo = await getUserApi();
-    userInfo?.result?.nickname && setNickName(userInfo?.result?.nickname);
-  };
 
   const getReplys = async () => {
     const data = await getReplysSpb(CommunityId);
@@ -53,7 +49,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const deleteReply = async (id: number) => {
     const removeReply = await deleteReplySpb(id);
-    setReplys((prev) => prev.filter((el) => el.id !== id));
+    if (removeReply) setReplys((prev) => prev.filter((el) => el.id !== id));
   };
 
   const showReplyForm = async (reply: ReplyType) => {
@@ -63,12 +59,11 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const udpateReply = async (replyId: string) => {
     const param = {
-      communityId: String(CommunityId),
-      replyId,
+      id: Number(replyId),
       reply: replyContent,
     };
-    const res = await setCommunityCommentApi(param);
-    if (!res?.data?.success) return;
+    const res = await setReplysSpb(param);
+    if (!res) return;
 
     setReplys((prev) =>
       prev.map((el) => {
@@ -130,7 +125,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
             style={styles.sendButton}
             onPress={() => udpateReply(String(item.id))}
           >
-            <Text style={styles.content}>등록</Text>
+            <Text style={styles.content}>수정</Text>
           </TouchableOpacity>
         </View>
       ) : (
