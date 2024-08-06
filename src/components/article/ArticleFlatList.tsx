@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { formatDate, getMonthValue, padZero } from "@/utils/date";
+import { formatDate } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
@@ -23,9 +23,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
           >
             {el?.articleImages?.[0]?.imgPath ? (
               <Image
-                source={{
-                  uri: el?.articleImages?.[0]?.imgPath,
-                }}
+                source={{ uri: `${el?.articleImages?.[0]?.imgPath}` }}
                 style={styles.thumbImage}
               />
             ) : (

@@ -3,7 +3,7 @@ import Button from "@/components/common/Button";
 import { RootStackParamList } from "@/components/router/Router";
 import { registValid } from "@/utils/validateHelper";
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Image,
   SafeAreaView,
@@ -16,7 +16,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 import UserIcon from "@/assets/icons/User.svg";
-import MailIcon from "@/assets/icons/Mail.svg";
+import MailIcon from "@/assets/icons/Email.svg";
 import LockIcon from "@/assets/icons/Lock.svg";
 import InputWithIcon from "@/components/common/InputWithIcon";
 
@@ -29,9 +29,7 @@ type SettingsScreenNavigationProp =
 
 const Signup = () => {
   const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState(
-    Math.random().toString().substr(2, 7)
-  );
+  const [nickname, setNickname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("01012341231");
   const [password, setPassword] = useState("");
 
@@ -46,7 +44,6 @@ const Signup = () => {
         phoneNumber,
       });
 
-      console.log(data);
       if (data.success) {
         navigation.replace("Login");
       }
@@ -64,17 +61,28 @@ const Signup = () => {
           <InputWithIcon
             value={nickname}
             setValue={setNickname}
-            placeholder="이름을 입력해주세요."
+            placeholder="닉네임을 입력해주세요."
             isBgWhite={true}
-            icon={<UserIcon width={50} height={25} color={"#999"} />}
+            icon={
+              <UserIcon
+                width={50}
+                height={25}
+                color={nickname ? "#FDA758" : "#999"}
+              />
+            }
           />
-
           <InputWithIcon
             value={email}
             setValue={setEmail}
             placeholder="이메일을 입력해주세요."
             isBgWhite={true}
-            icon={<MailIcon width={50} height={25} color={"#999"} />}
+            icon={
+              <MailIcon
+                width={50}
+                height={22}
+                color={email ? "#FDA758" : "#999"}
+              />
+            }
           />
           <InputWithIcon
             value={password}
@@ -82,7 +90,13 @@ const Signup = () => {
             placeholder="비밀번호를 입력해주세요."
             isBgWhite={true}
             secureTextEntry={true}
-            icon={<LockIcon width={50} height={25} color={"#999"} />}
+            icon={
+              <LockIcon
+                width={50}
+                height={25}
+                color={password ? "#FDA758" : "#999"}
+              />
+            }
           />
         </View>
 

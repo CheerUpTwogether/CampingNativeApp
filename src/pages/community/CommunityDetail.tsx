@@ -6,13 +6,17 @@ import {
   View,
   TouchableOpacity,
   Image,
-  FlatList,
+  ScrollView,
 } from "react-native";
-import { useNavigation, RouteProp } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import { getCommunityApi } from "@/apis/community";
+import Replys from "./Replys";
+import { getUserApi } from "@/apis/myPage";
+import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -23,47 +27,123 @@ const chatIcon = require("@/assets/icons/Chat.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-interface CommunityDetailRouteProp {
-  route: RouteProp<RootStackParamList, "CommunityDetail">;
-}
-
-const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
-  const [communityData, setCommunityData] = useState<Community | null>();
-  const communityId = route.params.CommunityId;
+const CommunityDetail = () => {
+  const [communityData, setCommunityData] = useState<Community | null>(null);
+  const [nickName, setNickName] = useState("");
+  const route = useRoute();
+  const { CommunityId } = route.params as { CommunityId: number };
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getCommunityApi(communityId);
-      setCommunityData(res?.data?.result);
+      const res = await getCommunityApi(CommunityId);
+      if (res?.data?.result) {
+        setCommunityData(res?.data?.result);
+      }
     };
+
+    const fetchUserInfo = async () => {
+      const userInfo = await getUserApi();
+      if (userInfo?.result?.nickName) {
+        setNickName(userInfo.result.nickName);
+      }
+    };
+
     fetchData();
-  }, [communityId]);
+    fetchUserInfo();
+  }, [CommunityId, communityData]);
 
   const handlePrev = () => {
     navigation.goBack();
   };
 
+  const handleEdit = () => {
+    if (communityData) {
+      navigation.navigate("Add", {
+        isEdit: true,
+        communityId: communityData.id.toString(),
+        subject: communityData.subject,
+        content: communityData.content,
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await deleteCommunityApi(CommunityId.toString());
+      if (res) {
+        Toast.show({
+          type: "success",
+          text1: "커뮤니티를 삭제했습니다.",
+        });
+        navigation.navigate("Community");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Toast.show({
+          type: "error",
+          text1: "다시 시도해주세요.",
+          text2: error.message,
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "삭제에 실패했습니다.",
+          text2: "알 수 없는 오류가 발생했습니다.",
+        });
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="상세 보기" leftIcon={backIcon} leftClick={handlePrev} />
-      <View>
+      <ScrollView>
         {communityData && (
           <View>
             <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
               <View style={styles.userWrapper}>
                 <View style={styles.topWrapper}>
-                  <View style={styles.imageWrapper}>
-                    <Image style={styles.profileImage} source={profileImage} />
+                  <View style={{ gap: 6 }}>
+                    <View style={styles.imageWrapper}>
+                      <Image
+                        style={styles.profileImage}
+                        source={profileImage}
+                      />
+                    </View>
+                    <Text style={styles.nickName}>
+                      {communityData.nickname}
+                    </Text>
                   </View>
-                  <Text style={styles.nickName}>{communityData.nickname}</Text>
+                  <View style={styles.subjectWrapper}>
+                    <Text style={styles.subject}>{communityData.subject}</Text>
+                  </View>
+
+                  <View style={styles.rightTopContainer}>
+                    {nickName === communityData.nickname && (
+                      <View style={styles.editButtonContainer}>
+                        <TouchableOpacity
+                          onPress={handleEdit}
+                          activeOpacity={0.8}
+                        >
+                          <Text style={styles.editText}>수정</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          onPress={handleDelete}
+                        >
+                          <Text style={styles.deleteText}>삭제</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={styles.iconWrapper}
+                      activeOpacity={0.8}
+                    >
+                      <Image source={shareIcon} style={styles.icon1} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <TouchableOpacity
-                  style={styles.iconWrapper}
-                  activeOpacity={0.8}
-                >
-                  <Image source={shareIcon} style={styles.icon1} />
-                </TouchableOpacity>
               </View>
 
               <View style={styles.contentWrapper}>
@@ -83,15 +163,12 @@ const CommunityDetail: React.FC<CommunityDetailRouteProp> = ({ route }) => {
                   </View>
                 </View>
               </View>
-              <View style={{ backgroundColor: "#FFF" }}>
-                <View style={styles.contentsWrapper}>
-                  <Text style={styles.content}>댓글</Text>
-                </View>
-              </View>
+
+              <Replys CommunityId={CommunityId} />
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -104,16 +181,18 @@ const styles = StyleSheet.create({
   topWrapper: {
     flexDirection: "row",
     gap: 4,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 8,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   userWrapper: {
-    flexDirection: "row",
     backgroundColor: "#FFF",
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    justifyContent: "space-between",
-    alignItems: "center",
     marginBottom: 3,
+    paddingHorizontal: "4%",
+    paddingVertical: "2%",
   },
   iconWrapper: {
     width: 25,
@@ -122,7 +201,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
   },
   icon1: {
     width: 15,
@@ -132,10 +210,20 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
   },
-
+  subjectWrapper: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+  },
   nickName: {
     color: "#573353",
     fontWeight: "500",
+    marginBottom: 5,
+  },
+  subject: {
+    color: "#FDA758",
+    fontWeight: "600",
+    fontSize: 16,
   },
   contentWrapper: {
     backgroundColor: "#FFF",
@@ -173,20 +261,34 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 12,
   },
   profileImage: {
     width: 70,
-    height: 130,
+    height: 100,
   },
-  contentsWrapper: {
-    marginTop: 50,
-    marginHorizontal: "4%",
-    marginBottom: 10,
+  editButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 10,
   },
-  content: {
-    fontSize: 15,
-    color: "#573353",
+  editText: {
+    color: "#999",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  deleteText: {
+    color: "#F44336",
+    fontSize: 10,
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  rightTopContainer: {
+    flexDirection: "column",
+    alignItems: "flex-end",
+    gap: 6,
+    marginRight: 8,
+    marginBottom: 18,
   },
 });
 

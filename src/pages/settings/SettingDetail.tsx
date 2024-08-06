@@ -14,10 +14,6 @@ type RootStackParamList = {
 
 type SettingDetailRouteProp = RouteProp<RootStackParamList, "SettingDetail">;
 
-interface SettingDetailProps {
-  route: SettingDetailRouteProp;
-}
-
 const SettingDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();

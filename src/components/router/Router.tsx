@@ -17,6 +17,7 @@ import CampingDetail from "@/pages/home/CampingDetail";
 import ProfileDetail from "@/pages/settings/ProfileDetail";
 import Intro from "@/pages/auth/Intro";
 import CommunityDetail from "@/pages/community/CommunityDetail";
+import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "../../pages/articles/ArticleDetail";
 
 const BottomTabNav = createBottomTabNavigator();
@@ -26,18 +27,24 @@ export type RootBottomParamList = {
   Home: undefined;
   Articles: undefined;
   Community: undefined | string;
-  Settings: undefined;
+  Settings: undefined | string;
 };
 
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Splash: undefined;
-  // BottomTab: undefined;
   BottomTab: {
     screen: keyof RootBottomParamList;
   };
-  Add: undefined;
+  Add: {
+    subject: string;
+    content: string;
+    isEdit: boolean;
+    communityId: string;
+    initialSubject?: string;
+    initialContent?: string;
+  };
   CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
@@ -45,6 +52,7 @@ export type RootStackParamList = {
   Intro: undefined;
   ArticleDetail: { id: number };
   Community: undefined;
+  EditProfile: undefined;
 };
 
 const renderTabBar = (props: BottomTabBarProps) => (
@@ -79,6 +87,7 @@ const Router = () => {
       <StackTab.Screen name="ProfileDetail" component={ProfileDetail} />
       <StackTab.Screen name="CommunityDetail" component={CommunityDetail} />
       <StackTab.Screen name="ArticleDetail" component={ArticleDetail} />
+      <StackTab.Screen name="EditProfile" component={EditProfile} />
     </StackTab.Navigator>
   );
 };

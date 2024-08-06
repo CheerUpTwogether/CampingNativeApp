@@ -10,6 +10,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  RefreshControl,
+  ScrollView,
 } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
@@ -24,22 +26,32 @@ const profileImage = require("@/assets/images/Introduce1.png");
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
-// TODO: 댓글 API 연동
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
+  const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await getCommunitysApi();
-      setDataList(res?.data?.result?.content);
-    };
+  const fetchData = async () => {
+    const res = await getCommunitysApi();
+    if (res?.data?.result?.content) {
+      const sortedData = res.data.result.content.sort(
+        (a: Community, b: Community) => b.id - a.id
+      );
+      setDataList(sortedData);
+    }
+    setRefresh(false);
+  };
 
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [refresh, dataList]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
+  };
+
+  const pullDown = () => {
+    setRefresh(true);
   };
 
   const renderItem: ListRenderItem<Community> = ({ item }) => (
@@ -50,14 +62,19 @@ const Community = () => {
     >
       <View style={styles.userWrapper}>
         <View style={styles.topWrapper}>
-          <View style={styles.imageWrapper}>
-            <Image style={styles.profileImage} source={profileImage} />
+          <View>
+            <View style={styles.imageWrapper}>
+              <Image style={styles.profileImage} source={profileImage} />
+            </View>
+            <Text style={styles.nickName}>{item.nickname}</Text>
           </View>
-          <Text style={styles.nickName}>{item.nickname}</Text>
+          <View style={styles.subjectWrapper}>
+            <Text style={styles.subject}>{item.subject}</Text>
+          </View>
+          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
+            <Image source={shareIcon} style={styles.icon1} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-          <Image source={shareIcon} style={styles.icon1} />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.contentWrapper}>
@@ -79,11 +96,17 @@ const Community = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="커뮤니티" leftIcon={leftIcon} />
-      <FlatList
-        data={dataList}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={() => pullDown()} />
+        }
+      >
+        <FlatList
+          data={dataList}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -92,12 +115,14 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginBottom: 80,
+    marginBottom: 100,
   },
   topWrapper: {
     flexDirection: "row",
-    gap: 4,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 6,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   userWrapper: {
     flexDirection: "row",
@@ -173,6 +198,16 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 100,
     height: 130,
+  },
+  subjectWrapper: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  subject: {
+    color: "#FDA758",
+    fontWeight: "600",
+    fontSize: 16,
   },
 });
 

@@ -1,12 +1,19 @@
-interface CommunityResponse {
-  result: Community;
+interface CommunityResponse<T> {
+  result: {
+    content: T;
+  };
+  replys: [];
+}
+interface CommunityDetailResponse {
+  result: Community[];
+  replys: [];
 }
 
 // 커뮤니티 타입
 interface Community {
   id: number;
   subject: string;
-  content: string | [];
+  content: string;
   nickname: string;
   like: number;
   likeCheck: boolean;
