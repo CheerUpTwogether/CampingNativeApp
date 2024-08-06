@@ -25,13 +25,24 @@ export const getCommunityApi = async (
 };
 
 // 커뮤니티 생성(post)
-export const addCommunityApi = async (
-  communityData: EditCommunity
-): Promise<ApiResponse<EditCommunity> | void> => {
+export const addCommunitySpb = async (
+  subject: string,
+  content: string
+): Promise<boolean> => {
   try {
-    return await API.post("/community", communityData);
+    const { data, error } = await supabase
+      .from("community")
+      .insert([{ subject, content }]);
+
+    if (error) {
+      showInfo("error", error.message);
+      return false;
+    }
+    showInfo("error", error.message);
+    return true;
   } catch (error) {
-    showToastApiError();
+    showInfo("error", "Error: " + (error as Error).message);
+    return false;
   }
 };
 
