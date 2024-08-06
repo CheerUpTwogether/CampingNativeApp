@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  profileImage: { width: 100, height: 100 },
+  profileImage: { width: 100, height: 100, borderRadius: 100 },
   profileChangeWrapper: {
     borderRadius: 16,
     backgroundColor: "rgba(87, 51, 83, 0.3)",
