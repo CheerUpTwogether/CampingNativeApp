@@ -129,6 +129,7 @@ export const getArticlesSpb = async (sortType: string): Promise<Article[]> => {
       return [];
     }
     // showInfo("success", "아티클 정보를 성공적으로 가져왔습니다.");
+
     return data;
   } catch (error) {
     showInfo("error", (error as Error).message);

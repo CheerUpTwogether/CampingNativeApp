@@ -9,11 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
 import Carousel from "react-native-snap-carousel";
 import { getArticleApi, setFavoriteApi } from "@/apis/article";
@@ -22,29 +18,31 @@ const { width: screenWidth } = Dimensions.get("window");
 
 import StarIcon from "@/assets/icons/Star.svg";
 import { ScrollView } from "react-native-gesture-handler";
-import { getArticleSpb } from "@/supaBase/api/article";
 const backIcon = require("@/assets/icons/Back.png");
 
 export const ArticleDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
   const { id, iconState, data, setFavorite } = route.params as {
     id: number;
     iconState: boolean;
     data: ArticleDetail;
     setFavorite: (articleId: number, mode: boolean) => void;
   };
+  console.log(data.images);
   const [isFavorite, setIsFavorite] = useState(iconState);
   const handleFavorite = async () => {
     setFavorite(id, isFavorite);
     setIsFavorite(!isFavorite);
   };
 
-  const renderItem = () => {
+  const renderItem = ({ item }) => {
+    console.log(item);
     return (
       <Image
         source={{
-          uri: `https://picsum.photos/300/200`,
+          uri: item,
         }}
         style={styles.thumbImage}
       />
