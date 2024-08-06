@@ -1,10 +1,16 @@
+type ArticleFavorite = {
+  user_id: string;
+  article_id: number;
+  is_favorite: boolean;
+};
+
 type Article = {
   id: number;
   title: string;
   content: string;
-  createDate: string;
-  isFavorite: boolean;
-  articleImages?: { id: number; imgPath: string }[];
+  create_date: string;
+  images: [key: string];
+  article_favorite: ArticleFavorite[][];
 };
 
 interface ArticleFlatListProps {

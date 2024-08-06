@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import uuid from "react-native-uuid";
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,6 +22,7 @@ const { width: screenWidth } = Dimensions.get("window");
 
 import StarIcon from "@/assets/icons/Star.svg";
 import { ScrollView } from "react-native-gesture-handler";
+import { getArticleSpb } from "@/supaBase/api/article";
 const backIcon = require("@/assets/icons/Back.png");
 
 export const ArticleDetail = () => {
@@ -31,9 +33,9 @@ export const ArticleDetail = () => {
     id: 0,
     title: "",
     content: "",
-    createDate: "",
-    isFavorite: false,
-    articleImages: [],
+    create_date: "",
+    images: [""],
+    article_favorite: [[""]],
   });
 
   useFocusEffect(
@@ -43,27 +45,19 @@ export const ArticleDetail = () => {
   );
 
   const getArticle = async () => {
-    const res = await getArticleApi(id);
-    res?.data?.result && setArticle(res?.data?.result);
+    const data = await getArticleSpb(id);
+    data && setArticle(data);
   };
 
-  const setFavorite = async () => {
-    const res = await setFavoriteApi(article.id);
-    res?.data?.success &&
-      setArticle((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
-  };
+  const setFavorite = async () => {};
 
-  const renderItem = ({
-    item,
-  }: {
-    item: { id: number; imgPath: string };
-    index: number;
-  }) => {
+  const renderItem = ({ item }) => {
+    console.log(item);
     return (
       <Image
-        key={id}
+        key={uuid.v4()}
         source={{
-          uri: item.imgPath,
+          uri: `https://picsum.photos/300/200`,
         }}
         style={styles.thumbImage}
       />
@@ -81,7 +75,7 @@ export const ArticleDetail = () => {
       <ScrollView>
         <View>
           <Carousel
-            data={article?.articleImages ? article?.articleImages : []}
+            data={article?.images ? article?.images : []}
             renderItem={renderItem}
             sliderWidth={screenWidth}
             itemWidth={screenWidth * 0.75}
@@ -98,7 +92,7 @@ export const ArticleDetail = () => {
             />
           </TouchableOpacity>
           <Text style={styles.title}>{article.title}</Text>
-          <Text>{formatDate(article.createDate)}</Text>
+          <Text>{formatDate(article.create_date)}</Text>
           <Text style={styles.content}>{article.content}</Text>
         </View>
       </ScrollView>

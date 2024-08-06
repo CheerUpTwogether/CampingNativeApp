@@ -5,13 +5,16 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
 import StarIcon from "@/assets/icons/Star.svg";
+import useStore from "@/store/store";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
   setFavorite,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const userInfo = useStore((state) => {
+    state.userInfo;
+  });
   return (
     <>
       {articles.length ? (
@@ -21,9 +24,9 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
             style={styles.container}
             onPress={() => navigation.navigate("ArticleDetail", { id: el.id })}
           >
-            {el?.articleImages?.[0]?.imgPath ? (
+            {el?.images?.[0] ? (
               <Image
-                source={{ uri: `${el?.articleImages?.[0]?.imgPath}` }}
+                source={{ uri: el?.images?.[0] }}
                 style={styles.thumbImage}
               />
             ) : (
@@ -35,10 +38,15 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
               {el.content}
             </Text>
             <View style={styles.etc}>
-              <Text style={styles.createDate}>{formatDate(el.createDate)}</Text>
+              <Text style={styles.createDate}>
+                {formatDate(el.create_date)}
+              </Text>
               <TouchableOpacity onPress={() => setFavorite(el.id)}>
                 <StarIcon
-                  color={el.isFavorite ? "#FFD73F" : "#ddd"}
+                  color={
+                    // el.article_favorite.find((item, index) => item.user_id === userInfo.user_id)
+                    true ? "#FFD73F" : "#ddd"
+                  }
                   width={24}
                   height={24}
                 />

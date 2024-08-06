@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { getArticlesApi, setFavoriteApi } from "@/apis/article";
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
+import { getArticlesSpb, setFavoriteSpb } from "@/supaBase/api/article";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
@@ -30,20 +30,11 @@ const Articles = () => {
   }, [sortType]);
 
   const getArticles = async () => {
-    const res = await getArticlesApi(sortType);
-    res?.data?.result && setArticles(res?.data?.result);
+    const data: Article[] = await getArticlesSpb(sortType);
+    data && setArticles(data);
   };
 
-  const setFavorite = async (id: number) => {
-    const res = await setFavoriteApi(id);
-    res?.data?.success &&
-      setArticles((prev) =>
-        prev.map((el) => {
-          if (el.id === id) return { ...el, isFavorite: !el.isFavorite };
-          return el;
-        })
-      );
-  };
+  const setFavorite = async (id: number) => {};
 
   return (
     <SafeAreaView style={styles.wrapper}>
