@@ -8,7 +8,6 @@ import {
   FlatList,
   ListRenderItem,
 } from "react-native";
-import { setCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
 import { formatDate } from "@/utils/date";
 import {
@@ -135,41 +134,42 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   );
 
   return (
-    <FlatList
-      renderItem={renderItem}
-      data={replys}
-      contentContainerStyle={styles.cardcontainer}
-      keyExtractor={(item) => String(item.id)}
-      ListHeaderComponent={
-        <View style={styles.contentsWrapper}>
-          <Text style={styles.content}>댓글</Text>
-        </View>
-      }
-      ListFooterComponent={
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <Input
-              value={inputText}
-              setValue={setInputText}
-              placeholder="댓글을 입력해주세요."
-              isBgWhite={false}
-            />
+    <View style={styles.replyContainer}>
+      <FlatList
+        renderItem={renderItem}
+        data={replys}
+        contentContainerStyle={styles.cardcontainer}
+        keyExtractor={(item) => String(item.id)}
+        ListHeaderComponent={
+          <View style={styles.contentsWrapper}>
+            <Text style={styles.content}>댓글</Text>
           </View>
-          <TouchableOpacity style={styles.sendButton} onPress={addReply}>
-            <Text style={styles.content}>등록</Text>
-          </TouchableOpacity>
+        }
+      />
+      <View style={styles.inputContainer}>
+        <View style={styles.inputWrapper}>
+          <Input
+            value={inputText}
+            setValue={setInputText}
+            placeholder="댓글을 입력해주세요."
+            isBgWhite={false}
+          />
         </View>
-      }
-    />
+        <TouchableOpacity style={styles.sendButton} onPress={addReply}>
+          <Text style={styles.content}>등록</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  cardcontainer: {
-    overflow: "hidden",
-    backgroundColor: "white",
-    width: "100%",
-    borderWidth: 0,
+  replyContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    marginHorizontal: "4%",
+    paddingTop: "4%",
+    marginBottom: 12,
   },
   commentContainer: {
     backgroundColor: "#FFF",
@@ -234,7 +234,6 @@ const styles = StyleSheet.create({
     height: 100,
   },
   contentsWrapper: {
-    marginTop: 50,
     marginHorizontal: "4%",
     marginBottom: 10,
   },
