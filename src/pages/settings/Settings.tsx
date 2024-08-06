@@ -15,7 +15,7 @@ import DetailBox from "@/components/common/DetailBox";
 import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
 import { RootStackParamList } from "@/components/router/Router";
-import { removeUserToken } from "@/apis/cookie";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const more = require("@/assets/icons/menu.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -77,9 +77,9 @@ const Settings = () => {
 
   const handleLogout = async () => {
     try {
-      await removeUserToken("userToken");
+      await AsyncStorage.removeItem("userToken");
       Alert.alert("로그아웃 성공", "로그아웃이 완료되었습니다.", [
-        { text: "확인", onPress: () => navigation.navigate("Login") },
+        { text: "확인", onPress: () => navigation.replace("Login") },
       ]);
     } catch (error) {
       Alert.alert("오류", "로그아웃 중 오류가 발생했습니다.");

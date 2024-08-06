@@ -36,7 +36,7 @@ const Login = () => {
   const clickLoginBtn = async () => {
     if (loginValid({ email, password })) {
       // 로그인이 되어있는지 확인.
-      const isLogin = await signInSpb(email, password);
+      const isLogin = await signInSpb(email, password, isAutoLogin);
 
       if (!isLogin) return;
 

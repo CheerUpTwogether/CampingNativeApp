@@ -7,6 +7,21 @@ export const signUpSpb = async (
   password: string,
   nickname: string
 ): Promise<boolean> => {
+  const { data, error: nicknameError } = await supabase
+    .from("profile")
+    .select("user_id")
+    .eq("nickname", nickname);
+
+  if (nicknameError) {
+    showInfo("error", nicknameError.message);
+    return false;
+  }
+
+  if (data && data?.length > 0) {
+    showInfo("error", "이미 존재하는 닉네임입니다.");
+    return false;
+  }
+
   const { data: user, error: authError } = await supabase.auth.signUp({
     email,
     password,
@@ -38,7 +53,8 @@ export const signUpSpb = async (
 
 export const signInSpb = async (
   email: string,
-  password: string
+  password: string,
+  autoLogin: boolean
 ): Promise<boolean> => {
   const { data: user, error: authError } =
     await supabase.auth.signInWithPassword({
@@ -51,7 +67,7 @@ export const signInSpb = async (
     return false;
   }
 
-  if (user.session) {
+  if (autoLogin && user.session) {
     const access_token = user.session.access_token;
     const refresh_token = user.session.refresh_token;
     AsyncStorage.setItem(
