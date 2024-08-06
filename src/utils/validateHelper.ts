@@ -103,7 +103,6 @@ export const registValid = (form: RegisterForm): boolean => {
     getPasswordValid(form.password) &&
     getPasswordCheckValid(form.password, form.passwordCheck)
   ) {
-    alertMessage("success", "회원가입에 성공하였습니다.");
     return true;
   }
   return false;

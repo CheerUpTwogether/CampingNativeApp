@@ -7,6 +7,7 @@ import { getSignInUserId } from "./auth";
 export const getUserSpb = async (): Promise<{ [key: string]: any } | null> => {
   try {
     const uid = await getSignInUserId();
+
     if (!uid) {
       showInfo("error", "uid 값을 찾지 못했습니다.");
       return null;
@@ -24,6 +25,7 @@ export const getUserSpb = async (): Promise<{ [key: string]: any } | null> => {
     showInfo("success", "프로필 조회에 성공하였습니다.");
     return data;
   } catch (error) {
+    console.log((error as Error).message);
     showInfo("error", (error as Error).message);
     return null;
   }
