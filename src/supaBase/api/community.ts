@@ -2,34 +2,16 @@ import { isSignInUser } from "./auth";
 import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
-export interface Communitys {
-  id: number;
-  like: number;
-  like_check?: boolean;
-  nickname: string;
-  content: string;
-  reply_count?: number;
-  subject: string;
-  user_id: string;
-  profile: Profile;
-}
-
-export interface Profile {
-  user_id: string;
-  email: string;
-  nickname: string;
-}
-
 // 커뮤니티 조회
 export const getCommunitysSpb = async (
   page: number = 0,
   pageSize: number = 10
-): Promise<Communitys[]> => {
+): Promise<Community[] | void> => {
   try {
     const isSignIn = await isSignInUser();
     if (!isSignIn) {
       showInfo("error", "로그인 후에 이용해주세요.");
-      return [];
+      return;
     }
 
     const start = page * (pageSize - 1) === 0 ? 0 : page * (pageSize - 1) - 1;
@@ -41,20 +23,20 @@ export const getCommunitysSpb = async (
 
     if (error) {
       showInfo("error", error.message);
-      return [];
+      return;
     }
 
     return data;
   } catch (error) {
     showInfo("error", (error as Error).message);
-    return [];
+    return;
   }
 };
 
 // 커뮤니티 상세 조회
 export const getCommunitySpb = async (
   communityId: number
-): Promise<Communitys[] | null> => {
+): Promise<Community[] | null> => {
   try {
     const isSignIn = await isSignInUser();
 
@@ -83,7 +65,8 @@ export const getCommunitySpb = async (
 // 커뮤니티 생성(post)
 export const addCommunitySpb = async (
   subject: string,
-  content: string
+  content: string,
+  user_id: string
 ): Promise<boolean> => {
   try {
     const isSignIn = await isSignInUser();

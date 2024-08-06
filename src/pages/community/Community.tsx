@@ -11,11 +11,9 @@ import {
   Image,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
 } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
-import { getCommunitysApi } from "@/apis/community";
 import { getCommunitysSpb } from "@/supaBase/api/community";
 
 const leftIcon = require("@/assets/icons/menu.png");
@@ -37,17 +35,13 @@ const Community = () => {
   }, [refresh]);
 
   const fetchCommunitysData = async () => {
-    const data = await getCommunitysSpb(0);
-    setDataList(data);
-
-    // 기존 로직
-    // if (res?.data?.result?.content) {
-    //   const sortedData = res.data.result.content.sort(
-    //     (a: Community, b: Community) => b.id - a.id
-    //   );
-    //   setDataList(sortedData);
-    // }
-    // setRefresh(false);
+    const data = await getCommunitysSpb();
+    if (data) {
+      const sortedData = data.sort((a, b) => b.id - a.id);
+      setDataList(sortedData);
+      console.log("datatatata ==> ", dataList);
+    }
+    setRefresh(false);
   };
 
   const handleMove = (id: number) => {
@@ -100,17 +94,14 @@ const Community = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="커뮤니티" leftIcon={leftIcon} />
-      <ScrollView
+      <FlatList
+        data={dataList}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
         refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={() => pullDown()} />
+          <RefreshControl refreshing={refresh} onRefresh={pullDown} />
         }
-      >
-        <FlatList
-          data={dataList}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
-      </ScrollView>
+      />
     </SafeAreaView>
   );
 };

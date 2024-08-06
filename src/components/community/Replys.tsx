@@ -8,20 +8,17 @@ import {
   FlatList,
   ListRenderItem,
 } from "react-native";
-import {
-  getCommunityApi,
-  addCommunityCommentApi,
-  setCommunityCommentApi,
-} from "@/apis/community";
+import { setCommunityCommentApi } from "@/apis/community";
 import Input from "@/components/common/Input";
 import { formatDate } from "@/utils/date";
 import { getUserApi } from "@/apis/myPage";
+import { getReplysSpb } from "@/supaBase/api/reply";
 
 const profileImage = require("@/assets/images/Introduce1.png");
 
 const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
   const [inputText, setInputText] = useState("");
-  const [replys, setReplys] = useState<Reply[]>([]);
+  const [replys, setReplys] = useState<ReplyType[]>([]);
   const [nickName, setNickName] = useState("");
   const [replyId, setReplyId] = useState(0);
   const [replyContent, setReplyContent] = useState("");
@@ -33,23 +30,22 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const getUserInfo = async () => {
     const userInfo = await getUserApi();
-    userInfo?.result?.nickName && setNickName(userInfo?.result?.nickName);
+    userInfo?.result?.nickname && setNickName(userInfo?.result?.nickname);
   };
 
   const getReplys = async () => {
-    const res = await getCommunityApi(CommunityId);
-    res?.data?.result && setReplys(res.data.result.replys);
+    setReplys(await getReplysSpb(CommunityId));
   };
 
-  const handleSend = async () => {
-    await addCommunityCommentApi(CommunityId.toString(), inputText);
-    setInputText("");
-    const updatedRes = await getCommunityApi(CommunityId);
-    updatedRes?.data?.result && setReplys(updatedRes.data.result.replys);
-  };
+  // const handleSend = async () => {
+  //   await addCommunityCommentApi(CommunityId.toString(), inputText);
+  //   setInputText("");
+  //   const updatedRes = await getCommunityApi(CommunityId);
+  //   updatedRes?.data?.result && setReplys(updatedRes.data.result.replys);
+  // };
 
-  const showReplyForm = async (reply: Reply) => {
-    setReplyId(reply.replyId);
+  const showReplyForm = async (reply: ReplyType) => {
+    setReplyId(reply.id);
     setReplyContent(reply.reply);
   };
 
@@ -64,7 +60,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
     setReplys((prev) =>
       prev.map((el) => {
-        if (String(el.replyId) === replyId) {
+        if (String(el.id) === replyId) {
           return { ...el, reply: replyContent };
         }
         return el;
@@ -74,7 +70,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
     setReplyId(0);
   };
 
-  const renderItem: ListRenderItem<Reply> = ({ item }) => (
+  const renderItem: ListRenderItem<ReplyType> = ({ item }) => (
     <View style={{ marginBottom: 8 }}>
       <View style={styles.commentWrapper}>
         <View style={{ flexDirection: "row" }}>
@@ -83,12 +79,12 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
           </View>
 
           <View style={{ paddingTop: 10, paddingLeft: 12 }}>
-            <Text style={styles.nickName}>{item.nickname}</Text>
-            <Text style={styles.id}>{formatDate(item.createDate)}</Text>
+            <Text style={styles.nickName}>{item.profile.nickname}</Text>
+            <Text style={styles.id}>{formatDate(item.create_date)}</Text>
           </View>
         </View>
 
-        {nickName === item.nickname ? (
+        {nickName === item.profile.nickname ? (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -105,7 +101,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
         )}
       </View>
 
-      {replyId === item.replyId ? (
+      {replyId === item.id ? (
         <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
             <Input
@@ -117,7 +113,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
           </View>
           <TouchableOpacity
             style={styles.sendButton}
-            onPress={() => udpateReply(String(item.replyId))}
+            onPress={() => udpateReply(String(item.id))}
           >
             <Text style={styles.content}>등록</Text>
           </TouchableOpacity>
@@ -137,7 +133,7 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
         <FlatList
           renderItem={renderItem}
           data={replys}
-          keyExtractor={(item) => item.replyId.toString()}
+          keyExtractor={(item) => String(item.id)}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -149,7 +145,8 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
             isBgWhite={false}
           />
         </View>
-        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+        {/* <TouchableOpacity style={styles.sendButton} onPress={handleSend}> */}
+        <TouchableOpacity style={styles.sendButton}>
           <Text style={styles.content}>등록</Text>
         </TouchableOpacity>
       </View>
