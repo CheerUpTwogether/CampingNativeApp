@@ -36,7 +36,10 @@ const Splash = () => {
       // 자동로그인
       const isSignIn = await autoSignInSpb();
 
-      if (!isSignIn) return;
+      if (!isSignIn) {
+        navigation.replace("Login");
+        return;
+      }
 
       // 로그인한 유저 프로필 정보
       const data = await getUserSpb();

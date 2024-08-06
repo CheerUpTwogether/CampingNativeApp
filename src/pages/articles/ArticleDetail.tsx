@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import uuid from "react-native-uuid";
+// import uuid from "react-native-uuid";
 import {
   SafeAreaView,
   StyleSheet,
@@ -55,7 +55,7 @@ export const ArticleDetail = () => {
     console.log(item);
     return (
       <Image
-        key={uuid.v4()}
+        // key={uuid.v4()}
         source={{
           uri: `https://picsum.photos/300/200`,
         }}
