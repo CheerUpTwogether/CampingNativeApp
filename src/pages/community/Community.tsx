@@ -39,7 +39,6 @@ const Community = () => {
     if (data) {
       const sortedData = data.sort((a, b) => b.id - a.id);
       setDataList(sortedData);
-      console.log("datatatata ==> ", dataList);
     }
     setRefresh(false);
   };
@@ -98,6 +97,7 @@ const Community = () => {
         data={dataList}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
+        style={{ marginBottom: 70 }}
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={pullDown} />
         }
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginBottom: 100,
   },
   topWrapper: {
     flexDirection: "row",
