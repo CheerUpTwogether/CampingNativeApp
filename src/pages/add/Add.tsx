@@ -46,7 +46,7 @@ const Add: React.FC = () => {
         CommunityId: Number(communityId),
       });
     } else {
-      res = await addCommunitySpb(subject, content, userInfo.user_id);
+      res = await addCommunitySpb(userInfo.user_id, subject, content);
     }
 
     if (res) {

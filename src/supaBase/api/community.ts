@@ -64,9 +64,9 @@ export const getCommunitySpb = async (
 
 // 커뮤니티 생성(post)
 export const addCommunitySpb = async (
+  user_id: string,
   subject: string,
-  content: string,
-  user_id: string
+  content: string
 ): Promise<boolean> => {
   try {
     const isSignIn = await isSignInUser();
@@ -78,7 +78,7 @@ export const addCommunitySpb = async (
 
     const { data, error } = await supabase
       .from("community")
-      .insert([{ subject, content }]);
+      .insert([{ user_id, subject, content }]);
 
     if (error) {
       showInfo("error", error.message);

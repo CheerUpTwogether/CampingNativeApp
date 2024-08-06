@@ -15,7 +15,6 @@ import TopBar from "@/components/common/TopBar";
 import Replys from "@/components/community/Replys";
 import { deleteCommunityApi } from "@/apis/community";
 import { getCommunitySpb } from "@/supaBase/api/community";
-import { getUserSpb } from "@/supaBase/api/myPage";
 import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
@@ -28,7 +27,7 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const CommunityDetail = () => {
-  const [communityData, setCommunityData] = useState<Community[] | null>(null);
+  const [communityData, setCommunityData] = useState<Community>();
   const [userId, setUserId] = useState("");
   const route = useRoute();
   const { CommunityId } = route.params as { CommunityId: number };
