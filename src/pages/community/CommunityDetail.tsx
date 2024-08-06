@@ -14,7 +14,7 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import { getCommunityApi } from "@/apis/community";
-import Replys from "./Replys";
+import Replys from "@/components/community/Replys";
 import { getUserApi } from "@/apis/myPage";
 import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
 
