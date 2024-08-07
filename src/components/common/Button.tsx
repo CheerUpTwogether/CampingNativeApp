@@ -10,12 +10,22 @@ interface Button {
   label: string;
   onPress: (e: GestureResponderEvent) => void;
   isPrimary?: boolean;
+  isSmall?: boolean;
 }
 
-const Button = ({ label, onPress, isPrimary = true }: Button) => {
+const Button = ({
+  label,
+  onPress,
+  isPrimary = true,
+  isSmall = false,
+}: Button) => {
   return (
     <TouchableOpacity
-      style={[styles.btn, !isPrimary && styles.btnPastel]}
+      style={[
+        styles.btn,
+        !isPrimary && styles.btnPastel,
+        isSmall && { padding: 8 },
+      ]}
       onPress={onPress}
     >
       <Text style={styles.btnText}>{label}</Text>
