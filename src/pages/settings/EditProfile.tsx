@@ -143,7 +143,6 @@ const EditProfile = () => {
               value={userInfo.email}
               onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
               autoCapitalize="none"
-              maxLength={12}
             />
           </View>
 
