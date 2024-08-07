@@ -5,8 +5,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
-import { getUserApi } from "@/apis/myPage";
 import { getUserSpb } from "@/supaBase/api/myPage";
+import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -45,6 +45,7 @@ const ProfileDetail = () => {
 
   useEffect(() => {
     fetchUserData();
+    console.log("hhh", userData);
   }, []);
 
   const fetchUserData = async () => {
@@ -79,11 +80,15 @@ const ProfileDetail = () => {
             <View style={styles.imageWrapper}>
               <Image
                 source={
-                  userData.profileImagePath
-                    ? { uri: userData.profileImagePath }
+                  userData.profileimagepath
+                    ? { uri: userData.profileimagepath }
                     : profileImage
                 }
-                style={styles.profileImage}
+                style={
+                  userData.profileimagepath
+                    ? styles.userProfileImage
+                    : styles.dummyProfileImage
+                }
               />
             </View>
             <View style={styles.introduceWrapper}>
@@ -164,9 +169,10 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 12,
+    marginVertical: 12,
   },
-  profileImage: {
+  userProfileImage: { width: 80, height: 80, marginVertical: "auto" },
+  dummyProfileImage: {
     width: 160,
     height: 190,
   },

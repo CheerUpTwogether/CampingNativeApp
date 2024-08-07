@@ -15,6 +15,7 @@ import {
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
 import { getCommunitysSpb } from "@/supaBase/api/community";
+import useStore from "@/store/store";
 
 const leftIcon = require("@/assets/icons/menu.png");
 const shareIcon = require("@/assets/icons/Share.png");
@@ -29,9 +30,11 @@ const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const userData = useStore().userInfo;
 
   useEffect(() => {
     fetchCommunitysData();
+    console.log("ooo", dataList);
   }, [refresh]);
 
   const fetchCommunitysData = async () => {
@@ -61,7 +64,14 @@ const Community = () => {
         <View style={styles.topWrapper}>
           <View>
             <View style={styles.imageWrapper}>
-              <Image style={styles.profileImage} source={profileImage} />
+              <Image
+                source={
+                  userData.profileimagepath
+                    ? { uri: userData.profileimagepath }
+                    : profileImage
+                }
+                style={styles.profileImage}
+              />
             </View>
             <Text style={styles.nickName}>{item.nickname}</Text>
           </View>
