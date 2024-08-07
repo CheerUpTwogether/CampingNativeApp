@@ -93,14 +93,14 @@ const Settings = () => {
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <TopBar title="설정" leftIcon={more} />
         <View style={styles.userView}>
-          <View style={styles.userContainer}>
-            <View style={styles.userWrapper}>
-              <Text style={styles.title}>프로필 보기</Text>
+          <View>
+            <View>
+              <Text style={styles.title}>{userData.nickname}</Text>
               <Text style={styles.email}>{userData.email}</Text>
             </View>
 
             <View style={styles.buttonWrapper}>
-              <Button label="View" onPress={handleMove} />
+              <Button label="View" onPress={handleMove} isSmall={true} />
             </View>
           </View>
           <Image
@@ -169,14 +169,11 @@ const styles = StyleSheet.create({
     height: 140,
     flexDirection: "row",
     overflow: "hidden",
+    justifyContent: "space-between",
+    paddingHorizontal: 28,
+    alignItems: "center",
   },
-  userContainer: {
-    marginLeft: 30,
-  },
-  userWrapper: {
-    marginTop: 20,
-    gap: 4,
-  },
+
   title: {
     color: "#573353",
     fontWeight: "700",
@@ -189,7 +186,6 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     width: 100,
-    height: 68,
   },
   DummyProfileImage: {
     width: 200,
@@ -198,10 +194,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userProfileImage: {
-    width: 160,
-    height: 200,
+    width: 120,
+    height: 120,
     opacity: 0.8,
     marginLeft: 40,
+    borderRadius: 100,
   },
   subTitle: {
     fontWeight: "500",
