@@ -36,7 +36,6 @@ const CommunityDetail = () => {
   useEffect(() => {
     fetchCommunityData();
     setUserId(userInfo.user_id);
-    console.log(userId);
   }, [CommunityId]);
 
   const handlePrev = () => {
@@ -47,13 +46,6 @@ const CommunityDetail = () => {
     const data = await getCommunitySpb(CommunityId);
     setCommunityData(data);
   };
-
-  // const fetchUserInfo = async () => {
-  //   const userInfo = await getUserSpb(false);
-  //   if (userInfo) {
-  //     setUserId(userInfo.nickname);
-  //   }
-  // };
 
   const handleEdit = () => {
     if (communityData) {
@@ -103,7 +95,15 @@ const CommunityDetail = () => {
               <View style={styles.topWrapper}>
                 <View style={{ gap: 6 }}>
                   <View style={styles.imageWrapper}>
-                    <Image style={styles.profileImage} source={profileImage} />
+                    {/* <Image style={styles.profileImage} source={profileImage} /> */}
+                    <Image
+                      source={
+                        userInfo.profileimagepath
+                          ? { uri: userInfo.profileimagepath }
+                          : profileImage
+                      }
+                      style={styles.profileImage}
+                    />
                   </View>
                   <Text style={styles.nickName}>{communityData.nickname}</Text>
                 </View>

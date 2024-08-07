@@ -71,7 +71,6 @@ type SettingsScreenNavigationProp =
 
 const Settings = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
-  // const [userData, setUserData] = useStore((state) => state.userData)
   const userData = useStore().userInfo;
 
   const handleMove = () => {
@@ -104,7 +103,18 @@ const Settings = () => {
               <Button label="View" onPress={handleMove} />
             </View>
           </View>
-          <Image source={profileImage} style={styles.profileImage} />
+          <Image
+            source={
+              userData.profileimagepath
+                ? { uri: userData.profileimagepath }
+                : profileImage
+            }
+            style={
+              userData.profileimagepath
+                ? styles.userProfileImage
+                : styles.DummyProfileImage
+            }
+          />
         </View>
 
         <View>
@@ -162,7 +172,6 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     marginLeft: 30,
-    justifyContent: "flex-start",
   },
   userWrapper: {
     marginTop: 20,
@@ -182,11 +191,17 @@ const styles = StyleSheet.create({
     width: 100,
     height: 68,
   },
-  profileImage: {
+  DummyProfileImage: {
     width: 200,
     height: 220,
     borderRadius: 40,
     marginRight: 10,
+  },
+  userProfileImage: {
+    width: 160,
+    height: 200,
+    opacity: 0.8,
+    marginLeft: 40,
   },
   subTitle: {
     fontWeight: "500",
