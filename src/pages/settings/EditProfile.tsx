@@ -26,11 +26,12 @@ type SettingsScreenNavigationProp =
 
 const EditProfile = () => {
   const setUserData = useStore((state) => state.setUserData);
+
   const [userInfo, setUserInfo] = useState<UserEditData>({
     nickname: "",
     email: "",
     introduce: "",
-    profileImagePath: "",
+    profileimagepath: "",
   });
 
   const navigation = useNavigation<SettingsScreenNavigationProp>();
@@ -52,7 +53,7 @@ const EditProfile = () => {
       email: data.email,
       nickname: data.nickname,
       introduce: data.introduce,
-      profileImagePath: data.profileimagepath,
+      profileimagepath: data.profileimagepath,
     });
   };
 
@@ -100,8 +101,8 @@ const EditProfile = () => {
         <View style={styles.profileImageWrapper}>
           <Image
             source={
-              userInfo.profileImagePath
-                ? { uri: userInfo.profileImagePath }
+              userInfo.profileimagepath
+                ? { uri: userInfo.profileimagepath }
                 : ProfileIcon
             }
             style={styles.profileImage}

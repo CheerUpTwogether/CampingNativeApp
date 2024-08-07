@@ -44,7 +44,6 @@ export const setUserSpb = async ({
 }): Promise<boolean> => {
   try {
     const uid = await getSignInUserId();
-    console.log("hellowWorld");
     if (!uid) {
       showInfo("error", "uid 값을 찾지 못했습니다.");
       return false;
