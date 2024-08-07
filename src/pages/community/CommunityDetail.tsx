@@ -115,7 +115,7 @@ const CommunityDetail = () => {
           <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
             <View style={styles.userWrapper}>
               <View style={styles.topWrapper}>
-                <View style={{ gap: 6 }}>
+                <View>
                   <View style={styles.imageWrapper}>
                     <Image
                       source={
@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 4,
     marginHorizontal: 12,
-    marginVertical: 8,
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -205,7 +204,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     marginBottom: 3,
     paddingHorizontal: "4%",
-    paddingVertical: "2%",
   },
   iconWrapper: {
     width: 25,
@@ -225,8 +223,8 @@ const styles = StyleSheet.create({
   },
   subjectWrapper: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
+    paddingBottom: 30,
+    marginLeft: 8,
   },
   nickName: {
     color: "#573353",

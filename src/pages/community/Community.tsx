@@ -88,7 +88,7 @@ const Community = () => {
       >
         <View style={styles.userWrapper}>
           <View style={styles.topWrapper}>
-            <View>
+            <View style={{ marginVertical: 3 }}>
               <View style={styles.imageWrapper}>
                 <Image
                   source={
@@ -228,7 +228,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 12,
   },
   dummyProfileImage: {
     width: 100,
@@ -240,8 +239,8 @@ const styles = StyleSheet.create({
   },
   subjectWrapper: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
+    paddingBottom: 30,
+    marginLeft: 8,
   },
   subject: {
     color: "#FDA758",
