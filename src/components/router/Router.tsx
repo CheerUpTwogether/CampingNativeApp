@@ -19,6 +19,8 @@ import Intro from "@/pages/auth/Intro";
 import CommunityDetail from "@/pages/community/CommunityDetail";
 import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "../../pages/articles/ArticleDetail";
+import Test from "@/supaBase/Test";
+import TestCommunity from "@/supaBase/TestCommunity";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -50,7 +52,7 @@ export type RootStackParamList = {
   ProfileDetail: undefined;
   CommunityDetail: { CommunityId: number };
   Intro: undefined;
-  ArticleDetail: { id: number };
+  ArticleDetail: { id: number; iconState?: boolean };
   Community: undefined;
   EditProfile: undefined;
 };

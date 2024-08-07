@@ -5,7 +5,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/components/router/Router";
 import { useNavigation } from "@react-navigation/native";
 import DetailBox from "@/components/common/DetailBox";
-import { getUserApi } from "@/apis/myPage";
+import { getUserSpb } from "@/supaBase/api/myPage";
+import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -41,17 +42,21 @@ type StackNavProp = StackNavigationProp<RootStackParamList, "EditProfile">;
 const ProfileDetail = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const navigation = useNavigation<StackNavProp>();
+  const userInfo = useStore().userInfo;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getUserApi();
-      if (!res) return;
-      setUserData(res?.result);
-    };
+    fetchUserData();
+  }, []);
 
-    fetchData();
-  }, [userData]);
+  useEffect(() => {
+    setUserData(userInfo);
+  }, [userInfo]);
 
+  const fetchUserData = async () => {
+    const data = await getUserSpb();
+    if (!data) return;
+    setUserData(data);
+  };
   const handlePrev = () => {
     navigation.goBack();
   };
@@ -79,16 +84,20 @@ const ProfileDetail = () => {
             <View style={styles.imageWrapper}>
               <Image
                 source={
-                  userData.profileImagePath
-                    ? { uri: userData.profileImagePath }
+                  userData.profileimagepath
+                    ? { uri: userData.profileimagepath }
                     : profileImage
                 }
-                style={styles.profileImage}
+                style={
+                  userData.profileimagepath
+                    ? styles.userProfileImage
+                    : styles.dummyProfileImage
+                }
               />
             </View>
             <View style={styles.introduceWrapper}>
               <View>
-                <Text style={styles.name}>{userData.nickName}</Text>
+                <Text style={styles.name}>{userData.nickname}</Text>
                 <Text style={styles.subText}>
                   {userData.introduce
                     ? userData.introduce
@@ -103,7 +112,7 @@ const ProfileDetail = () => {
           <View style={[styles.contentWrapper, { borderBottomLeftRadius: 12 }]}>
             <View style={styles.contentText}>
               <Text style={styles.subText}>내가 쓴 글</Text>
-              <Text style={styles.count}>{userData.communityCount}</Text>
+              <Text style={styles.count}>{userData.communitycount}</Text>
             </View>
             <View style={styles.iconWrapper}>
               <Image source={timeIcon} style={styles.iconStyle} />
@@ -115,7 +124,7 @@ const ProfileDetail = () => {
           >
             <View style={styles.contentText}>
               <Text style={styles.subText}>즐겨 찾기</Text>
-              <Text style={styles.count}>{userData.favoriteCount}</Text>
+              <Text style={styles.count}>{userData.favoritecount}</Text>
             </View>
             <View style={styles.iconWrapper}>
               <Image source={favoriteIcon} style={styles.iconStyle} />
@@ -164,9 +173,10 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 12,
+    marginVertical: 12,
   },
-  profileImage: {
+  userProfileImage: { width: 80, height: 80, marginVertical: "auto" },
+  dummyProfileImage: {
     width: 160,
     height: 190,
   },

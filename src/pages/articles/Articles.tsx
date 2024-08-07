@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-import { getArticlesApi, setFavoriteApi } from "@/apis/article";
 import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
+import {
+  getArticlesSpb,
+  getFavoriteArticleIdSpb,
+  setFavoriteSpb,
+} from "@/supaBase/api/article";
+import useStore from "@/store/store";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
@@ -14,35 +19,41 @@ const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 const Articles = () => {
   const [sortType, setSortType] = useState<string>("LATEST");
   const [articles, setArticles] = useState<Article[]>([]);
+  const [myFavoriteArticles, setMyFavoriteArticles] = useState<
+    ArticleFavoriteAId[]
+  >([]);
   const orderList = [
     { title: "최신순", value: "LATEST" },
     { title: "좋아요순", value: "FAVORITE" },
   ];
+  const setFavoriteFunc = useStore().setFavoriteFunc;
 
   useFocusEffect(
     React.useCallback(() => {
       getArticles();
+      getFavoriteArticles();
+      setFavoriteFunc(setFavorite);
     }, [])
   );
 
   useEffect(() => {
     getArticles();
+    getFavoriteArticles();
   }, [sortType]);
 
   const getArticles = async () => {
-    const res = await getArticlesApi(sortType);
-    res?.data?.result && setArticles(res?.data?.result);
+    const data: Article[] = await getArticlesSpb(sortType);
+    data && setArticles(data);
   };
 
-  const setFavorite = async (id: number) => {
-    const res = await setFavoriteApi(id);
-    res?.data?.success &&
-      setArticles((prev) =>
-        prev.map((el) => {
-          if (el.id === id) return { ...el, isFavorite: !el.isFavorite };
-          return el;
-        })
-      );
+  const getFavoriteArticles = async () => {
+    const data: ArticleFavoriteAId[] = await getFavoriteArticleIdSpb();
+    data && setMyFavoriteArticles(data);
+  };
+  const setFavorite = async (articleId: number, mode: boolean) => {
+    await setFavoriteSpb(articleId, mode);
+    getArticles();
+    getFavoriteArticles();
   };
 
   return (
@@ -68,7 +79,10 @@ const Articles = () => {
           />
         </View>
 
-        <ArticleFlatList articles={articles} setFavorite={setFavorite} />
+        <ArticleFlatList
+          articles={articles}
+          myFavoriteArticles={myFavoriteArticles}
+        />
       </ScrollView>
     </SafeAreaView>
   );

@@ -15,7 +15,8 @@ import DetailBox from "@/components/common/DetailBox";
 import TopBar from "@/components/common/TopBar";
 import Button from "@/components/common/Button";
 import { RootStackParamList } from "@/components/router/Router";
-import { removeUserToken } from "@/apis/cookie";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useStore from "@/store/store";
 
 const more = require("@/assets/icons/menu.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -70,6 +71,7 @@ type SettingsScreenNavigationProp =
 
 const Settings = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const userData = useStore().userInfo;
 
   const handleMove = () => {
     navigation.navigate("ProfileDetail");
@@ -77,9 +79,9 @@ const Settings = () => {
 
   const handleLogout = async () => {
     try {
-      await removeUserToken("userToken");
+      await AsyncStorage.removeItem("userToken");
       Alert.alert("로그아웃 성공", "로그아웃이 완료되었습니다.", [
-        { text: "확인", onPress: () => navigation.navigate("Login") },
+        { text: "확인", onPress: () => navigation.replace("Login") },
       ]);
     } catch (error) {
       Alert.alert("오류", "로그아웃 중 오류가 발생했습니다.");
@@ -91,17 +93,28 @@ const Settings = () => {
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <TopBar title="설정" leftIcon={more} />
         <View style={styles.userView}>
-          <View style={styles.userContainer}>
-            <View style={styles.userWrapper}>
-              <Text style={styles.title}>프로필 보기</Text>
-              <Text style={styles.email}>dummyTest@gmail.com</Text>
+          <View>
+            <View>
+              <Text style={styles.title}>{userData.nickname}</Text>
+              <Text style={styles.email}>{userData.email}</Text>
             </View>
 
             <View style={styles.buttonWrapper}>
-              <Button label="View" onPress={handleMove} />
+              <Button label="View" onPress={handleMove} isSmall={true} />
             </View>
           </View>
-          <Image source={profileImage} style={styles.profileImage} />
+          <Image
+            source={
+              userData.profileimagepath
+                ? { uri: userData.profileimagepath }
+                : profileImage
+            }
+            style={
+              userData.profileimagepath
+                ? styles.userProfileImage
+                : styles.DummyProfileImage
+            }
+          />
         </View>
 
         <View>
@@ -156,15 +169,11 @@ const styles = StyleSheet.create({
     height: 140,
     flexDirection: "row",
     overflow: "hidden",
+    justifyContent: "space-between",
+    paddingHorizontal: 28,
+    alignItems: "center",
   },
-  userContainer: {
-    marginLeft: 30,
-    justifyContent: "flex-start",
-  },
-  userWrapper: {
-    marginTop: 20,
-    gap: 4,
-  },
+
   title: {
     color: "#573353",
     fontWeight: "700",
@@ -177,13 +186,19 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     width: 100,
-    height: 68,
   },
-  profileImage: {
+  DummyProfileImage: {
     width: 200,
     height: 220,
     borderRadius: 40,
     marginRight: 10,
+  },
+  userProfileImage: {
+    width: 120,
+    height: 120,
+    opacity: 0.8,
+    marginLeft: 40,
+    borderRadius: 100,
   },
   subTitle: {
     fontWeight: "500",

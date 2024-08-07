@@ -6,17 +6,19 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ScrollView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
-import { getCommunityApi } from "@/apis/community";
-import Replys from "./Replys";
-import { getUserApi } from "@/apis/myPage";
-import { deleteCommunityApi, setCommunityApi } from "@/apis/community";
+import Replys from "@/components/community/Replys";
+import {
+  getCommunitySpb,
+  deleteCommunitySpb,
+  getUsersSpb,
+} from "@/supaBase/api/community";
+import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
 const profileImage = require("@/assets/images/Introduce1.png");
@@ -28,33 +30,36 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const CommunityDetail = () => {
-  const [communityData, setCommunityData] = useState<Community | null>(null);
-  const [nickName, setNickName] = useState("");
+  const [communityData, setCommunityData] = useState<Community>();
+  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
+  const [userId, setUserId] = useState("");
   const route = useRoute();
   const { CommunityId } = route.params as { CommunityId: number };
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const userInfo = useStore().userInfo;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getCommunityApi(CommunityId);
-      if (res?.data?.result) {
-        setCommunityData(res?.data?.result);
-      }
-    };
-
-    const fetchUserInfo = async () => {
-      const userInfo = await getUserApi();
-      if (userInfo?.result?.nickName) {
-        setNickName(userInfo.result.nickName);
-      }
-    };
-
-    fetchData();
-    fetchUserInfo();
-  }, [CommunityId, communityData]);
+    fetchCommunityData();
+    fetchUserProfileData();
+    setUserId(userInfo.user_id);
+  }, [CommunityId]);
 
   const handlePrev = () => {
     navigation.goBack();
+  };
+
+  const fetchCommunityData = async () => {
+    const data = await getCommunitySpb(CommunityId);
+    if (data) {
+      setCommunityData(data);
+    }
+  };
+
+  const fetchUserProfileData = async () => {
+    const data: UserProfile[] | null = await getUsersSpb();
+    if (data) {
+      setUserProfileData(data);
+    }
   };
 
   const handleEdit = () => {
@@ -70,7 +75,7 @@ const CommunityDetail = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await deleteCommunityApi(CommunityId.toString());
+      const res = await deleteCommunitySpb(CommunityId);
       if (res) {
         Toast.show({
           type: "success",
@@ -95,80 +100,88 @@ const CommunityDetail = () => {
     }
   };
 
+  const getProfileImage = (userId: string) => {
+    const userProfile = userProfileData.find(
+      (profile) => profile.user_id === userId
+    );
+    return userProfile ? userProfile.profileimagepath : "";
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="상세 보기" leftIcon={backIcon} leftClick={handlePrev} />
-      <ScrollView>
-        {communityData && (
-          <View>
-            <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
-              <View style={styles.userWrapper}>
-                <View style={styles.topWrapper}>
-                  <View style={{ gap: 6 }}>
-                    <View style={styles.imageWrapper}>
-                      <Image
-                        style={styles.profileImage}
-                        source={profileImage}
-                      />
+      {communityData && (
+        <View>
+          <View style={{ marginHorizontal: "4%", marginVertical: "2%" }}>
+            <View style={styles.userWrapper}>
+              <View style={styles.topWrapper}>
+                <View>
+                  <View style={styles.imageWrapper}>
+                    <Image
+                      source={
+                        getProfileImage(communityData.user_id)
+                          ? { uri: getProfileImage(communityData.user_id) }
+                          : profileImage
+                      }
+                      style={
+                        getProfileImage(communityData.user_id)
+                          ? styles.userProfileImage
+                          : styles.dummyProfileImage
+                      }
+                    />
+                  </View>
+                  <Text style={styles.nickName}>{communityData.nickname}</Text>
+                </View>
+                <View style={styles.subjectWrapper}>
+                  <Text style={styles.subject}>{communityData.subject}</Text>
+                </View>
+
+                <View style={styles.rightTopContainer}>
+                  {userInfo.user_id === communityData.user_id && (
+                    <View style={styles.editButtonContainer}>
+                      <TouchableOpacity
+                        onPress={handleEdit}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.editText}>수정</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={handleDelete}
+                      >
+                        <Text style={styles.deleteText}>삭제</Text>
+                      </TouchableOpacity>
                     </View>
-                    <Text style={styles.nickName}>
-                      {communityData.nickname}
-                    </Text>
-                  </View>
-                  <View style={styles.subjectWrapper}>
-                    <Text style={styles.subject}>{communityData.subject}</Text>
-                  </View>
-
-                  <View style={styles.rightTopContainer}>
-                    {nickName === communityData.nickname && (
-                      <View style={styles.editButtonContainer}>
-                        <TouchableOpacity
-                          onPress={handleEdit}
-                          activeOpacity={0.8}
-                        >
-                          <Text style={styles.editText}>수정</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          onPress={handleDelete}
-                        >
-                          <Text style={styles.deleteText}>삭제</Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    <TouchableOpacity
-                      style={styles.iconWrapper}
-                      activeOpacity={0.8}
-                    >
-                      <Image source={shareIcon} style={styles.icon1} />
-                    </TouchableOpacity>
-                  </View>
+                  )}
+                  <TouchableOpacity
+                    style={styles.iconWrapper}
+                    activeOpacity={0.8}
+                  >
+                    <Image source={shareIcon} style={styles.icon1} />
+                  </TouchableOpacity>
                 </View>
               </View>
+            </View>
 
-              <View style={styles.contentWrapper}>
-                <Text style={styles.contentText}>{communityData.content}</Text>
-                <View style={styles.reactionContainer}>
-                  <View style={styles.reactionWrapper}>
-                    <Image style={styles.icon1} source={heartIcon} />
-                    <Text style={styles.reactionText}>
-                      {communityData.like}
-                    </Text>
-                  </View>
-                  <View style={styles.reaction}>
-                    <Image style={styles.icon2} source={chatIcon} />
-                    <Text style={styles.reactionText}>
-                      {communityData.replyCount}
-                    </Text>
-                  </View>
+            <View style={styles.contentWrapper}>
+              <Text style={styles.contentText}>{communityData.content}</Text>
+              <View style={styles.reactionContainer}>
+                <View style={styles.reactionWrapper}>
+                  <Image style={styles.icon1} source={heartIcon} />
+                  <Text style={styles.reactionText}>{communityData.like}</Text>
+                </View>
+                <View style={styles.reaction}>
+                  <Image style={styles.icon2} source={chatIcon} />
+                  <Text style={styles.reactionText}>
+                    {communityData.reply_count}
+                  </Text>
                 </View>
               </View>
-
-              <Replys CommunityId={CommunityId} />
             </View>
           </View>
-        )}
-      </ScrollView>
+        </View>
+      )}
+      <Replys CommunityId={CommunityId} />
     </SafeAreaView>
   );
 };
@@ -182,7 +195,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 4,
     marginHorizontal: 12,
-    marginVertical: 8,
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -192,7 +204,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     marginBottom: 3,
     paddingHorizontal: "4%",
-    paddingVertical: "2%",
   },
   iconWrapper: {
     width: 25,
@@ -212,8 +223,8 @@ const styles = StyleSheet.create({
   },
   subjectWrapper: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
+    paddingBottom: 30,
+    marginLeft: 8,
   },
   nickName: {
     color: "#573353",
@@ -262,10 +273,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
   },
-  profileImage: {
+  dummyProfileImage: {
     width: 70,
     height: 100,
   },
+  userProfileImage: { width: 40, height: 40 },
   editButtonContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",

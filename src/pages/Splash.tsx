@@ -1,20 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import {
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ImageBackground, SafeAreaView, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { RootStackParamList } from "../components/router/Router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { addLoginApi } from "@/apis/account";
-import { getUserApi } from "@/apis/myPage";
 import useStore from "@/store/store";
 import Toast from "react-native-toast-message";
-import { getUserToken } from "@/apis/cookie";
+import { autoSignInSpb } from "@/supaBase/api/auth";
+import { getUserSpb } from "@/supaBase/api/myPage";
 
 const splashScreen = require("@/assets/images/SplashScreen.png");
 type SettingsScreenNavigationProp =
@@ -34,27 +27,37 @@ const Splash = () => {
       }
 
       // 저장된 정보가 없을 경우
-      const userData = await AsyncStorage.getItem("userData");
-      if (!userData) {
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
         navigation.replace("Login");
         return;
       }
 
-      // 로그인 재시도...?
-      // password 저장을 암호화 없이 하면 위험하지 않을까용...?
-      const { email, password } = JSON.parse(userData);
-      const data = await addLoginApi({ email, password });
-      if (!data.success) return;
+      // 자동로그인
+      const isSignIn = await autoSignInSpb();
 
-      // 로그인 api 성공 시 수행 로직
-      const userInfo = await getUserApi();
-      setUserData(userInfo);
+      if (!isSignIn) {
+        navigation.replace("Login");
+        return;
+      }
+
+      // 로그인한 유저 프로필 정보
+      const data = await getUserSpb();
+
+      // zustand 전역 상태 관리
+      setUserData(data);
+
+      if (!data?.nickname) {
+        navigation.replace("Login");
+        return;
+      }
+
       Toast.show({
         type: "success",
-        text1: `${userInfo?.result?.nickName} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
+        text1: `${data?.nickname} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
       });
 
-      navigation.replace("BottomTab");
+      navigation.replace("BottomTab", { screen: "Home" });
     } catch (e) {}
   };
 

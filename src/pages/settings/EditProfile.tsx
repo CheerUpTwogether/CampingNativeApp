@@ -7,55 +7,59 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "@/components/router/Router";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { setProfileApi, setUserApi, getUserApi } from "@/apis/myPage";
 import TopBar from "@/components/common/TopBar";
+import { setUserSpb, getUserSpb, setProfileSpb } from "@/supaBase/api/myPage";
+import ImagePicker from "react-native-image-crop-picker";
+import { base64ToBlob } from "../../utils/imageHelper";
+import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
 const ProfileIcon = require("@/assets/icons/Profile.png");
-
-const baseUrl = "http://13.209.27.220:8080";
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const EditProfile = () => {
+  const setUserData = useStore((state) => state.setUserData);
+
   const [userInfo, setUserInfo] = useState<UserEditData>({
-    nickname: { value: "" },
+    nickname: "",
+    email: "",
     introduce: "",
-    profileImagePath: "",
+    profileimagepath: "",
   });
+
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getUserApi();
-      if (!res) return;
-      setUserInfo({
-        nickname: { value: res.result.nickName },
-        introduce: res.result.introduce,
-        profileImagePath: res.result.profileImagePath,
-      });
-    };
-
-    fetchData();
+    fetchUserData();
   }, []);
 
-  const handlePrev = () => {
-    navigation.goBack();
+  useEffect(() => {
+    // zustand 전역 상태 관리
+    setUserData(userInfo);
+  }, [userInfo]);
+
+  const fetchUserData = async () => {
+    const data = await getUserSpb();
+    if (!data) return;
+    setUserInfo({
+      email: data.email,
+      nickname: data.nickname,
+      introduce: data.introduce,
+      profileimagepath: data.profileimagepath,
+    });
   };
 
-  const patchAccountsData = async () => {
-    const data: Partial<User> = {
-      nickname: userInfo.nickname.value,
-      introduce: userInfo.introduce,
-      profileImagePath: userInfo.profileImagePath,
-    };
+  const handlePrev = () => navigation.goBack();
 
-    await setUserApi(data);
+  const patchAccountsData = async () => {
+    await setUserSpb(userInfo);
   };
 
   const handleSave = async () => {
@@ -63,67 +67,116 @@ const EditProfile = () => {
     navigation.navigate("ProfileDetail");
   };
 
+  const selectImage = async () => {
+    try {
+      const file = await ImagePicker.openPicker({
+        mediaType: "photo",
+        multiple: false,
+        base64ToBlob,
+      });
+
+      const image = {
+        uri: file.path,
+        type: file.mime,
+        name: `${file.modificationDate}${file.path.slice(-4)}`,
+      };
+      const profileimagepath = await setProfileSpb(image);
+      if (profileimagepath) {
+        setUserInfo((prev) => ({ ...prev, profileimagepath }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
-    <ScrollView style={styles.wrapper}>
-      <TopBar title="내 정보 수정" leftIcon={backIcon} leftClick={handlePrev} />
-      <View style={styles.profileImageWrapper}>
-        <Image source={ProfileIcon} style={styles.profileImage} />
-        <TouchableOpacity
-          style={styles.profileChangeWrapper}
-          activeOpacity={0.8}
-        >
-          <Text style={{ color: "#FFF" }}>프로필 변경</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>닉네임</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="닉네임을 입력해주세요."
-            placeholderTextColor="#999"
-            value={userInfo.nickname.value}
-            onChangeText={(text) =>
-              setUserInfo({ ...userInfo, nickname: { value: text } })
+    <SafeAreaView style={styles.wrapper}>
+      <ScrollView style={styles.wrapper}>
+        <TopBar
+          title="내 정보 수정"
+          leftIcon={backIcon}
+          leftClick={handlePrev}
+        />
+        <View style={styles.profileImageWrapper}>
+          <Image
+            source={
+              userInfo.profileimagepath
+                ? { uri: userInfo.profileimagepath }
+                : ProfileIcon
             }
-            autoCapitalize="none"
-            maxLength={12}
+            style={styles.profileImage}
           />
-          <Text style={{ color: "#FDA758", fontSize: 8 }}>
-            * 닉네임은 12자까지 입력할 수 있습니다.
-          </Text>
+          <TouchableOpacity
+            style={styles.profileChangeWrapper}
+            activeOpacity={0.8}
+            onPress={selectImage}
+          >
+            <Text style={{ color: "#FFF" }}>프로필 변경</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <Text style={styles.textStyle}>소개</Text>
-          <TextInput
-            style={[styles.inputStyle, { height: 70 }]}
-            placeholder="나를 소개해주세요."
-            placeholderTextColor="#999"
-            autoCorrect={false}
-            autoCapitalize="none"
-            value={userInfo.introduce}
-            onChangeText={(text) =>
-              setUserInfo({ ...userInfo, introduce: text })
-            }
-            multiline={true}
-            numberOfLines={3}
-            maxLength={46}
-          />
-          <Text style={{ color: "#FDA758", fontSize: 8 }}>
-            * 소개는 46자까지 입력할 수 있습니다.
-          </Text>
-        </View>
+        <View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>닉네임</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="닉네임을 입력해주세요."
+              placeholderTextColor="#999"
+              value={userInfo.nickname}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, nickname: text })
+              }
+              autoCapitalize="none"
+              maxLength={12}
+            />
+            <Text style={{ color: "#FDA758", fontSize: 8 }}>
+              * 닉네임은 12자까지 입력할 수 있습니다.
+            </Text>
+          </View>
 
-        <TouchableOpacity
-          style={{ marginVertical: 12, marginHorizontal: 24 }}
-          onPress={handleSave}
-        >
-          <Text style={[styles.btnStyle, styles.saveButton]}>저장하기</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>이메일</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="이메일을 입력해주세요."
+              placeholderTextColor="#999"
+              value={userInfo.email}
+              onChangeText={(text) => setUserInfo({ ...userInfo, email: text })}
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>소개</Text>
+            <TextInput
+              style={[styles.inputStyle, { height: 70 }]}
+              placeholder="나를 소개해주세요."
+              placeholderTextColor="#999"
+              autoCorrect={false}
+              autoCapitalize="none"
+              value={userInfo.introduce}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, introduce: text })
+              }
+              multiline={true}
+              numberOfLines={3}
+              maxLength={46}
+            />
+            <Text style={{ color: "#FDA758", fontSize: 8 }}>
+              * 소개는 46자까지 입력할 수 있습니다.
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={{ marginVertical: 12, marginHorizontal: 24 }}
+            onPress={handleSave}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.btnStyle, styles.saveButton]}>저장하기</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -137,7 +190,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  profileImage: { width: 100, height: 100 },
+  profileImage: { width: 100, height: 100, borderRadius: 100 },
   profileChangeWrapper: {
     borderRadius: 16,
     backgroundColor: "rgba(87, 51, 83, 0.3)",

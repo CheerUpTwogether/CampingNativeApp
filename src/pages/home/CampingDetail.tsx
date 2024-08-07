@@ -33,10 +33,16 @@ const Camping = () => {
 
       {/* 추가 프로퍼티들 출력 */}
       <ScrollView>
-        <Image
-          source={{ uri: `${campingInfo.firstImageUrl}` }}
-          style={styles.thumbImage}
-        />
+        {campingInfo.firstImageUrl ? (
+          <Image
+            source={{ uri: `${campingInfo.firstImageUrl}` }}
+            style={styles.thumbImage}
+          />
+        ) : (
+          <View style={styles.thumbImage}>
+            <Text style={styles.noImageText}>이미지가 없습니다</Text>
+          </View>
+        )}
         <View>
           <View style={styles.divNmContainer}>
             <Text style={styles.mangeDivNm}>{campingInfo.facltDivNm}</Text>
@@ -96,6 +102,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 250,
     resizeMode: "cover",
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
   addrbox: {
     flexDirection: "row",
@@ -157,6 +164,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     //marginVertical: 8,
     paddingBottom: 8,
+  },
+  noImageText: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    paddingTop: 112,
   },
 });
 export default Camping;

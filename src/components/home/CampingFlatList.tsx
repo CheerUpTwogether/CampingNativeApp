@@ -31,7 +31,9 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({
               style={styles.thumbImage}
             />
           ) : (
-            <></>
+            <View style={styles.thumbImage}>
+              <Text style={styles.noImageText}>이미지가 없습니다</Text>
+            </View>
           )}
 
           <View style={styles.induty}>
@@ -50,7 +52,12 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({
 
           <View style={styles.faclDetailContainer}>
             <View style={styles.divNmContainer}>
-              <Text style={styles.mangeDivNm}>{item.facltDivNm}</Text>
+              {item?.facltDivNm ? (
+                <Text style={styles.mangeDivNm}>{item.facltDivNm}</Text>
+              ) : (
+                <></>
+              )}
+
               <Text style={styles.mangeDivNm}>{item.mangeDivNm}</Text>
             </View>
             <Text style={styles.resveCl}>{item.resveCl}</Text>
@@ -82,6 +89,13 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     borderRadius: 10,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  noImageText: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    paddingTop: 82,
   },
   induty: {
     position: "absolute",

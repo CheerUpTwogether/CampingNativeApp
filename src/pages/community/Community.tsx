@@ -11,11 +11,10 @@ import {
   Image,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
 } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
-import { getCommunitysApi } from "@/apis/community";
+import { getCommunitysSpb, getUsersSpb } from "@/supaBase/api/community";
 
 const leftIcon = require("@/assets/icons/menu.png");
 const shareIcon = require("@/assets/icons/Share.png");
@@ -28,23 +27,48 @@ type SettingsScreenNavigationProp =
 
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
+  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
+  const [mergedData, setMergedData] = useState<
+    (Community & { profileimagepath: string })[]
+  >([]);
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
 
-  const fetchData = async () => {
-    const res = await getCommunitysApi();
-    if (res?.data?.result?.content) {
-      const sortedData = res.data.result.content.sort(
-        (a: Community, b: Community) => b.id - a.id
-      );
+  useEffect(() => {
+    fetchCommunitysData();
+    fetchUserProfileData();
+    console.log(dataList);
+  }, [refresh]);
+
+  useEffect(() => {
+    if (dataList.length && userProfileData.length) {
+      const merged = dataList.map((item) => {
+        const userProfile = userProfileData.find(
+          (profile) => profile.user_id === item.user_id
+        );
+        return {
+          ...item,
+          profileimagepath: userProfile ? userProfile.profileimagepath : "",
+        };
+      });
+      setMergedData(merged);
+    }
+  }, [dataList, userProfileData]);
+
+  const fetchUserProfileData = async () => {
+    const data: UserProfile[] | null = await getUsersSpb();
+    if (data) {
+      setUserProfileData(data);
+    }
+  };
+  const fetchCommunitysData = async () => {
+    const data = await getCommunitysSpb();
+    if (data) {
+      const sortedData = data.sort((a, b) => b.id - a.id);
       setDataList(sortedData);
     }
     setRefresh(false);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [refresh, dataList]);
 
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
@@ -54,59 +78,72 @@ const Community = () => {
     setRefresh(true);
   };
 
-  const renderItem: ListRenderItem<Community> = ({ item }) => (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={{ marginHorizontal: "4%", marginVertical: "2%" }}
-      onPress={() => handleMove(item.id)}
-    >
-      <View style={styles.userWrapper}>
-        <View style={styles.topWrapper}>
-          <View>
-            <View style={styles.imageWrapper}>
-              <Image style={styles.profileImage} source={profileImage} />
+  const renderItem: ListRenderItem<
+    Community & { profileimagepath: string }
+  > = ({ item }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={{ marginHorizontal: "4%", marginVertical: "2%" }}
+        onPress={() => handleMove(item.id)}
+      >
+        <View style={styles.userWrapper}>
+          <View style={styles.topWrapper}>
+            <View style={{ marginVertical: 3 }}>
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={
+                    item.profileimagepath
+                      ? { uri: item.profileimagepath }
+                      : profileImage
+                  }
+                  style={
+                    item.profileimagepath
+                      ? styles.userProfileImage
+                      : styles.dummyProfileImage
+                  }
+                />
+              </View>
+              <Text style={styles.nickName}>{item.nickname}</Text>
             </View>
-            <Text style={styles.nickName}>{item.nickname}</Text>
+            <View style={styles.subjectWrapper}>
+              <Text style={styles.subject}>{item.subject}</Text>
+            </View>
+            <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
+              <Image source={shareIcon} style={styles.icon1} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.subjectWrapper}>
-            <Text style={styles.subject}>{item.subject}</Text>
-          </View>
-          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-            <Image source={shareIcon} style={styles.icon1} />
-          </TouchableOpacity>
         </View>
-      </View>
 
-      <View style={styles.contentWrapper}>
-        <Text style={styles.contentText}>{item.content}</Text>
-        <View style={styles.reactionContainer}>
-          <View style={styles.reactionWrapper}>
-            <Image style={styles.icon1} source={heartIcon} />
-            <Text style={styles.reactionText}>{item.like}</Text>
-          </View>
-          <View style={styles.reaction}>
-            <Image style={styles.icon2} source={chatIcon} />
-            <Text style={styles.reactionText}>{item.replyCount}</Text>
+        <View style={styles.contentWrapper}>
+          <Text style={styles.contentText}>{item.content}</Text>
+          <View style={styles.reactionContainer}>
+            <View style={styles.reactionWrapper}>
+              <Image style={styles.icon1} source={heartIcon} />
+              <Text style={styles.reactionText}>{item.like}</Text>
+            </View>
+            <View style={styles.reaction}>
+              <Image style={styles.icon2} source={chatIcon} />
+              <Text style={styles.reactionText}>{item.reply_count}</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="커뮤니티" leftIcon={leftIcon} />
-      <ScrollView
+      <FlatList
+        data={mergedData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        style={{ marginBottom: 70 }}
         refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={() => pullDown()} />
+          <RefreshControl refreshing={refresh} onRefresh={pullDown} />
         }
-      >
-        <FlatList
-          data={dataList}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
-      </ScrollView>
+      />
     </SafeAreaView>
   );
 };
@@ -115,7 +152,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF3E9",
-    marginBottom: 100,
   },
   topWrapper: {
     flexDirection: "row",
@@ -193,16 +229,19 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     alignItems: "center",
-    marginBottom: 12,
   },
-  profileImage: {
+  dummyProfileImage: {
     width: 100,
     height: 130,
   },
+  userProfileImage: {
+    width: 40,
+    height: 40,
+  },
   subjectWrapper: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
+    paddingBottom: 30,
+    marginLeft: 8,
   },
   subject: {
     color: "#FDA758",

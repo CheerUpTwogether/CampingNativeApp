@@ -9,16 +9,24 @@ interface CommunityDetailResponse {
   replys: [];
 }
 
-// 커뮤니티 타입
+interface Profile {
+  user_id: string;
+  email: string;
+  nickname: string;
+}
+
+// 커뮤니티 타입 상세
 interface Community {
   id: number;
+  user_id: string;
   subject: string;
   content: string;
   nickname: string;
   like: number;
-  likeCheck: boolean;
-  replyCount: number;
-  replys: Reply[];
+  like_check: boolean;
+  reply_count: number;
+  profileimagepath?: string;
+  replys?: Reply[];
 }
 
 interface Reply {
@@ -39,4 +47,9 @@ interface CommunityReply {
   communityId: string;
   replyId: string;
   reply: string;
+}
+
+interface UserProfile {
+  user_id: string;
+  profileimagepath: string;
 }

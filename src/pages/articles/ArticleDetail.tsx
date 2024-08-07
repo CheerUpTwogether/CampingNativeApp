@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import uuid from "react-native-uuid";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,11 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
 import Carousel from "react-native-snap-carousel";
 import { getArticleApi, setFavoriteApi } from "@/apis/article";
@@ -21,49 +18,31 @@ const { width: screenWidth } = Dimensions.get("window");
 
 import StarIcon from "@/assets/icons/Star.svg";
 import { ScrollView } from "react-native-gesture-handler";
+import useStore from "@/store/store";
 const backIcon = require("@/assets/icons/Back.png");
 
 export const ArticleDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { id } = route.params as { id: number };
-  const [article, setArticle] = useState<Article>({
-    id: 0,
-    title: "",
-    content: "",
-    createDate: "",
-    isFavorite: false,
-    articleImages: [],
-  });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getArticle();
-    }, [])
-  );
-
-  const getArticle = async () => {
-    const res = await getArticleApi(id);
-    res?.data?.result && setArticle(res?.data?.result);
+  const { id, iconState, data } = route.params as {
+    id: number;
+    iconState: boolean;
+    data: ArticleDetail;
   };
 
-  const setFavorite = async () => {
-    const res = await setFavoriteApi(article.id);
-    res?.data?.success &&
-      setArticle((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
+  const [isFavorite, setIsFavorite] = useState(iconState);
+  const favoriteFunc = useStore().favoriteFunc;
+  const handleFavorite = async () => {
+    favoriteFunc(id, isFavorite);
+    setIsFavorite(!isFavorite);
   };
 
-  const renderItem = ({
-    item,
-  }: {
-    item: { id: number; imgPath: string };
-    index: number;
-  }) => {
+  const renderItem = ({ item }) => {
     return (
       <Image
-        key={id}
         source={{
-          uri: item.imgPath,
+          uri: item,
         }}
         style={styles.thumbImage}
       />
@@ -81,7 +60,7 @@ export const ArticleDetail = () => {
       <ScrollView>
         <View>
           <Carousel
-            data={article?.articleImages ? article?.articleImages : []}
+            data={data?.images ? data?.images : []}
             renderItem={renderItem}
             sliderWidth={screenWidth}
             itemWidth={screenWidth * 0.75}
@@ -90,16 +69,16 @@ export const ArticleDetail = () => {
         </View>
 
         <View style={styles.info}>
-          <TouchableOpacity style={styles.starBtn} onPress={setFavorite}>
+          <TouchableOpacity style={styles.starBtn} onPress={handleFavorite}>
             <StarIcon
-              color={article.isFavorite ? "#FFD73F" : "#ddd"}
+              color={isFavorite ? "#FFD73F" : "#ddd"}
               width={24}
               height={24}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>{article.title}</Text>
-          <Text>{formatDate(article.createDate)}</Text>
-          <Text style={styles.content}>{article.content}</Text>
+          <Text style={styles.title}>{data.title}</Text>
+          <Text>{formatDate(data.create_date)}</Text>
+          <Text style={styles.content}>{data.content}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

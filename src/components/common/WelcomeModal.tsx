@@ -1,31 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Animated, Easing } from "react-native";
 import Modal from "react-native-modal";
 import LottieView from "lottie-react-native";
 
+const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
+
 const WelcomeModal = ({ isVisible, onClose }) => {
-  const animationRef = useRef(null);
+  const animationProgress = useRef(new Animated.Value(0));
 
   useEffect(() => {
-    if (isVisible && animationRef.current) {
-      animationRef.current;
-    }
-    const timer = setTimeout(() => {
-      onClose();
-    }, 3000);
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
 
-    return () => clearTimeout(timer);
+      Animated.timing(animationProgress.current, {
+        toValue: 1,
+        duration: 5000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }).start();
+
+      return () => clearTimeout(timer);
+    }
   }, [isVisible]);
 
   return (
-    <Modal isVisible={isVisible} onBackdropPress={onClose}>
+    <Modal
+      isVisible={isVisible}
+      onBackdropPress={onClose}
+      style={styles.modalWrapper}
+    >
       <View style={styles.modalContent}>
-        <LottieView
-          ref={animationRef}
-          source={require("../../assets/animation/welcomeAnimation.json")}
-          autoPlay={false}
-          loop={false}
-          style={styles.animation}
+        <AnimatedLottieView
+          source={require("@/assets/animation/welcomeAnimation.json")}
+          progress={animationProgress.current}
+          style={{ width: "100%", height: 200 }}
         />
         <Text style={styles.welcomText}>반갑습니다!</Text>
       </View>
@@ -39,6 +49,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: "center",
+    height: 300,
   },
   animation: {
     width: 150,

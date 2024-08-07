@@ -7,9 +7,14 @@ import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
 import { addCommunityApi, setCommunityApi } from "@/apis/community";
 import { RootStackParamList } from "@/components/router/Router";
-
+import {
+  addCommunitySpb,
+  setCommunityCommentSpb,
+  setCommunitySpb,
+} from "@/supaBase/api/community";
 const backIcon = require("@/assets/icons/Back.png");
 const addButton = require("@/assets/icons/bottomTab/add.png");
+import useStore from "@/store/store";
 
 type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;
 type AddScreenRouteProp = RouteProp<RootStackParamList, "Add">;
@@ -19,6 +24,7 @@ const Add: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const navigation = useNavigation<AddScreenNavigationProp>();
   const route = useRoute<AddScreenRouteProp>();
+  const userInfo = useStore().userInfo;
 
   const isEdit = route.params?.isEdit ?? false;
   const communityId = route.params?.communityId ?? null;
@@ -35,21 +41,25 @@ const Add: React.FC = () => {
   const handleSubmit = async () => {
     let res;
     if (isEdit) {
-      res = await setCommunityApi(Number(communityId), {
+      res = await setCommunitySpb(
+        Number(communityId),
         subject,
         content,
-      });
+        userInfo.nickname
+      );
       navigation.navigate("CommunityDetail", {
         CommunityId: Number(communityId),
       });
     } else {
-      res = await addCommunityApi({
+      res = await addCommunitySpb(
+        userInfo.user_id,
         subject,
         content,
-      });
+        userInfo.nickname
+      );
     }
 
-    if (res?.success) {
+    if (res) {
       Toast.show({
         type: "success",
         text1: isEdit ? "커뮤니티를 수정했습니다." : "커뮤니티를 생성했습니다.",
