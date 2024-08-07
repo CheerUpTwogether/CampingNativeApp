@@ -27,7 +27,6 @@ const TopBar: React.FC<TopBarProps> = ({
     <View style={styles.wrapper}>
       {leftIcon ? (
         <TouchableOpacity
-          style={[styles.iconWrapper, { backgroundColor: bgColor }]}
           onPress={() => {
             if (leftClick) {
               leftClick();
@@ -55,7 +54,6 @@ const TopBar: React.FC<TopBarProps> = ({
 
       {rightIcon ? (
         <TouchableOpacity
-          style={[styles.iconWrapper, { backgroundColor: bgColor }]}
           onPress={() => {
             if (rightClick) {
               rightClick();
@@ -80,7 +78,7 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 24,
+    marginVertical: 12,
     marginHorizontal: 12,
     flexDirection: "row",
     justifyContent: "space-between",
