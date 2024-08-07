@@ -7,14 +7,14 @@ import { RootStackParamList } from "../router/Router";
 import StarIcon from "@/assets/icons/Star.svg";
 
 import UserIcon from "@/assets/icons/User.svg";
+import useStore from "@/store/store";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
   myFavoriteArticles,
-  setFavorite,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const favoriteFunc = useStore().favoriteFunc;
   return (
     <>
       {articles.length ? (
@@ -38,7 +38,6 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                     images: el.images,
                     favorite_count: el.favorite_count,
                   },
-                  setFavorite,
                 })
               }
             >
@@ -75,7 +74,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                   </View>
                   <Text style={{ fontSize: 12 }}>{el.favorite_count}</Text>
                   <TouchableOpacity
-                    onPress={() => setFavorite(el.id, !!isFavorite)}
+                    onPress={() => favoriteFunc(el.id, !!isFavorite)}
                   >
                     <StarIcon
                       color={isFavorite ? "#FFD73F" : "#ddd"}

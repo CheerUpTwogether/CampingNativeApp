@@ -24,7 +24,6 @@ type ArticleDetail = {
 interface ArticleFlatListProps {
   articles: Article[];
   myFavoriteArticles: ArticleFavoriteAId[];
-  setFavorite: (articleId: number, mode: boolean) => void;
 }
 
 interface ArticlesReponse {

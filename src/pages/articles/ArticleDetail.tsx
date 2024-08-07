@@ -18,22 +18,23 @@ const { width: screenWidth } = Dimensions.get("window");
 
 import StarIcon from "@/assets/icons/Star.svg";
 import { ScrollView } from "react-native-gesture-handler";
+import useStore from "@/store/store";
 const backIcon = require("@/assets/icons/Back.png");
 
 export const ArticleDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { id, iconState, data, setFavorite } = route.params as {
+  const { id, iconState, data } = route.params as {
     id: number;
     iconState: boolean;
     data: ArticleDetail;
-    setFavorite: (articleId: number, mode: boolean) => void;
   };
 
   const [isFavorite, setIsFavorite] = useState(iconState);
+  const favoriteFunc = useStore().favoriteFunc;
   const handleFavorite = async () => {
-    setFavorite(id, isFavorite);
+    favoriteFunc(id, isFavorite);
     setIsFavorite(!isFavorite);
   };
 

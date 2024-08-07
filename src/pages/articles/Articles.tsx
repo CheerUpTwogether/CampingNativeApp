@@ -10,6 +10,7 @@ import {
   getFavoriteArticleIdSpb,
   setFavoriteSpb,
 } from "@/supaBase/api/article";
+import useStore from "@/store/store";
 
 const menu = require("@/assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
@@ -25,11 +26,13 @@ const Articles = () => {
     { title: "최신순", value: "LATEST" },
     { title: "좋아요순", value: "FAVORITE" },
   ];
+  const setFavoriteFunc = useStore().setFavoriteFunc;
 
   useFocusEffect(
     React.useCallback(() => {
       getArticles();
       getFavoriteArticles();
+      setFavoriteFunc(setFavorite);
     }, [])
   );
 
@@ -79,7 +82,6 @@ const Articles = () => {
         <ArticleFlatList
           articles={articles}
           myFavoriteArticles={myFavoriteArticles}
-          setFavorite={setFavorite}
         />
       </ScrollView>
     </SafeAreaView>
