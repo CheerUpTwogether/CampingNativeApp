@@ -84,7 +84,7 @@ export const deleteReplySpb = async (id: number) => {
     }
     showInfo("success", "댓글이 성공적으로 삭제되었습니다.");
 
-    return data;
+    return true;
   } catch (e) {
     console.log(e);
   }
