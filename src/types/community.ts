@@ -24,7 +24,7 @@ interface Community {
   nickname: string;
   like: number;
   like_check: boolean;
-  replyCount: number;
+  reply_count: number;
   profileimagepath?: string;
   replys?: Reply[];
 }

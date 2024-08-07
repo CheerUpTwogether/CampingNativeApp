@@ -37,6 +37,7 @@ const Community = () => {
   useEffect(() => {
     fetchCommunitysData();
     fetchUserProfileData();
+    console.log(dataList);
   }, [refresh]);
 
   useEffect(() => {
@@ -123,7 +124,7 @@ const Community = () => {
             </View>
             <View style={styles.reaction}>
               <Image style={styles.icon2} source={chatIcon} />
-              <Text style={styles.reactionText}>{item.replyCount}</Text>
+              <Text style={styles.reactionText}>{item.reply_count}</Text>
             </View>
           </View>
         </View>

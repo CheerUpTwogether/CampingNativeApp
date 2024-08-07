@@ -173,7 +173,7 @@ const CommunityDetail = () => {
                 <View style={styles.reaction}>
                   <Image style={styles.icon2} source={chatIcon} />
                   <Text style={styles.reactionText}>
-                    {communityData.replyCount}
+                    {communityData.reply_count}
                   </Text>
                 </View>
               </View>
