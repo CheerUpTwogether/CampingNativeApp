@@ -30,7 +30,7 @@ export const ArticleDetail = () => {
     data: ArticleDetail;
     setFavorite: (articleId: number, mode: boolean) => void;
   };
-  console.log(data.images);
+
   const [isFavorite, setIsFavorite] = useState(iconState);
   const handleFavorite = async () => {
     setFavorite(id, isFavorite);
@@ -38,7 +38,6 @@ export const ArticleDetail = () => {
   };
 
   const renderItem = ({ item }) => {
-    console.log(item);
     return (
       <Image
         source={{

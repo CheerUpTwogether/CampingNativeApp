@@ -32,6 +32,8 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const getReplys = async () => {
     const data = await getReplysSpb(CommunityId);
+    console.log(data);
+    console.log(userInfo.nickname);
     setReplys(data);
   };
 
@@ -85,12 +87,12 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
           </View>
 
           <View style={{ paddingTop: 10, paddingLeft: 12 }}>
-            <Text style={styles.nickName}>{item.profile.nickname}</Text>
+            <Text style={styles.nickName}>{item?.profile?.nickname}</Text>
             <Text style={styles.id}>{formatDate(item.create_date)}</Text>
           </View>
         </View>
 
-        {userInfo.nickname === item.profile.nickname ? (
+        {userInfo?.nickname === item?.profile?.nickname ? (
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -140,24 +142,26 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
         data={replys}
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={
-          <View style={styles.contentsWrapper}>
-            <Text style={styles.content}>댓글</Text>
+          <View>
+            <View style={styles.contentsWrapper}>
+              <Text style={styles.content}>댓글</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <View style={styles.inputWrapper}>
+                <Input
+                  value={inputText}
+                  setValue={setInputText}
+                  placeholder="댓글을 입력해주세요."
+                  isBgWhite={false}
+                />
+              </View>
+              <TouchableOpacity style={styles.sendButton} onPress={addReply}>
+                <Text style={styles.content}>등록</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         }
       />
-      <View style={styles.inputContainer}>
-        <View style={styles.inputWrapper}>
-          <Input
-            value={inputText}
-            setValue={setInputText}
-            placeholder="댓글을 입력해주세요."
-            isBgWhite={false}
-          />
-        </View>
-        <TouchableOpacity style={styles.sendButton} onPress={addReply}>
-          <Text style={styles.content}>등록</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

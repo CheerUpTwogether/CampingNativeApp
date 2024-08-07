@@ -44,17 +44,18 @@ export const setUserSpb = async ({
 }): Promise<boolean> => {
   try {
     const uid = await getSignInUserId();
-    console.log("hellowWorld");
     if (!uid) {
       showInfo("error", "uid 값을 찾지 못했습니다.");
       return false;
     }
+
     const { error } = await supabase
       .from("profile")
       .update({ nickname, email, introduce })
       .eq("user_id", uid);
 
     if (error) {
+      console.log(error);
       showInfo("error", error.message);
       return false;
     }

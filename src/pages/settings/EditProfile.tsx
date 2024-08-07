@@ -42,7 +42,6 @@ const EditProfile = () => {
   useEffect(() => {
     // zustand 전역 상태 관리
     setUserData(userInfo);
-    console.log(userInfo);
   }, [userInfo]);
 
   const fetchUserData = async () => {
