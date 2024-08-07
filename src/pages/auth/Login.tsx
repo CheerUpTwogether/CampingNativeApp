@@ -47,12 +47,15 @@ const Login = () => {
       setUserData(data);
 
       setisVisibleModal(true);
-      navigation.replace("BottomTab", { screen: "Home" });
     }
   };
 
   const moveSignup = () => {
     navigation.replace("Signup");
+  };
+  const movehome = () => {
+    setisVisibleModal(false);
+    navigation.replace("BottomTab", { screen: "Home" });
   };
 
   const iconColor = (text: string) => (!!text ? "#FDA758" : "#999");
@@ -129,10 +132,7 @@ const Login = () => {
               <Text style={styles.defaultText}>아직 회원이 아니세요?</Text>
               <Text style={styles.boldText}>회원가입</Text>
             </TouchableOpacity>
-            <WelcomeModal
-              isVisible={isVisibleModal}
-              onClose={() => setisVisibleModal(false)}
-            />
+            <WelcomeModal isVisible={isVisibleModal} onClose={movehome} />
           </View>
         </View>
       </ScrollView>
