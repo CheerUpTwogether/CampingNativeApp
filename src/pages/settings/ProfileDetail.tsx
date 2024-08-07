@@ -42,10 +42,15 @@ type StackNavProp = StackNavigationProp<RootStackParamList, "EditProfile">;
 const ProfileDetail = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const navigation = useNavigation<StackNavProp>();
+  const userInfo = useStore().userInfo;
 
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    setUserData(userInfo);
+  }, [userInfo]);
 
   const fetchUserData = async () => {
     const data = await getUserSpb();
