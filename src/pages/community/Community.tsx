@@ -14,8 +14,7 @@ import {
 } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import TopBar from "@/components/common/TopBar";
-import { getCommunitysSpb } from "@/supaBase/api/community";
-import useStore from "@/store/store";
+import { getCommunitysSpb, getUsersSpb } from "@/supaBase/api/community";
 
 const leftIcon = require("@/assets/icons/menu.png");
 const shareIcon = require("@/assets/icons/Share.png");
@@ -28,15 +27,39 @@ type SettingsScreenNavigationProp =
 
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
+  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
+  const [mergedData, setMergedData] = useState<
+    (Community & { profileimagepath: string })[]
+  >([]);
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
-  const userData = useStore().userInfo;
 
   useEffect(() => {
     fetchCommunitysData();
-    console.log("ooo", dataList);
+    fetchUserProfileData();
   }, [refresh]);
 
+  useEffect(() => {
+    if (dataList.length && userProfileData.length) {
+      const merged = dataList.map((item) => {
+        const userProfile = userProfileData.find(
+          (profile) => profile.user_id === item.user_id
+        );
+        return {
+          ...item,
+          profileimagepath: userProfile ? userProfile.profileimagepath : "",
+        };
+      });
+      setMergedData(merged);
+    }
+  }, [dataList, userProfileData]);
+
+  const fetchUserProfileData = async () => {
+    const data: UserProfile[] | null = await getUsersSpb();
+    if (data) {
+      setUserProfileData(data);
+    }
+  };
   const fetchCommunitysData = async () => {
     const data = await getCommunitysSpb();
     if (data) {
@@ -54,57 +77,65 @@ const Community = () => {
     setRefresh(true);
   };
 
-  const renderItem: ListRenderItem<Community> = ({ item }) => (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      style={{ marginHorizontal: "4%", marginVertical: "2%" }}
-      onPress={() => handleMove(item.id)}
-    >
-      <View style={styles.userWrapper}>
-        <View style={styles.topWrapper}>
-          <View>
-            <View style={styles.imageWrapper}>
-              <Image
-                source={
-                  userData.profileimagepath
-                    ? { uri: userData.profileimagepath }
-                    : profileImage
-                }
-                style={styles.profileImage}
-              />
+  const renderItem: ListRenderItem<
+    Community & { profileimagepath: string }
+  > = ({ item }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={{ marginHorizontal: "4%", marginVertical: "2%" }}
+        onPress={() => handleMove(item.id)}
+      >
+        <View style={styles.userWrapper}>
+          <View style={styles.topWrapper}>
+            <View>
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={
+                    item.profileimagepath
+                      ? { uri: item.profileimagepath }
+                      : profileImage
+                  }
+                  style={
+                    item.profileimagepath
+                      ? styles.userProfileImage
+                      : styles.dummyProfileImage
+                  }
+                />
+              </View>
+              <Text style={styles.nickName}>{item.nickname}</Text>
             </View>
-            <Text style={styles.nickName}>{item.nickname}</Text>
+            <View style={styles.subjectWrapper}>
+              <Text style={styles.subject}>{item.subject}</Text>
+            </View>
+            <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
+              <Image source={shareIcon} style={styles.icon1} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.subjectWrapper}>
-            <Text style={styles.subject}>{item.subject}</Text>
-          </View>
-          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-            <Image source={shareIcon} style={styles.icon1} />
-          </TouchableOpacity>
         </View>
-      </View>
 
-      <View style={styles.contentWrapper}>
-        <Text style={styles.contentText}>{item.content}</Text>
-        <View style={styles.reactionContainer}>
-          <View style={styles.reactionWrapper}>
-            <Image style={styles.icon1} source={heartIcon} />
-            <Text style={styles.reactionText}>{item.like}</Text>
-          </View>
-          <View style={styles.reaction}>
-            <Image style={styles.icon2} source={chatIcon} />
-            <Text style={styles.reactionText}>{item.replyCount}</Text>
+        <View style={styles.contentWrapper}>
+          <Text style={styles.contentText}>{item.content}</Text>
+          <View style={styles.reactionContainer}>
+            <View style={styles.reactionWrapper}>
+              <Image style={styles.icon1} source={heartIcon} />
+              <Text style={styles.reactionText}>{item.like}</Text>
+            </View>
+            <View style={styles.reaction}>
+              <Image style={styles.icon2} source={chatIcon} />
+              <Text style={styles.reactionText}>{item.replyCount}</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="커뮤니티" leftIcon={leftIcon} />
       <FlatList
-        data={dataList}
+        data={mergedData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         style={{ marginBottom: 70 }}
@@ -199,9 +230,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  profileImage: {
+  dummyProfileImage: {
     width: 100,
     height: 130,
+  },
+  userProfileImage: {
+    width: 40,
+    height: 40,
   },
   subjectWrapper: {
     flex: 1,

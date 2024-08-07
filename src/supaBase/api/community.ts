@@ -46,7 +46,7 @@ export const getCommunitySpb = async (
     }
     const { data, error } = await supabase
       .from("community")
-      .select("*, profile (user_id, email, nickname)")
+      .select("*, profile (user_id, email, nickname, profileimagepath)")
       .eq("id", communityId)
       .single();
 
@@ -252,4 +252,12 @@ export const setCommunityCommentSpb = async (
     showInfo("error", (error as Error).message);
     return false;
   }
+};
+
+// 유저 정보 전체 조회
+export const getUsersSpb = async () => {
+  const { data, error } = await supabase
+    .from("profile")
+    .select("profileimagepath, user_id");
+  return data;
 };

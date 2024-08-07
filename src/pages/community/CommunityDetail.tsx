@@ -13,7 +13,11 @@ import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/n
 import { RootStackParamList } from "@/components/router/Router";
 import TopBar from "@/components/common/TopBar";
 import Replys from "@/components/community/Replys";
-import { getCommunitySpb, deleteCommunitySpb } from "@/supaBase/api/community";
+import {
+  getCommunitySpb,
+  deleteCommunitySpb,
+  getUsersSpb,
+} from "@/supaBase/api/community";
 import useStore from "@/store/store";
 
 const backIcon = require("@/assets/icons/Back.png");
@@ -27,6 +31,7 @@ type SettingsScreenNavigationProp =
 
 const CommunityDetail = () => {
   const [communityData, setCommunityData] = useState<Community>();
+  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
   const [userId, setUserId] = useState("");
   const route = useRoute();
   const { CommunityId } = route.params as { CommunityId: number };
@@ -35,6 +40,7 @@ const CommunityDetail = () => {
 
   useEffect(() => {
     fetchCommunityData();
+    fetchUserProfileData();
     setUserId(userInfo.user_id);
   }, [CommunityId]);
 
@@ -44,7 +50,16 @@ const CommunityDetail = () => {
 
   const fetchCommunityData = async () => {
     const data = await getCommunitySpb(CommunityId);
-    setCommunityData(data);
+    if (data) {
+      setCommunityData(data);
+    }
+  };
+
+  const fetchUserProfileData = async () => {
+    const data: UserProfile[] | null = await getUsersSpb();
+    if (data) {
+      setUserProfileData(data);
+    }
   };
 
   const handleEdit = () => {
@@ -85,6 +100,13 @@ const CommunityDetail = () => {
     }
   };
 
+  const getProfileImage = (userId: string) => {
+    const userProfile = userProfileData.find(
+      (profile) => profile.user_id === userId
+    );
+    return userProfile ? userProfile.profileimagepath : "";
+  };
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar title="상세 보기" leftIcon={backIcon} leftClick={handlePrev} />
@@ -95,14 +117,17 @@ const CommunityDetail = () => {
               <View style={styles.topWrapper}>
                 <View style={{ gap: 6 }}>
                   <View style={styles.imageWrapper}>
-                    {/* <Image style={styles.profileImage} source={profileImage} /> */}
                     <Image
                       source={
-                        userInfo.profileimagepath
-                          ? { uri: userInfo.profileimagepath }
+                        getProfileImage(communityData.user_id)
+                          ? { uri: getProfileImage(communityData.user_id) }
                           : profileImage
                       }
-                      style={styles.profileImage}
+                      style={
+                        getProfileImage(communityData.user_id)
+                          ? styles.userProfileImage
+                          : styles.dummyProfileImage
+                      }
                     />
                   </View>
                   <Text style={styles.nickName}>{communityData.nickname}</Text>
@@ -250,10 +275,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
   },
-  profileImage: {
+  dummyProfileImage: {
     width: 70,
     height: 100,
   },
+  userProfileImage: { width: 40, height: 40 },
   editButtonContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
