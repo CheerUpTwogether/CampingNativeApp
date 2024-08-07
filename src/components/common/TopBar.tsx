@@ -78,12 +78,15 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 12,
-    marginHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     gap: 10,
+    backgroundColor: "#fff",
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 0.5,
   },
   iconWrapper: {
     width: 40,
