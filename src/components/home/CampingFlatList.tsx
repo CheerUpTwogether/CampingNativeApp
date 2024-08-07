@@ -31,7 +31,7 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({
               style={styles.thumbImage}
             />
           ) : (
-            <></>
+            <View style={styles.thumbImage}></View>
           )}
 
           <View style={styles.induty}>
