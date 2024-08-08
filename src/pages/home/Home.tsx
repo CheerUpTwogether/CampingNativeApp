@@ -27,12 +27,15 @@ const Home = () => {
   const getCampings = async () => {
     const serviceKey = OPENAPI_SERVICE_KEY;
     const data = await getCampingsApi({
-      MobileOS: Platform.OS === "ios" ? "IOS" : "AND",
+      //MobileOS: Platform.OS === "ios" ? "ETC" : "AND",
+      MobileOS: "AND",
       MobileApp: "캠핑 투게더",
-      serviceKey,
+      serviceKey:
+        "S0Hye%2FT7xZSp8W%2FQ1Md2miGHRKrwGW%2FJQ8%2BQ7OTXdsiJxECs7cki9ujGX9TMlwfxfsV%2Fupe61%2FJw4jfbeqgAog%3D%3D",
       _type: "json",
       pageNo,
     });
+    console.log(data);
 
     const campingList = data?.response?.body?.items?.item;
 
@@ -48,13 +51,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar
-        leftIcon={menu}
-        leftClick={handleLeft}
-        title="캠핑투게더"
-        rightIsProfile={true}
-        rightIcon={profile}
-      />
+      <TopBar title="캠핑투게더" rightIsProfile={true} rightIcon={profile} />
       <CampingFlatList campings={campings} onEndReached={handleEndReached} />
     </SafeAreaView>
   );
@@ -63,8 +60,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#FFF3E9",
-    marginBottom: 72,
+    backgroundColor: "#F5F7F8",
+    marginBottom: 40,
   },
   scrollAreaContainer: { flexGrow: 1, paddingBottom: 100 },
 });

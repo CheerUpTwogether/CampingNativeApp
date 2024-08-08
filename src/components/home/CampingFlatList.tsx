@@ -78,15 +78,13 @@ const CampingFlatList: React.FC<CampingFlatListProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
-    marginHorizontal: 24,
-    padding: 12,
+    marginBottom: 8,
+    padding: 20,
     backgroundColor: "#fff",
-    borderRadius: 10,
   },
   thumbImage: {
     width: "100%",
-    height: 200,
+    height: 180,
     resizeMode: "cover",
     borderRadius: 10,
     backgroundColor: "rgba(0,0,0,0.6)",
