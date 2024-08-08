@@ -27,7 +27,6 @@ const TopBar: React.FC<TopBarProps> = ({
     <View style={styles.wrapper}>
       {leftIcon ? (
         <TouchableOpacity
-          style={[styles.iconWrapper, { backgroundColor: bgColor }]}
           onPress={() => {
             if (leftClick) {
               leftClick();
@@ -44,18 +43,23 @@ const TopBar: React.FC<TopBarProps> = ({
           )}
         </TouchableOpacity>
       ) : (
-        <View style={styles.iconWrapper}></View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            source={require("@/assets/images/Camping.png")}
+            style={{ height: 28, width: 28, marginRight: 8 }}
+          />
+          <Text style={{ fontSize: 18, color: "#173B45" }}>캠핑투게더</Text>
+        </View>
       )}
 
-      <View style={styles.titleWrapper}>
+      {/* <View style={styles.titleWrapper}>
         <Text style={styles.titleStyle} numberOfLines={1}>
           {title}
         </Text>
-      </View>
+      </View> */}
 
       {rightIcon ? (
         <TouchableOpacity
-          style={[styles.iconWrapper, { backgroundColor: bgColor }]}
           onPress={() => {
             if (rightClick) {
               rightClick();
@@ -65,7 +69,7 @@ const TopBar: React.FC<TopBarProps> = ({
           {rightIsProfile ? (
             <Image
               source={rightIcon}
-              style={[styles.icon, { width: 40, height: 40 }]}
+              style={[styles.icon, { width: 36, height: 36 }]}
             />
           ) : (
             <Image source={rightIcon} style={styles.icon} />
@@ -80,12 +84,19 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginVertical: 24,
-    marginHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: 10,
+    backgroundColor: "#fff",
+    // 그림자 스타일
+    shadowColor: "#000", // 그림자 색상
+    shadowOffset: { width: 0, height: 4 }, // 그림자의 위치
+    shadowOpacity: 0.3, // 그림자의 투명도
+    shadowRadius: 8, // 그림자의 반경
+    elevation: 8, // Android에서 그림자 깊이
+    zIndex: 1,
   },
   iconWrapper: {
     width: 40,

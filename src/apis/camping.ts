@@ -15,6 +15,7 @@ export const getCampingsApi = async (obj: {
     );
     return res.data;
   } catch (error) {
+    console.log(error);
     showToastApiError();
   }
 };

@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import CustomCurveUi from "./CustomCurveUi";
 
-const addButton = require("../../assets/icons/bottomTab/add.png");
+//const addButton = require("../../assets/icons/bottomTab/add.png");
+const addButton = require("@/assets/images/Add.png");
 import HomeIcon from "@/assets/icons/Home.svg";
 import ArticleIcon from "@/assets/icons/Article.svg";
 import CommunityIcon from "@/assets/icons/Community.svg";
@@ -97,10 +98,9 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
         />
       </TouchableOpacity>
       {/* 곡선의 UI 컴포넌트 */}
-      <CustomCurveUi />
+      {/* <CustomCurveUi /> */}
       {/* 각 아이콘 설정  */}
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
         const label = route.name;
         const isFocused = state.index === index;
         const animatedValue = animatedValues[index];
@@ -109,25 +109,25 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
             case "Home":
               return (
                 <HomeIcon
-                  width={28}
-                  height={28}
-                  color={bool ? "#FC9D45" : "#ddd"}
+                  width={24}
+                  height={24}
+                  color={bool ? "#FF8225" : "#999"}
                 />
               );
             case "Articles":
               return (
                 <ArticleIcon
-                  width={28}
-                  height={28}
-                  color={bool ? "#FC9D45" : "#ddd"}
+                  width={24}
+                  height={24}
+                  color={bool ? "#FF8225" : "#999"}
                 />
               );
             case "Community":
               return (
                 <CommunityIcon
-                  width={28}
-                  height={28}
-                  color={bool ? "#FC9D45" : "#ddd"}
+                  width={24}
+                  height={24}
+                  color={bool ? "#FF8225" : "#999"}
                 />
               );
             default:
@@ -135,7 +135,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                 <SettingIcon
                   width={28}
                   height={28}
-                  color={bool ? "#FC9D45" : "#ddd"}
+                  color={bool ? "#FF8225" : "#999"}
                 />
               );
           }
@@ -169,8 +169,8 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
               marginRight: route.name === "Articles" ? 40 : 0,
               marginLeft: route.name === "Community" ? 40 : 0,
               alignItems: "center",
-              paddingBottom: 20,
-              paddingTop: 24,
+              paddingBottom: 16,
+              paddingTop: 12,
               zIndex: 2,
             }}
             key={index}
@@ -207,17 +207,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#FFF3E9",
     zIndex: 1,
+    backgroundColor: "#fff",
+    borderTopColor: "#ddd",
+    borderTopWidth: 0.5,
   },
   addButtonWrapper: {
     width: 80,
-    height: 50,
+    height: 44,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    bottom: 46,
+    bottom: 24,
     left: (width - 80) / 2 + 1,
     zIndex: 2,
   },
