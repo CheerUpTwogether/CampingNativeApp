@@ -19,8 +19,8 @@ import Intro from "@/pages/auth/Intro";
 import CommunityDetail from "@/pages/community/CommunityDetail";
 import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "../../pages/articles/ArticleDetail";
-import Test from "@/supaBase/Test";
-import TestCommunity from "@/supaBase/TestCommunity";
+import { Session } from "@supabase/supabase-js";
+import LoginDetail from "@/pages/auth/LoginDetail";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -34,6 +34,7 @@ export type RootBottomParamList = {
 
 export type RootStackParamList = {
   Login: undefined;
+  LoginDetail: {authData: { user?: User; session: Session; }}
   Signup: undefined;
   Splash: undefined;
   BottomTab: {
@@ -80,6 +81,7 @@ const Router = () => {
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
+      <StackTab.Screen name="LoginDetail" component={LoginDetail} />
       <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="Intro" component={Intro} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
