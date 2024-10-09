@@ -32,8 +32,6 @@ const Replys: React.FC<{ CommunityId: number }> = ({ CommunityId }) => {
 
   const getReplys = async () => {
     const data = await getReplysSpb(CommunityId);
-    console.log(data);
-    console.log(userInfo.nickname);
     setReplys(data);
   };
 

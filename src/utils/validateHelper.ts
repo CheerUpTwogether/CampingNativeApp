@@ -45,7 +45,6 @@ export const getPasswordValid = (password: string): string | boolean => {
   const regex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
   if (!regex.test(password)) {
-    console.log(password);
     alertMessage(
       "error",
       "대/소문자, 특수 문자, 숫자를 포함하여 8글자 이상 입력하세요."
@@ -66,7 +65,6 @@ export const getPasswordCheckValid = (
   password: string,
   passwordCheck: string
 ): string | boolean => {
-  console.log(passwordCheck);
   if (!passwordCheck) {
     alertMessage("error", "비밀번호 확인을 입력해주세요.");
     return false;
