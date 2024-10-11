@@ -11,6 +11,7 @@ import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import CampingFlatList from "@/components/home/CampingFlatList";
 
+
 const menu = require("../../assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
 
@@ -30,12 +31,10 @@ const Home = () => {
       //MobileOS: Platform.OS === "ios" ? "ETC" : "AND",
       MobileOS: "AND",
       MobileApp: "캠핑 투게더",
-      serviceKey:
-        "S0Hye%2FT7xZSp8W%2FQ1Md2miGHRKrwGW%2FJQ8%2BQ7OTXdsiJxECs7cki9ujGX9TMlwfxfsV%2Fupe61%2FJw4jfbeqgAog%3D%3D",
+      serviceKey: serviceKey,
       _type: "json",
       pageNo,
     });
-    console.log(data);
 
     const campingList = data?.response?.body?.items?.item;
 

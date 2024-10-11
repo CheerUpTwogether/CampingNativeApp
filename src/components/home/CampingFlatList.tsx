@@ -99,17 +99,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: "#FC9D45",
+    backgroundColor: "#386641",
     borderRadius: 100,
     padding: 8,
   },
   indutyText: {
-    color: "#FFF3E9",
+    color: "#fff",
     fontSize: 14,
     fontWeight: "bold",
   },
   facltNm: {
     fontSize: 18,
+    fontWeight: '500',
     color: "#000",
   },
   divNmContainer: {
@@ -123,8 +124,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 100,
-    backgroundColor: "rgba(87, 51, 83, 0.2)",
-    color: "#573353",
+    backgroundColor: "#cdd993",
+    color: "#386641",
+    fontWeight: '500'
   },
   faclDetailContainer: {
     paddingHorizontal: 8,

@@ -50,7 +50,9 @@ const Login = () => {
       );
 
       if (profileDataError) {
-        Toast.show({ type: "error", text1: '문제가 발생했어요. 다시 로그인 해주세요' });
+        
+        Toast.show({ type: "success", text1: '정보를 등록해주세요' });
+        navigation.replace('LoginDetail', {authData})
         return;
       }
 

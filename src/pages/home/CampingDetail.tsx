@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flex: 1,
   },
-  topBar: { backgroundColor: "#FFF3E9" },
+  topBar: { backgroundColor: "#fff" },
   thumbImage: {
     width: "100%",
     height: 250,
@@ -120,14 +120,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 4,
     color: "#000",
+    fontWeight: '600'
   },
   mangeDivNm: {
     marginRight: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 100,
-    backgroundColor: "rgba(87, 51, 83, 0.2)",
-    color: "#573353",
+    backgroundColor: "#cdd993",
+    color: "#386641",
   },
   intro: {
     paddingHorizontal: 16,
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
   caravInnerFclty: {
     paddingVertical: 4,
     paddingLeft: 4,
+    fontSize: 16,
   },
   caravInnerFcltyTitle: {
     flexDirection: "row",
@@ -152,12 +154,14 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: "#555",
     paddingLeft: 4,
+    fontSize: 16,
+    fontWeight: '600'
   },
   resveCl: {
     paddingHorizontal: 16,
   },
   btnWrapper: {
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#fff",
     height: 88,
     position: "static",
     bottom: 0,

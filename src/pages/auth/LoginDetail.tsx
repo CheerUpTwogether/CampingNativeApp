@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from "react-native-image-crop-picker";
 import { addProfileSpb, setProfileSpb } from '@/supaBase/api/myPage';
 import Toast from 'react-native-toast-message';
@@ -79,7 +79,7 @@ const LoginDetail = () => {
               <Image source={{ uri: userInfo.profileimagepath }} style={styles.profileImage}/>
               :(
                 <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
-                  <Icon name="user" size={120} color="#AEB6B9" solid  />
+                  <Icon name="account-circle" size={160} color="#AEB6B9" solid  />
                   <View style={styles.noProfileContainer}>
                     <Icon name="camera" size={24} color="#AEB6B9" solid  />
                   </View>
@@ -152,10 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   noProfileWapper: {
-    backgroundColor: "#E0E5E9", 
-    borderRadius: 100, 
-    height: 160, 
-    width: 160, 
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: "center",
   },

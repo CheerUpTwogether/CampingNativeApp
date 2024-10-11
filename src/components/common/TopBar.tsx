@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 interface TopBarProps {
   leftIcon?: { uri: string } | undefined;
@@ -44,19 +45,10 @@ const TopBar: React.FC<TopBarProps> = ({
         </TouchableOpacity>
       ) : (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image
-            source={require("@/assets/images/Camping.png")}
-            style={{ height: 28, width: 28, marginRight: 8 }}
-          />
-          <Text style={{ fontSize: 18, color: "#173B45" }}>캠핑투게더</Text>
+          <Icon name="campground" size={28} color="#386641" style={{marginRight: 8}} />
+          <Text style={{ fontSize: 18, color: "#386641" }}>캠핑투게더</Text>
         </View>
       )}
-
-      {/* <View style={styles.titleWrapper}>
-        <Text style={styles.titleStyle} numberOfLines={1}>
-          {title}
-        </Text>
-      </View> */}
 
       {rightIcon ? (
         <TouchableOpacity

@@ -35,19 +35,19 @@ const Button = ({
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: "#FDA758",
+    backgroundColor: "#6a994e",
     alignItems: "center",
     borderRadius: 5,
     padding: 16,
     marginTop: 20,
   },
   btnPastel: {
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#FFF",
   },
   btnText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#573353",
+    color: "#fff",
   },
 });
 export default Button;

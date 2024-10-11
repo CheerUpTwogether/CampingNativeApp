@@ -7,15 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CustomCurveUi from "./CustomCurveUi";
-
-//const addButton = require("../../assets/icons/bottomTab/add.png");
-const addButton = require("@/assets/images/Add.png");
-import HomeIcon from "@/assets/icons/Home.svg";
-import ArticleIcon from "@/assets/icons/Article.svg";
-import CommunityIcon from "@/assets/icons/Community.svg";
-import SettingIcon from "@/assets/icons/Setting.svg";
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const CustomBottomTab: React.FC<BottomTabBarProps> = ({
   state,
   navigation,
@@ -81,11 +73,14 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
         style={styles.addButtonWrapper}
         onPress={() => navigation.navigate("Add")}
       >
-        <Animated.Image
-          source={addButton}
+        <Animated.View
           style={{
             width: 60,
             height: 60,
+            backgroundColor: '#a7c957',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 100,
             transform: [
               {
                 translateY: addAnimation.interpolate({
@@ -95,7 +90,9 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
               },
             ],
           }}
-        />
+        >
+          <Icon name="plus" size={40} color="#fff" />
+        </Animated.View>
       </TouchableOpacity>
       {/* 곡선의 UI 컴포넌트 */}
       {/* <CustomCurveUi /> */}
@@ -108,35 +105,19 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
           switch (label) {
             case "Home":
               return (
-                <HomeIcon
-                  width={24}
-                  height={24}
-                  color={bool ? "#386641" : "#999"}
-                />
+                <Icon name={bool? 'home-variant': "home-variant-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
             case "Articles":
               return (
-                <ArticleIcon
-                  width={24}
-                  height={24}
-                  color={bool ? "#386641" : "#999"}
-                />
+                <Icon name={bool? 'text-box': "text-box-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
             case "Community":
               return (
-                <CommunityIcon
-                  width={24}
-                  height={24}
-                  color={bool ? "#386641" : "#999"}
-                />
+                <Icon name={bool? 'clipboard': "clipboard-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
             default:
               return (
-                <SettingIcon
-                  width={28}
-                  height={28}
-                  color={bool ? "#386641" : "#999"}
-                />
+                <Icon name={bool? 'cog': "cog-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
           }
         };
@@ -172,6 +153,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
               paddingBottom: 16,
               paddingTop: 12,
               zIndex: 2,
+              justifyContent: 'center'
             }}
             key={index}
             activeOpacity={0.7}
