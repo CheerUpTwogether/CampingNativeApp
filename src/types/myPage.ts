@@ -30,5 +30,4 @@ interface UserEditData {
   nickname: string;
   introduce: string;
   profileimagepath: string;
-  email: string;
 }
