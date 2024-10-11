@@ -21,6 +21,7 @@ import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "../../pages/articles/ArticleDetail";
 import { Session } from "@supabase/supabase-js";
 import LoginDetail from "@/pages/auth/LoginDetail";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -57,6 +58,9 @@ export type RootStackParamList = {
   Community: undefined;
   EditProfile: undefined;
 };
+
+export type SettingsScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 const renderTabBar = (props: BottomTabBarProps) => (
   <CustomBottomTab {...props} />

@@ -31,3 +31,9 @@ interface UserEditData {
   introduce: string;
   profileimagepath: string;
 }
+
+interface CropPickerImage {
+  uri: string,
+  type: string,
+  name: string,
+}
