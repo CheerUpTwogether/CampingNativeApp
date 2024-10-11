@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#573353",
+    color: "#386641",
   },
   kakaoWrapper: {
     flexDirection: "row",
