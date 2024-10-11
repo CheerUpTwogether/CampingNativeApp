@@ -9,6 +9,7 @@ import { KakaoOAuthToken, login, loginWithKakaoAccount } from "@react-native-seo
 import KakaoSvg from "@/assets/images/kakao.svg";
 import Toast from "react-native-toast-message";
 import { Session, User } from "@supabase/supabase-js";
+import { setItemSession } from "@/utils/storage";
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
 
@@ -70,6 +71,12 @@ const Login = () => {
             profileimagepath,
             introduce,
           );
+
+          await setItemSession(
+            authData.session.access_token,
+            authData.session.refresh_token,
+          );
+          
           navigation.replace('BottomTab', {screen: 'Home'});
           return;
         }
@@ -160,36 +167,6 @@ const styles = StyleSheet.create({
   socialText: {
     fontSize: 16,
     color: "#333",
-  },
-  formWrapper: {
-    height: "100%",
-    backgroundColor: "#FFF",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 5,
-  },
-  formTitle: {
-    fontSize: 16,
-    color: "#573353",
-    textAlign: "center",
-    backgroundColor: "#fff",
-    marginTop: 20,
-    paddingVertical: 12,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    marginBottom: 1,
-  },
-  signupBtn: {
-    flexDirection: "row",
-    justifyContent: "center",
-    paddingBottom: 20,
-  },
-  defaultText: {
-    color: "#573353",
-  },
-  boldText: {
-    color: "#573353",
-    fontWeight: "700",
   },
   socialContainer: {
     flexDirection: "row",

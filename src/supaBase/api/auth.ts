@@ -95,7 +95,7 @@ export const signInSpb = async (
 };
 
 export const autoSignInSpb = async (): Promise<boolean> => {
-  const token = await AsyncStorage.getItem("userToken");
+  const token = await AsyncStorage.getItem("session_token");
 
   if (token) {
     const { access_token, refresh_token } = token && JSON.parse(token);

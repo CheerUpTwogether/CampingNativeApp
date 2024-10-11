@@ -25,7 +25,7 @@ const Splash = () => {
       }
 
       // 저장된 정보가 없을 경우
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem("session_token");
       if (!token) {
         navigation.replace("Login");
         return;

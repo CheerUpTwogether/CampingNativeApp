@@ -111,7 +111,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                 <HomeIcon
                   width={24}
                   height={24}
-                  color={bool ? "#FF8225" : "#999"}
+                  color={bool ? "#386641" : "#999"}
                 />
               );
             case "Articles":
@@ -119,7 +119,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                 <ArticleIcon
                   width={24}
                   height={24}
-                  color={bool ? "#FF8225" : "#999"}
+                  color={bool ? "#386641" : "#999"}
                 />
               );
             case "Community":
@@ -127,7 +127,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                 <CommunityIcon
                   width={24}
                   height={24}
-                  color={bool ? "#FF8225" : "#999"}
+                  color={bool ? "#386641" : "#999"}
                 />
               );
             default:
@@ -135,7 +135,7 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
                 <SettingIcon
                   width={28}
                   height={28}
-                  color={bool ? "#FF8225" : "#999"}
+                  color={bool ? "#386641" : "#999"}
                 />
               );
           }
@@ -178,21 +178,6 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
             onPress={onPress}
           >
             {iconFlag(isFocused)}
-            {/* <Animated.Image
-              source={iconFlag(isFocused)}
-              style={{
-                width: 40,
-                height: 40,
-                transform: [
-                  {
-                    scale: animatedValue.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0.9],
-                    }),
-                  },
-                ],
-              }}
-            /> */}
           </TouchableOpacity>
         );
       })}
