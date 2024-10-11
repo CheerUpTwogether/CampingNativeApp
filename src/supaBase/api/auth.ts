@@ -13,7 +13,7 @@ export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
 
 // 프로필 가져오기
 export const getProfileSpb = (uid: string) => {
-  return supabase.from('profile').select('*').eq('user_id', uid);
+  return supabase.from('profile').select('*').eq('user_id', uid).single();
 };
 
 export const signUpSpb = async (

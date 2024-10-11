@@ -105,3 +105,10 @@ export const setProfileImagePathSpb = async (profileimagepath, uid) => {
   showInfo("success", "프로필 이미지가 성공적으로 업데이트되었습니다.");
   return true;
 };
+
+
+export const addProfileSpb = async ({nickname, introduce, profileimagepath}: UserEditData) => {
+  return await supabase
+  .from("profile")
+  .insert({ nickname, introduce, profileimagepath });
+}
