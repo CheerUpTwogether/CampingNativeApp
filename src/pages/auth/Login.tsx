@@ -49,29 +49,29 @@ const Login = () => {
       );
 
       if (profileDataError) {
-        console.log(profileDataError)
         Toast.show({ type: "error", text1: '문제가 발생했어요. 다시 로그인 해주세요' });
         return;
       }
 
-        if (profileData.length > 0) {
+        if (profileData) {
           // 여기에 zutand profileData 정보가지고 전역설정
           const {
-            id,
+            user_id,
             nickname,
             created_at,
             profileimagepath,
             introduce,
-          } = profileData[0];
+          } = profileData;
 
           setUserData(
-            id,
+            user_id,
             nickname,
             created_at,
             profileimagepath,
             introduce,
           );
           navigation.replace('BottomTab', {screen: 'Home'});
+          return;
         }
         navigation.replace('LoginDetail', {authData});
   }

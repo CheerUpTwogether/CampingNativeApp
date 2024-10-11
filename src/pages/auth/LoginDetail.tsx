@@ -1,15 +1,76 @@
 import React, { useState } from 'react'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome6';
+import ImagePicker from "react-native-image-crop-picker";
+import { addProfileSpb, setProfileSpb } from '@/supaBase/api/myPage';
+import Toast from 'react-native-toast-message';
+import useStore from "@/store/store";
+import { useNavigation } from '@react-navigation/native';
+import { SettingsScreenNavigationProp } from '@/components/router/Router';
 
 const LoginDetail = () => {
+  const setUserData = useStore((state) => state.setUserData);
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   const [userInfo, setUserInfo] = useState<UserEditData>({
     nickname: "",
     introduce: "",
-    profileimagepath: "",
+    profileimagepath: '',
   });
+  const [profileImage, setProfileImage] = useState<CropPickerImage>({
+    uri: '',
+    type: '',
+    name: '',
+  })
 
-  
+  const selectImage = async () => {
+    try {
+      const file = await ImagePicker.openPicker({
+        mediaType: "photo",
+        multiple: false,
+      });
+
+      if(!file) return;
+
+      const image = {
+        uri: file.path,
+        type: file.mime,
+        name: `${file.modificationDate}${file.path.slice(-4)}`,
+      };
+      setProfileImage(image)
+      setUserInfo((prev) => ({ ...prev, profileimagepath: file.path }));
+      
+    } catch (e) {}
+  };
+
+  const addProfile = async () => {
+    try{
+      if(userInfo.profileimagepath) {
+        const profileImagePath = await setProfileSpb(profileImage);
+        if(!profileImagePath) throw new Error('프로필 이미지 업로드 실패');
+        setUserInfo((prev) => ({ ...prev, profileimagepath: profileImagePath }));
+      }
+
+      const {error} = await addProfileSpb(userInfo)
+      if(error) {
+        throw new Error(error.message);
+      }
+
+      Toast.show({
+        type: "success",
+        text1: `${userInfo.nickname} 님 환영합니다 🎉`, // userInfo에서 직접 가져오기
+      });
+
+      setUserData(userInfo);
+      
+      navigation.replace("BottomTab", {"screen": 'Home'})
+    } catch(e) {
+      Toast.show({
+        type: "error",
+        text1: '오류가 발생했어요', // userInfo에서 직접 가져오기
+      });
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.wrapper}>
@@ -17,7 +78,7 @@ const LoginDetail = () => {
             {userInfo.profileimagepath ?
               <Image source={{ uri: userInfo.profileimagepath }} style={styles.profileImage}/>
               :(
-                <TouchableOpacity style={styles.noProfileWapper}>
+                <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
                   <Icon name="user" size={120} color="#AEB6B9" solid  />
                   <View style={styles.noProfileContainer}>
                     <Icon name="camera" size={24} color="#AEB6B9" solid  />
@@ -68,7 +129,7 @@ const LoginDetail = () => {
 
             <TouchableOpacity
               style={{ marginVertical: 12, marginHorizontal: 24 }}
-              //onPress={handleSave}
+              onPress={addProfile}
               activeOpacity={0.8}
             >
               <Text style={styles.saveButton}>저장하기</Text>

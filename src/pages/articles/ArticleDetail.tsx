@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import TopBar from "@/components/common/TopBar";
-import Carousel from "react-native-snap-carousel";
+//import Carousel from "react-native-snap-carousel";
 import { getArticleApi, setFavoriteApi } from "@/apis/article";
 import { formatDate } from "@/utils/date";
 const { width: screenWidth } = Dimensions.get("window");
@@ -59,13 +59,13 @@ export const ArticleDetail = () => {
 
       <ScrollView>
         <View>
-          <Carousel
+          {/* <Carousel
             data={data?.images ? data?.images : []}
             renderItem={renderItem}
             sliderWidth={screenWidth}
             itemWidth={screenWidth * 0.75}
             layout={"default"}
-          />
+          /> */}
         </View>
 
         <View style={styles.info}>
