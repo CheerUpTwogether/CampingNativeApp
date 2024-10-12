@@ -47,6 +47,7 @@ const Articles = () => {
         ListHeaderComponent={<Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />}
         onRefresh={getArticles}
         refreshing={refresh}
+        style={{ marginBottom: 70 }}
       />
     </SafeAreaView>
   );
