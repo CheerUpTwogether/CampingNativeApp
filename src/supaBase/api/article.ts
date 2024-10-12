@@ -111,29 +111,41 @@ export const isFavoriteSpb = async (articleId: number): Promise<Boolean> => {
 // 아티클 리스트 가져오기
 export const getArticlesSpb = async (sortType: string): Promise<Article[]> => {
   try {
-    const isSignIn = await isSignInUser();
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return [];
-    }
-    const sortColumn =
-      sortType === "FAVORITE" ? "favorite_count" : "create_date";
 
-    const { data, error } = await supabase
-      .from("article")
-      .select("*")
-      .order(sortColumn, { ascending: false }); // 내림차순 정렬
+    const user_id = await getSignInUserId();
+    const { data, error } = await supabase.rpc('get_articles_with_likes', {
+      user_id,
+      sort_by_date: sortType !== "FAVORITE"
+    });
 
     if (error) {
       showInfo("error", error.message);
+      console.log(error)
       return [];
     }
-    // showInfo("success", "아티클 정보를 성공적으로 가져왔습니다.");
 
     return data;
   } catch (error) {
     showInfo("error", (error as Error).message);
     return [];
+  }
+};
+
+// 아티클 이미지 가져오기
+export const getArticleImageSpb = async (articles: Article[]): Promise<any> => {
+  try {
+    const { data } = await supabase
+    .storage
+    .from('articleBucket') // Storage에 설정한 버킷 이름
+    .list('article1', { // 폴더 이름
+      limit: 100, // 원하는 파일 수를 제한할 수 있음
+      offset: 0,  // 시작 인덱스 설정
+    })
+
+    return data;
+  } catch (error) {
+    showInfo("error", (error as Error).message);
+    return null;
   }
 };
 
@@ -166,52 +178,3 @@ export const getArticleSpb = async (
     return null;
   }
 };
-
-// export const getFavoriteArticleSpb = async (): Promise<ArticleWithImages[]> => {
-//   try {
-//     const isSignIn = await isSignInUser();
-//     if (!isSignIn) {
-//       showInfo("error", "로그인 후에 이용해주세요.");
-//       return [];
-//     }
-//     const { data, error } = await supabase
-//       .from("article")
-//       .select(
-//         `
-//     *,
-//     article_favorite (
-//       user_id,
-//       article_id,
-//       is_favorite
-//     )
-//   `
-//       )
-//       .order("created_at", { ascending: false });
-
-//     if (error) {
-//       showInfo("error", error.message);
-//       return [];
-//     }
-
-//     // 데이터 구조 처리
-//     const articlesWithImages: ArticleWithImages[] = (data || []).map(
-//       (article) => ({
-//         article_id: article.article_id,
-//         title: article.title,
-//         content: article.content,
-//         is_favorite: article.is_favorite,
-//         create_date: article.create_date,
-//         images: (article.article_image || []).map((img) => ({
-//           img_path: img.img_path,
-//           article_id: article.article_id,
-//         })),
-//       })
-//     );
-
-//     showInfo("success", "즐겨찾기 아티클을 성공적으로 가져왔습니다.");
-//     return articlesWithImages;
-//   } catch (error) {
-//     showInfo("error", (error as Error).message);
-//     return [];
-//   }
-// };

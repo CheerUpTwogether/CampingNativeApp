@@ -29,21 +29,21 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
               onPress={() =>
                 navigation.navigate("ArticleDetail", {
                   id: el.id,
-                  iconState: !!isFavorite,
                   data: {
                     id: el.id,
                     title: el.title,
                     content: el.content,
                     create_date: el.create_date,
                     images: el.images,
-                    favorite_count: el.favorite_count,
+                    like_count: el.like_count,
+                    is_liked: el.is_liked
                   },
                 })
               }
             >
               {el?.images?.[0] ? (
                 <Image
-                  source={{ uri: el.images[0] }}
+                  source={{ uri: el.images?.[0] }}
                   style={styles.thumbImage}
                 />
               ) : (
@@ -52,7 +52,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
 
               <Text style={styles.title}>{el.title}</Text>
               <Text numberOfLines={2} style={styles.content}>
-                {el.content}
+                {el.contents}
               </Text>
               <View style={styles.etc}>
                 <Text style={styles.createDate}>
@@ -60,7 +60,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                 </Text>
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <View style={{ flexDirection: "row" }}>
-                    {Array.from({ length: el.favorite_count })
+                    {Array.from({ length: el.like_count })
                       .slice(0, 3)
                       .map(() => (
                         <UserIcon
@@ -72,12 +72,12 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                         />
                       ))}
                   </View>
-                  <Text style={{ fontSize: 12 }}>{el.favorite_count}</Text>
+                  <Text style={{ fontSize: 12 }}>{el.like_count}</Text>
                   <TouchableOpacity
-                    onPress={() => favoriteFunc(el.id, !!isFavorite)}
+                    onPress={() => favoriteFunc(el.id, !!el.is_liked)}
                   >
                     <StarIcon
-                      color={isFavorite ? "#FFD73F" : "#ddd"}
+                      color={el.is_liked ? "#FFD73F" : "#ddd"}
                       width={24}
                       height={24}
                     />
@@ -96,7 +96,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 16,
+    margin: 12,
     paddingHorizontal: 12,
     backgroundColor: "#fff",
     borderRadius: 10,

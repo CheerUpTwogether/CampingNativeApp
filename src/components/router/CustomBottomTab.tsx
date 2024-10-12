@@ -109,11 +109,11 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
               );
             case "Articles":
               return (
-                <Icon name={bool? 'text-box': "text-box-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'clipboard': "clipboard-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
             case "Community":
               return (
-                <Icon name={bool? 'clipboard': "clipboard-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'text-box': "text-box-outline"} size={32} color={bool ? "#386641" : "#999"} />
               );
             default:
               return (

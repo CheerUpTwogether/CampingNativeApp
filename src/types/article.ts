@@ -4,7 +4,8 @@ type Article = {
   content: string;
   create_date: string;
   images: [key: string];
-  favorite_count: number;
+  is_liked: number;
+  like_count: number;
 };
 
 type ArticleFavoriteAId = {

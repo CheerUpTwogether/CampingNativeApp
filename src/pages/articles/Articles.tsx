@@ -6,6 +6,7 @@ import TopBar from "@/components/common/TopBar";
 import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
 import {
+  getArticleImageSpb,
   getArticlesSpb,
   getFavoriteArticleIdSpb,
   setFavoriteSpb,
@@ -19,6 +20,7 @@ const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 const Articles = () => {
   const [sortType, setSortType] = useState<string>("LATEST");
   const [articles, setArticles] = useState<Article[]>([]);
+  const [articleImages, setArticleImages] = useState<any[]>([]);
   const [myFavoriteArticles, setMyFavoriteArticles] = useState<
     ArticleFavoriteAId[]
   >([]);
@@ -26,41 +28,27 @@ const Articles = () => {
     { title: "최신순", value: "LATEST" },
     { title: "좋아요순", value: "FAVORITE" },
   ];
-  const setFavoriteFunc = useStore().setFavoriteFunc;
 
   useFocusEffect(
     React.useCallback(() => {
       getArticles();
-      getFavoriteArticles();
-      setFavoriteFunc(setFavorite);
     }, [])
   );
-
-  useEffect(() => {
-    getArticles();
-    getFavoriteArticles();
-  }, [sortType]);
 
   const getArticles = async () => {
     const data: Article[] = await getArticlesSpb(sortType);
     data && setArticles(data);
   };
 
-  const getFavoriteArticles = async () => {
-    const data: ArticleFavoriteAId[] = await getFavoriteArticleIdSpb();
-    data && setMyFavoriteArticles(data);
-  };
   const setFavorite = async (articleId: number, mode: boolean) => {
     await setFavoriteSpb(articleId, mode);
     getArticles();
-    getFavoriteArticles();
   };
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
         title="아티클"
-        leftIcon={menu}
         rightIsProfile={true}
         rightIcon={profile}
       />
@@ -72,9 +60,10 @@ const Articles = () => {
         <View style={{ alignItems: "flex-end", marginVertical: 12 }}>
           <Dropdown
             options={orderList}
-            onSelect={(selectedItem) =>
+            onSelect={(selectedItem) =>{
               setSortType(selectedItem?.value || "LATEST")
-            }
+              getArticles()
+            }}
             defaultValue={orderList[0]}
           />
         </View>
@@ -91,7 +80,7 @@ const Articles = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#efefef",
   },
   container: {
     padding: 12,
