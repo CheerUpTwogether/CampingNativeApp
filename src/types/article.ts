@@ -1,7 +1,7 @@
 type Article = {
   id: number;
   title: string;
-  content: string;
+  contents: string;
   create_date: string;
   images: [key: string];
   is_liked: number;
@@ -15,7 +15,7 @@ type ArticleFavoriteAId = {
 type ArticleDetail = {
   id: number;
   title: string;
-  content: string;
+  contents: string;
   create_date: string;
   images: [key: string];
   favorite_count: number;
@@ -24,7 +24,6 @@ type ArticleDetail = {
 
 interface ArticleFlatListProps {
   articles: Article[];
-  myFavoriteArticles: ArticleFavoriteAId[];
 }
 
 interface ArticlesReponse {

@@ -11,7 +11,6 @@ import useStore from "@/store/store";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
   articles,
-  myFavoriteArticles,
 }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const favoriteFunc = useStore().favoriteFunc;
@@ -19,26 +18,12 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
     <>
       {articles.length ? (
         articles.map((el) => {
-          const isFavorite = myFavoriteArticles.find(
-            (item) => item.article_id === el.id
-          );
           return (
             <TouchableOpacity
               key={el.id}
               style={styles.container}
               onPress={() =>
-                navigation.navigate("ArticleDetail", {
-                  id: el.id,
-                  data: {
-                    id: el.id,
-                    title: el.title,
-                    content: el.content,
-                    create_date: el.create_date,
-                    images: el.images,
-                    like_count: el.like_count,
-                    is_liked: el.is_liked
-                  },
-                })
+                navigation.navigate("ArticleDetail", {...el})
               }
             >
               {el?.images?.[0] ? (
@@ -56,7 +41,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
               </Text>
               <View style={styles.etc}>
                 <Text style={styles.createDate}>
-                  {formatDate(el.create_date)}
+                  {formatDate(el.create_date).split(' ')[0]}
                 </Text>
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <View style={{ flexDirection: "row" }}>
@@ -65,7 +50,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
                       .map(() => (
                         <UserIcon
                           style={{ borderRadius: 10, marginRight: -12 }}
-                          color={isFavorite ? "#FFD73F" : "#ddd"}
+                          color={el.is_liked ? "#FFD73F" : "#ddd"}
                           width={20}
                           height={20}
                           key={Math.random()}
@@ -96,8 +81,9 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 12,
-    paddingHorizontal: 12,
+    marginHorizontal: 12,
+    marginBottom: 8,
+    padding: 16,
     backgroundColor: "#fff",
     borderRadius: 10,
   },
@@ -106,7 +92,6 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     borderRadius: 10,
-    marginTop: 10,
   },
   title: {
     fontSize: 18,
@@ -122,7 +107,8 @@ const styles = StyleSheet.create({
   },
   createDate: {
     color: "#999",
-  },
+    fontSize: 16,
+  },  
   etc: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -8,7 +8,7 @@ interface TopBarProps {
   leftClick?: () => void;
   leftIsProfile?: boolean;
   title: string;
-  rightIcon?: { uri: string } | undefined;
+  rightIcon?: React.ReactElement | { uri: string };
   rightClick?: () => void;
   rightIsProfile?: boolean;
   bgColor?: string;
@@ -60,11 +60,13 @@ const TopBar: React.FC<TopBarProps> = ({
         >
           {rightIsProfile ? (
             <Image
-              source={rightIcon}
+              source={rightIcon as { uri: string }} 
               style={[styles.icon, { width: 36, height: 36 }]}
             />
           ) : (
-            <Image source={rightIcon} style={styles.icon} />
+            <>
+              {React.isValidElement(rightIcon) ? rightIcon : <Image source={rightIcon as { uri: string }} style={styles.icon} /> }
+            </>
           )}
         </TouchableOpacity>
       ) : (

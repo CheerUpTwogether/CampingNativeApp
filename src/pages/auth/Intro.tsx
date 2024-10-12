@@ -102,11 +102,10 @@ function Intro() {
           />
         </View>
       )}
-     
     </View>
   );
 }
- 
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
