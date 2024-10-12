@@ -4,7 +4,7 @@ type Article = {
   contents: string;
   create_date: string;
   images: [key: string];
-  is_liked: number;
+  is_liked: boolean;
   like_count: number;
 };
 
@@ -23,7 +23,7 @@ type ArticleDetail = {
 };
 
 interface ArticleFlatListProps {
-  articles: Article[];
+  article: Article;
 }
 
 interface ArticlesReponse {

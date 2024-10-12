@@ -5,7 +5,7 @@ import { getSignInUserId, isSignInUser } from "./auth";
 // 아티클 좋아요
 export const setFavoriteSpb = async (
   articleId: number,
-  mode: boolean
+  isDelete: boolean
 ): Promise<boolean> => {
   try {
     const uid = await getSignInUserId();
@@ -15,7 +15,7 @@ export const setFavoriteSpb = async (
       return false;
     }
 
-    if (mode) {
+    if (isDelete) {
       const { data, error: deleteError } = await supabase
         .from("article_favorite")
         .delete()
@@ -112,9 +112,9 @@ export const isFavoriteSpb = async (articleId: number): Promise<Boolean> => {
 export const getArticlesSpb = async (sortType: string): Promise<Article[]> => {
   try {
 
-    const user_id = await getSignInUserId();
+    const user_uuid = await getSignInUserId();  
     const { data, error } = await supabase.rpc('get_articles_with_likes', {
-      user_id,
+      user_uuid,
       sort_by_date: sortType !== "FAVORITE"
     });
 

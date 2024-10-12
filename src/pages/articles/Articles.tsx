@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, Text, View, Image, FlatList } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import TopBar from "@/components/common/TopBar";
 //import Dropdown from "@/components/common/Dropdown";
@@ -17,21 +16,21 @@ const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 const Articles = () => {
   const [sortType, setSortType] = useState<string>("LATEST");
   const {articles, setArticles} = useStore();
-  
+  const [refresh, setRefresh] = useState(false);
   const orderList = [
     { title: "최신순", value: "LATEST" },
     { title: "좋아요순", value: "FAVORITE" },
   ];
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getArticles();
-    }, [])
-  );
+  useEffect(() => {
+    getArticles()
+  },[]);
 
   const getArticles = async () => {
+    setRefresh(true);
     const data: Article[] = await getArticlesSpb(sortType);
     data && setArticles(data);
+    setRefresh(false);
   };
 
   return (
@@ -41,26 +40,14 @@ const Articles = () => {
         rightIsProfile={true}
         rightIcon={profile}
       />
-      <ScrollView
-        
-        contentContainerStyle={styles.scrollAreaContainer}
-      >
-        <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
-        {/* <View style={{ alignItems: "flex-end", marginVertical: 20, marginHorizontal: 24 }}>
-          <Dropdown
-            options={orderList}
-            onSelect={(selectedItem) =>{
-              setSortType(selectedItem?.value || "LATEST")
-              getArticles()
-            }}
-            defaultValue={orderList[0]}
-          />
-        </View> */}
-
-        <ArticleFlatList
-          articles={articles}
-        />
-      </ScrollView>
+      <FlatList 
+        data={articles} 
+        renderItem={({item}) => <ArticleFlatList article={item} />} 
+        keyExtractor={(item) => item.id.toString()} 
+        ListHeaderComponent={<Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />}
+        onRefresh={getArticles}
+        refreshing={refresh}
+      />
     </SafeAreaView>
   );
 };

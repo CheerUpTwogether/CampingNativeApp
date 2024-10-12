@@ -26,18 +26,13 @@ export const ArticleDetail = () => {
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const { id, is_liked, title, contents,create_date, images } = route.params as Article;
-  
-
-  //const [isFavorite, setIsFavorite] = useState(iconState);
-  const favoriteFunc = useStore().favoriteFunc;
-  const handleFavorite = async () => {
-    //favoriteFunc(id, isFavorite);
-    //setIsFavorite(!isFavorite);
-  };
-
+  const [star, setStar] = useState(is_liked); 
+  const {articles, setArticles} = useStore();
   const setFavorite = async () => {
-    await setFavoriteSpb(id, !is_liked);
-    favoriteFunc(id, !is_liked);
+    await setFavoriteSpb(id, is_liked === null ? false : true);
+    const newArticles = articles.map((el: Article) => el.id === id ? {...el, is_liked: !is_liked} : el);
+    setArticles(newArticles);
+    setStar(is_liked === null ? true : !is_liked)
   };
 
   const renderItem = ({ item }) => {
@@ -61,7 +56,7 @@ export const ArticleDetail = () => {
       <TopBar
         leftIcon={backIcon}
         leftClick={navigation.goBack}
-        rightIcon={<StarIcon color={is_liked ? "#FFD73F" : "#ddd"} width={28} height={28} />}
+        rightIcon={<StarIcon color={star ? "#FFD73F" : "#ddd"} width={28} height={28} />}
         rightClick={setFavorite}
         title="캠핑장 상세 정보"
       />
