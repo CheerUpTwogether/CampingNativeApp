@@ -13,7 +13,7 @@ import {
   setCommunitySpb,
 } from "@/supaBase/api/community";
 const backIcon = require("@/assets/icons/Back.png");
-const addButton = require("@/assets/icons/bottomTab/add.png");
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useStore from "@/store/store";
 
 type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;
@@ -78,19 +78,17 @@ const Add: React.FC = () => {
         title={isEdit ? "수정하기" : "새 글 쓰기"}
         leftIcon={backIcon}
         leftClick={handleLeftPress}
-        rightIcon={addButton}
+        rightIcon={<Icon name="square-edit-outline" size={28} color="#333" />}
         rightClick={handleSubmit}
       />
-      <View
-        style={{ width: "80%", marginHorizontal: "4%", marginBottom: "2%" }}
-      >
+      <View style={{ margin: 16}}>
         <Input
           value={subject}
           setValue={setSubject}
           placeholder="제목을 입력해주세요."
         />
       </View>
-      <View style={{ marginHorizontal: 16, marginVertical: 20 }}>
+      <View style={{ marginHorizontal: 16}}>
         <TextInput
           style={styles.textInput}
           value={content}
@@ -100,6 +98,7 @@ const Add: React.FC = () => {
           numberOfLines={5}
           maxLength={1000}
           textAlignVertical="top"
+          placeholder="내용을 입력해주세요."
         />
       </View>
     </SafeAreaView>
@@ -109,7 +108,7 @@ const Add: React.FC = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#efefef",
   },
   textInput: {
     backgroundColor: "#FFF",

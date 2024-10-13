@@ -3,13 +3,14 @@ import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { View } from 'react-native'
 import { SettingsScreenNavigationProp } from '../router/Router';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const shareIcon = require("@/assets/icons/Share.png");
 const heartIcon = require("@/assets/icons/Heart.png");
 const chatIcon = require("@/assets/icons/Chat.png");
-const profileImage = require("@/assets/images/Introduce1.png");
 
 const CommunityItem = ({item}: {item: Community}) => {
+  console.log(item)
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   
   const handleMove = (id: number) => {
@@ -26,18 +27,13 @@ const CommunityItem = ({item}: {item: Community}) => {
         <View style={styles.topWrapper}>
           <View style={{ marginVertical: 3 }}>
             <View style={styles.imageWrapper}>
-              <Image
-                source={
-                  item.profile
-                    ? { uri: item.profile }
-                    : profileImage
-                }
-                style={
-                  item.profile
-                    ? styles.userProfileImage
-                    : styles.dummyProfileImage
-                }
-              />
+              {item?.profile?.profile ? 
+                <Image
+                  source={{ uri: item.profile.profile }}
+                  style={styles.userProfileImage}
+                />
+                : <Icon name="account-circle" size={180} color="#AEB6B9"   />
+              }
             </View>
             <Text style={styles.nickName}>{item.nickname}</Text>
           </View>

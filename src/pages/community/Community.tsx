@@ -1,148 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { RootStackParamList } from "@/components/router/Router";
-import { useNavigation } from "@react-navigation/native";
-import {
-  FlatList,
-  SafeAreaView,
-  ListRenderItem,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import { FlatList, SafeAreaView, StyleSheet} from "react-native";
 import TopBar from "@/components/common/TopBar";
-import { getCommunitysSpb, getUsersSpb } from "@/supaBase/api/community";
-
-const leftIcon = require("@/assets/icons/menu.png");
-const shareIcon = require("@/assets/icons/Share.png");
-const heartIcon = require("@/assets/icons/Heart.png");
-const chatIcon = require("@/assets/icons/Chat.png");
-const profileImage = require("@/assets/images/Introduce1.png");
-
-type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
+import { getCommunitysSpb } from "@/supaBase/api/community";
+import CommunityItem from "@/components/community/CommunityItem";
 
 const Community = () => {
   const [dataList, setDataList] = useState<Community[]>([]);
-  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
-  const [mergedData, setMergedData] = useState<
-    (Community & { profileimagepath: string })[]
-  >([]);
   const [refresh, setRefresh] = useState(false);
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
     fetchCommunitysData();
-    fetchUserProfileData();
-    console.log(dataList);
-  }, [refresh]);
+  }, []);
 
-  useEffect(() => {
-    if (dataList.length && userProfileData.length) {
-      const merged = dataList.map((item) => {
-        const userProfile = userProfileData.find(
-          (profile) => profile.user_id === item.user_id
-        );
-        return {
-          ...item,
-          profileimagepath: userProfile ? userProfile.profileimagepath : "",
-        };
-      });
-      setMergedData(merged);
-    }
-  }, [dataList, userProfileData]);
-
-  const fetchUserProfileData = async () => {
-    const data: UserProfile[] | null = await getUsersSpb();
-    if (data) {
-      setUserProfileData(data);
-    }
-  };
-  const fetchCommunitysData = async () => {
-    const data = await getCommunitysSpb();
-    if (data) {
-      const sortedData = data.sort((a, b) => b.id - a.id);
-      setDataList(sortedData);
-    }
-    setRefresh(false);
+  const fetchCommunitysData = async (page?: number) => {
+    const data = await getCommunitysSpb(pageNo || page, 10);
+    console.log(data)
+    if (data) setDataList(data);
   };
 
-  const handleMove = (id: number) => {
-    navigation.navigate("CommunityDetail", { CommunityId: id });
+  const handleEndReached = () => {
+    setPageNo((prev) => {
+      fetchCommunitysData(prev + 1)
+      return prev + 1
+    });
   };
 
-  const pullDown = () => {
+  const pullDown = async() => {
     setRefresh(true);
-  };
-
-  const renderItem: ListRenderItem<
-    Community & { profileimagepath: string }
-  > = ({ item }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{ marginHorizontal: "4%", marginVertical: "2%" }}
-        onPress={() => handleMove(item.id)}
-      >
-        <View style={styles.userWrapper}>
-          <View style={styles.topWrapper}>
-            <View style={{ marginVertical: 3 }}>
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={
-                    item.profileimagepath
-                      ? { uri: item.profileimagepath }
-                      : profileImage
-                  }
-                  style={
-                    item.profileimagepath
-                      ? styles.userProfileImage
-                      : styles.dummyProfileImage
-                  }
-                />
-              </View>
-              <Text style={styles.nickName}>{item.nickname}</Text>
-            </View>
-            <View style={styles.subjectWrapper}>
-              <Text style={styles.subject}>{item.subject}</Text>
-            </View>
-            <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-              <Image source={shareIcon} style={styles.icon1} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.contentWrapper}>
-          <Text style={styles.contentText}>{item.content}</Text>
-          <View style={styles.reactionContainer}>
-            <View style={styles.reactionWrapper}>
-              <Image style={styles.icon1} source={heartIcon} />
-              <Text style={styles.reactionText}>{item.like}</Text>
-            </View>
-            <View style={styles.reaction}>
-              <Image style={styles.icon2} source={chatIcon} />
-              <Text style={styles.reactionText}>{item.reply_count}</Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
+    setPageNo(1)
+    setRefresh(true)
+    await fetchCommunitysData();
+    setRefresh(false);
   };
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar title="커뮤니티" leftIcon={leftIcon} />
+      <TopBar rightIsProfile={true} />
       <FlatList
-        data={mergedData}
+        data={dataList}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
+        renderItem={({item}) => <CommunityItem item={item} />}
         style={{ marginBottom: 70 }}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={pullDown} />
-        }
+        onRefresh={pullDown}
+        refreshing={refresh}
+        onEndReached={handleEndReached} 
       />
     </SafeAreaView>
   );
@@ -151,7 +53,7 @@ const Community = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#efefef",
   },
   topWrapper: {
     flexDirection: "row",

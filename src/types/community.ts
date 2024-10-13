@@ -25,7 +25,7 @@ interface Community {
   like: number;
   like_check: boolean;
   reply_count: number;
-  profile?: string;
+  profile?: User;
   replys?: Reply[];
 }
 

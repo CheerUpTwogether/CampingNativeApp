@@ -48,13 +48,9 @@ const TopBar: React.FC<TopBarProps> = ({
         </View>
       )}
 
-      {rightIcon ? (
+      {rightIcon || rightIsProfile ? (
         <TouchableOpacity
-          onPress={() => {
-            if (rightClick) {
-              rightClick();
-            }
-          }}
+          onPress={() => {if (rightClick) {rightClick()}}}
         >
           {rightIsProfile ? (
             userInfo.profile ?

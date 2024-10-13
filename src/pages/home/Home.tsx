@@ -48,7 +48,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar title="캠핑투게더" rightIsProfile={true} rightIcon={profile} />
+      <TopBar rightIsProfile={true} />
       <FlatList
         data={campings}
         keyExtractor={(item: CampingType) => item.facltNm}

@@ -37,7 +37,6 @@ const Articles = () => {
     <SafeAreaView style={styles.wrapper}>
       <TopBar
         rightIsProfile={true}
-        rightIcon={profile}
       />
       <FlatList 
         data={articles} 
