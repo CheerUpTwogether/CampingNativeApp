@@ -12,7 +12,7 @@ interface UserData {
   nickname: string;
   email?: string;
   introduce: string;
-  profileimagepath: string;
+  profile: string;
   communitycount?: number;
   favoritecount?: number;
   user_id?: string;
@@ -22,14 +22,13 @@ interface UserData {
 interface User {
   nickname: string;
   introduce: string;
-  profileimagepath: string;
-  email: string;
+  profile: string;
 }
 
 interface UserEditData {
   nickname: string;
   introduce: string;
-  profileimagepath: string;
+  profile: string;
 }
 
 interface CropPickerImage {

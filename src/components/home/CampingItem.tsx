@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   facltNm: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 20,
+    fontWeight: 'bold',
     color: "#000",
   },
   divNmContainer: {

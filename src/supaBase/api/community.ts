@@ -8,18 +8,11 @@ export const getCommunitysSpb = async (
   pageSize: number = 10
 ): Promise<Community[] | void> => {
   try {
-    const isSignIn = await isSignInUser();
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return;
-    }
-
-    const start = page * (pageSize - 1) === 0 ? 0 : page * (pageSize - 1) - 1;
-    const end = start + pageSize - 1;
+    const start = (page - 1) * pageSize;
     const { data, error } = await supabase
       .from("community")
-      .select("*, profile (user_id, email, nickname)")
-      .range(start, end);
+      .select("*, profile (user_id, nickname, profile)")
+      .range(start, pageSize);
 
     if (error) {
       showInfo("error", error.message);

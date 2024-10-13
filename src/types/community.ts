@@ -25,7 +25,7 @@ interface Community {
   like: number;
   like_check: boolean;
   reply_count: number;
-  profileimagepath?: string;
+  profile?: string;
   replys?: Reply[];
 }
 
@@ -51,5 +51,5 @@ interface CommunityReply {
 
 interface UserProfile {
   user_id: string;
-  profileimagepath: string;
+  profile: string;
 }

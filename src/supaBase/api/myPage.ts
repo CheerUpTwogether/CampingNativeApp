@@ -70,7 +70,7 @@ export const setUserSpb = async ({
 
 export const setProfileSpb = async (image): Promise<string> => {
   const fileName = `${uuid.v4()}${image.name}`;
-  const { data, error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("profileBucket") // 버킷 이름
     .upload(`profile-images/${fileName}`, image, {
       contentType: image.type,
@@ -82,21 +82,18 @@ export const setProfileSpb = async (image): Promise<string> => {
   }
 
   // 파일의 URL 생성
-  const { data: file } = supabase.storage
+  const { data } = supabase.storage
     .from("profileBucket")
     .getPublicUrl(`profile-images/${fileName}`);
 
-  const uid = await getSignInUserId();
-  await setProfileImagePathSpb(file.publicUrl, uid);
-
-  return file.publicUrl;
+  return data.publicUrl;
 };
 
-export const setProfileImagePathSpb = async (profileimagepath, uid) => {
-  // profile 테이블의 profileimagepath 컬럼을 업데이트합니다.
+export const setProfileImagePathSpb = async (profile, uid) => {
+  // profile 테이블의 profile 컬럼을 업데이트합니다.
   const { data, error } = await supabase
     .from("profile")
-    .update({ profileimagepath })
+    .update({ profile })
     .eq("user_id", uid);
   if (error) {
     showInfo("error", "프로필 이미지 업로드 하는데 실패하였습니다.");
@@ -107,8 +104,8 @@ export const setProfileImagePathSpb = async (profileimagepath, uid) => {
 };
 
 
-export const addProfileSpb = async ({nickname, introduce, profileimagepath}: UserEditData) => {
+export const addProfileSpb = async ({nickname, introduce, profile}: User) => {
   return await supabase
   .from("profile")
-  .insert({ nickname, introduce, profileimagepath });
+  .insert({ nickname, introduce, profile });
 }

@@ -36,7 +36,6 @@ const Articles = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <TopBar
-        title="아티클"
         rightIsProfile={true}
         rightIcon={profile}
       />

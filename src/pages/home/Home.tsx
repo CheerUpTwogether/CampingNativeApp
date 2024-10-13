@@ -1,18 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, Platform, FlatList } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from "@react-navigation/native";
-import { RootBottomParamList } from "../../components/router/Router";
 import { getCampingsApi } from "@/apis/camping";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import CampingItem from "@/components/home/CampingItem";
 
-
-const menu = require("../../assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
 
 const Home = () => {
@@ -25,7 +17,6 @@ const Home = () => {
   }, []);
 
   const getCampings = async (no?: number) => {
-    console.log(no || pageNo)
     const serviceKey = OPENAPI_SERVICE_KEY;
     const data = await getCampingsApi({
       MobileOS: "AND",
@@ -36,7 +27,6 @@ const Home = () => {
     });
 
     const campingList = data?.response?.body?.items?.item;
-
     if (campingList) setCampings((prev) => [...prev, ...campingList]);
     
   };
@@ -76,7 +66,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     backgroundColor: "#F5F7F8",
-    //marginBottom: 40,
   },
 });
 

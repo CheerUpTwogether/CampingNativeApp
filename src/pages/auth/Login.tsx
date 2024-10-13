@@ -62,7 +62,7 @@ const Login = () => {
             user_id,
             nickname,
             created_at,
-            profileimagepath,
+            profile,
             introduce,
           } = profileData;
 
@@ -70,7 +70,7 @@ const Login = () => {
             user_id,
             nickname,
             created_at,
-            profileimagepath,
+            profile,
             introduce,
           );
 

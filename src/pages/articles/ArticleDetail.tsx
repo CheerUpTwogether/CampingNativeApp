@@ -67,7 +67,7 @@ export const ArticleDetail = () => {
             data={images ? images : []}
             renderItem={renderItem}
             width={screenWidth}
-            height={200}  
+            height={250}  
             onProgressChange={progress}
           />
           <Pagination.Basic
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   thumbImage: {
     width: "100%",
-    height: 200,
+    height: 250,
     resizeMode: "cover",
   },
   info: {

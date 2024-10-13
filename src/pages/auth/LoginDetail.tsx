@@ -11,10 +11,10 @@ import { SettingsScreenNavigationProp } from '@/components/router/Router';
 const LoginDetail = () => {
   const setUserData = useStore((state) => state.setUserData);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
-  const [userInfo, setUserInfo] = useState<UserEditData>({
+  const [userInfo, setUserInfo] = useState({
     nickname: "",
     introduce: "",
-    profileimagepath: '',
+    profile: '',
   });
   const [profileImage, setProfileImage] = useState<CropPickerImage>({
     uri: '',
@@ -37,20 +37,22 @@ const LoginDetail = () => {
         name: `${file.modificationDate}${file.path.slice(-4)}`,
       };
       setProfileImage(image)
-      setUserInfo((prev) => ({ ...prev, profileimagepath: file.path }));
+      setUserInfo((prev) => ({ ...prev, profile: file.path }));
       
     } catch (e) {}
   };
 
-  const addProfile = async () => {
+  const setsProfile = async () => {
     try{
-      if(userInfo.profileimagepath) {
-        const profileImagePath = await setProfileSpb(profileImage);
-        if(!profileImagePath) throw new Error('프로필 이미지 업로드 실패');
-        setUserInfo((prev) => ({ ...prev, profileimagepath: profileImagePath }));
-      }
+      const user = {...userInfo}
+      if(userInfo.profile) {
+        const profile = await setProfileSpb(profileImage);
+        if(!profile) throw new Error('프로필 이미지 업로드 실패');
+        user.profile = profile;
+      } 
+      
+      const {error} = await addProfileSpb(user)
 
-      const {error} = await addProfileSpb(userInfo)
       if(error) {
         throw new Error(error.message);
       }
@@ -64,6 +66,7 @@ const LoginDetail = () => {
       
       navigation.replace("BottomTab", {"screen": 'Home'})
     } catch(e) {
+      console.log(e)
       Toast.show({
         type: "error",
         text1: '오류가 발생했어요', // userInfo에서 직접 가져오기
@@ -75,13 +78,13 @@ const LoginDetail = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.wrapper}>
           <View style={styles.profileImageWrapper}>
-            {userInfo.profileimagepath ?
-              <Image source={{ uri: userInfo.profileimagepath }} style={styles.profileImage}/>
+            {userInfo.profile ?
+              <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
               :(
                 <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
-                  <Icon name="account-circle" size={160} color="#AEB6B9" solid  />
+                  <Icon name="account-circle" size={180} color="#AEB6B9"   />
                   <View style={styles.noProfileContainer}>
-                    <Icon name="camera" size={24} color="#AEB6B9" solid  />
+                    <Icon name="camera" size={24} color="#AEB6B9"  />
                   </View>
                 </TouchableOpacity>
               )
@@ -129,7 +132,7 @@ const LoginDetail = () => {
 
             <TouchableOpacity
               style={{ marginVertical: 12, marginHorizontal: 24 }}
-              onPress={addProfile}
+              onPress={setsProfile}
               activeOpacity={0.8}
             >
               <Text style={styles.saveButton}>저장하기</Text>
@@ -156,7 +159,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: "center",
   },
-  noProfileContainer: {position: 'absolute', right: 0, bottom: 0, backgroundColor: '#fff', padding: 8, borderRadius: 100, borderColor: "#ddd", borderWidth: 1},
+  noProfileContainer: {
+    position: 'absolute', 
+    right: 12, 
+    bottom: 12, 
+    backgroundColor: '#fff', 
+    padding: 8, 
+    borderRadius: 100, 
+    borderColor: "#ddd", 
+    borderWidth: 1
+  },
   profileImageWrapper: {
     justifyContent: "center",
     alignItems: "center",

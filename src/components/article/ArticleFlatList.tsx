@@ -27,6 +27,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
       ) : (
         <View style={styles.thumbImage}></View>
       )}
+    
 
       <Text style={styles.title}>{article.title}</Text>
       <Text numberOfLines={2} style={styles.content}>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#000",
     fontWeight: "bold",
     paddingTop: 16,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   content: {
     paddingBottom: 24,
     fontSize: 16,
-    color: "#999",
+    color: "#333",
   },
   createDate: {
     color: "#999",

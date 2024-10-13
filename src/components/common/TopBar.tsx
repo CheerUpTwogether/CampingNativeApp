@@ -1,3 +1,4 @@
+import useStore from "@/store/store";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,23 +8,20 @@ interface TopBarProps {
   leftIcon?: { uri: string } | undefined;
   leftClick?: () => void;
   leftIsProfile?: boolean;
-  title: string;
   rightIcon?: React.ReactElement | { uri: string };
   rightClick?: () => void;
   rightIsProfile?: boolean;
-  bgColor?: string;
 }
 
 const TopBar: React.FC<TopBarProps> = ({
   leftIcon,
   leftClick,
   leftIsProfile = false,
-  title,
   rightIcon,
   rightClick,
   rightIsProfile = false,
-  bgColor = "rgba(87, 51, 83, 0.2)",
 }) => {
+  const {userInfo} = useStore();
   return (
     <View style={styles.wrapper}>
       {leftIcon ? (
@@ -59,10 +57,12 @@ const TopBar: React.FC<TopBarProps> = ({
           }}
         >
           {rightIsProfile ? (
+            userInfo.profile ?
             <Image
-              source={rightIcon as { uri: string }} 
+              source={{ uri: userInfo.profile }} 
               style={[styles.icon, { width: 36, height: 36 }]}
             />
+            : <></>
           ) : (
             <>
               {React.isValidElement(rightIcon) ? rightIcon : <Image source={rightIcon as { uri: string }} style={styles.icon} /> }
@@ -103,17 +103,6 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 100,
-  },
-  titleWrapper: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleStyle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#573353",
   },
 });
 
