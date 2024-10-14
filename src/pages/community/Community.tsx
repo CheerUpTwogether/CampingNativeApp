@@ -3,9 +3,10 @@ import { FlatList, SafeAreaView, StyleSheet} from "react-native";
 import TopBar from "@/components/common/TopBar";
 import { getCommunitysSpb } from "@/supaBase/api/community";
 import CommunityItem from "@/components/community/CommunityItem";
+import useStore from "@/store/store";
 
 const Community = () => {
-  const [dataList, setDataList] = useState<Community[]>([]);
+  const {setCommunities, communities} = useStore();
   const [refresh, setRefresh] = useState(false);
   const [pageNo, setPageNo] = useState(1);
 
@@ -15,7 +16,7 @@ const Community = () => {
 
   const fetchCommunitysData = async (page?: number) => {
     const data = await getCommunitysSpb(pageNo || page);
-    if (data) setDataList(data);
+    if (data) setCommunities(data);
   };
 
   const handleEndReached = () => {
@@ -29,7 +30,7 @@ const Community = () => {
     setRefresh(true);
     setPageNo(1)
     setRefresh(true)
-    await fetchCommunitysData();
+    await fetchCommunitysData(1);
     setRefresh(false);
   };
 
@@ -37,9 +38,9 @@ const Community = () => {
     <SafeAreaView style={styles.wrapper}>
       <TopBar rightIsProfile={true} />
       <FlatList
-        data={dataList}
+        data={communities}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => <CommunityItem item={item} />}
+        renderItem={({item}) => <CommunityItem id={item.id} />}
         style={{ marginBottom: 70 }}
         onRefresh={pullDown}
         refreshing={refresh}

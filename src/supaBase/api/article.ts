@@ -2,6 +2,26 @@ import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 import { getSignInUserId, isSignInUser } from "./auth";
 
+// 아티클 리스트 가져오기
+export const getArticlesSpb = async (user_uuid: string): Promise<Article[]> => {
+  try {
+    const { data, error } = await supabase.rpc('get_article_list', {
+      user_uuid,
+      sort_by_date: true
+    });
+    
+    if (error) {
+      showInfo("error", error.message);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    showInfo("error", (error as Error).message);
+    return [];
+  }
+};
+
 // 아티클 좋아요
 export const setLikeAriticleSpb = async (
   user_id: string,
@@ -37,25 +57,5 @@ export const setLikeAriticleSpb = async (
   } catch (error) {
     showInfo("error", (error as Error).message);
     return false;
-  }
-};
-
-// 아티클 리스트 가져오기
-export const getArticlesSpb = async (user_uuid: string): Promise<Article[]> => {
-  try {
-    const { data, error } = await supabase.rpc('get_article_list', {
-      user_uuid,
-      sort_by_date: true
-    });
-    
-    if (error) {
-      showInfo("error", error.message);
-      return [];
-    }
-
-    return data;
-  } catch (error) {
-    showInfo("error", (error as Error).message);
-    return [];
   }
 };

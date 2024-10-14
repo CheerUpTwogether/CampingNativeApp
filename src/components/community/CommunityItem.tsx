@@ -5,15 +5,30 @@ import { SettingsScreenNavigationProp } from '../router/Router';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from '@/utils/date';
+import useStore from '@/store/store';
+import { setLikeCommunitySpb } from '@/supaBase/api/community';
 
-const CommunityItem = ({item}: {item: Community}) => {
+const CommunityItem = ({id}: {id: number}) => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const {setCommunities, communities, userInfo} = useStore();
+  const item = {...communities.find((el: Community) => el.id === id)}
   
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
   };
 
-  const handleLike = () => {}
+  const handleLike = async() => {
+    const res = await setLikeCommunitySpb(userInfo.user_id, item.id, !!item.is_liked)
+    if(res) {
+      const newCommunities = communities.map((el: Community) =>{
+        return el.id === item.id ? 
+          {...el, is_liked: !item.is_liked, like_count: !!item.is_liked ? item.like_count - 1 : item.like_count + 1} :
+          el
+      });
+      setCommunities(newCommunities);
+    }
+  }
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -38,7 +53,7 @@ const CommunityItem = ({item}: {item: Community}) => {
       <View style={{flexDirection: 'row', marginTop: 8, justifyContent: 'space-between', alignContent: 'center', alignItems: 'center'}}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={handleLike}>
-            <Icon name={item.is_liked ? 'heart' : 'heart-outline'} size={24} color="#AEB6B9" style={{marginRight: 2}}/>
+            <Icon name={item.is_liked ? 'heart' : 'heart-outline'} size={24} color={item.is_liked ? 'red' : '#AEB6B9'} style={{marginRight: 2}}/>
             <Text>{item.like_count}</Text>
           </TouchableOpacity>
           <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}}>

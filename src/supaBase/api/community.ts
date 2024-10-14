@@ -26,35 +26,6 @@ export const getCommunitysSpb = async (
   }
 };
 
-// 커뮤니티 상세 조회
-export const getCommunitySpb = async (
-  communityId: number
-): Promise<Community[] | null> => {
-  try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return null;
-    }
-    const { data, error } = await supabase
-      .from("community")
-      .select("*, profile (user_id, email, nickname, profileimagepath)")
-      .eq("id", communityId)
-      .single();
-
-    if (error) {
-      showInfo("error", error.message);
-      // return null;
-      console.log(error.message);
-    }
-    return data;
-  } catch (error) {
-    showInfo("error", (error as Error).message);
-    return null;
-  }
-};
-
 // 커뮤니티 생성(post)
 export const addCommunitySpb = async (
   user_id: string,
@@ -78,6 +49,46 @@ export const addCommunitySpb = async (
     return false;
   }
 };
+
+// 아티클 좋아요
+export const setLikeCommunitySpb = async (
+  user_id: string,
+  community_id: number,
+  isDelete: boolean
+): Promise<boolean> => {
+  try {
+    if (isDelete) {
+      const { data, error: deleteError } = await supabase
+        .from("community_like")
+        .delete()
+        .eq("user_id", user_id)
+        .eq("community_id", community_id);
+
+      if (deleteError) {
+        showInfo("error", deleteError.message);
+        return false;
+      }
+      showInfo("success", "게시글에 좋아요를 취소하였습니다.");
+      return true;
+    } else {
+      const { error: insertError } = await supabase
+        .from("community_like")
+        .insert({ community_id, user_id});
+
+      if (insertError) {
+        showInfo("error", insertError.message);
+        return false;
+      }
+      showInfo("success", "게시글에 좋아요를 누르셨습니다!");
+      return true;
+    }
+  } catch (error) {
+    showInfo("error", (error as Error).message);
+    return false;
+  }
+};
+
+
 
 // 커뮤니티 수정(put)
 export const setCommunitySpb = async (
