@@ -68,11 +68,12 @@ export const setUserSpb = async ({
   }
 };
 
-export const setProfileSpb = async (image): Promise<string> => {
-  const fileName = `${uuid.v4()}${image.name}`;
+export const uploadImageSpb = async (image: ImageFile, isProfileBucket: boolean): Promise<string> => {
+  const bucket = isProfileBucket ? "profileBucket" : "communityBucket"
+  const path = isProfileBucket ? 'profile-images/' : ''
   const { error: uploadError } = await supabase.storage
-    .from("profileBucket") // 버킷 이름
-    .upload(`profile-images/${fileName}`, image, {
+    .from(bucket) // 버킷 이름
+    .upload(`${path}${image.name}`, image, {
       contentType: image.type,
     });
 
@@ -83,8 +84,8 @@ export const setProfileSpb = async (image): Promise<string> => {
 
   // 파일의 URL 생성
   const { data } = supabase.storage
-    .from("profileBucket")
-    .getPublicUrl(`profile-images/${fileName}`);
+    .from(bucket)
+    .getPublicUrl(`${path}${image.name}`);
 
   return data.publicUrl;
 };

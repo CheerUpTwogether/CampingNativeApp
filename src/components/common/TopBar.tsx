@@ -11,6 +11,7 @@ interface TopBarProps {
   rightIcon?: React.ReactElement | { uri: string };
   rightClick?: () => void;
   rightIsProfile?: boolean;
+  title?: string
 }
 
 const TopBar: React.FC<TopBarProps> = ({
@@ -20,6 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({
   rightIcon,
   rightClick,
   rightIsProfile = false,
+  title,
 }) => {
   const {userInfo} = useStore();
   return (
@@ -47,6 +49,8 @@ const TopBar: React.FC<TopBarProps> = ({
           <Text style={{ fontSize: 18, color: "#386641" }}>캠핑투게더</Text>
         </View>
       )}
+      {title && <Text style={styles.title}>{title}</Text>}
+      
 
       {rightIcon || rightIsProfile ? (
         <TouchableOpacity
@@ -58,7 +62,7 @@ const TopBar: React.FC<TopBarProps> = ({
               source={{ uri: userInfo.profile }} 
               style={[styles.icon, { width: 36, height: 36 }]}
             />
-            : <></>
+            : <Icon name="account-circle" size={36} color="#AEB6B9" />
           ) : (
             <>
               {React.isValidElement(rightIcon) ? rightIcon : <Image source={rightIcon as { uri: string }} style={styles.icon} /> }
@@ -100,6 +104,11 @@ const styles = StyleSheet.create({
     height: 34,
     borderRadius: 100,
   },
+  title: {
+    color: "#333",
+    fontWeight: "bold",
+    fontSize: 16,
+  }
 });
 
 export default TopBar;

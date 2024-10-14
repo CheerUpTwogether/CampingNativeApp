@@ -6,18 +6,25 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
 import StarIcon from "@/assets/icons/Star.svg";
 
-import UserIcon from "@/assets/icons/User.svg";
 import useStore from "@/store/store";
+import { setLikeAriticleSpb } from "@/supaBase/api/article";
 
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const favoriteFunc = useStore().favoriteFunc;
+  const {setArticles, articles, userInfo} = useStore();
+
+  const handleArticleLike  = async () => {
+    const res = await setLikeAriticleSpb(userInfo.user_id, article.id, !!article.is_liked)
+    if(res) {
+      const newArticles = articles.map((el: Article) => el.id === article.id ? {...el, is_liked: !article.is_liked} : el);
+      setArticles(newArticles);
+    }
+  }
+
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() =>
-        navigation.navigate("ArticleDetail", {...article})
-      }
+      onPress={() => navigation.navigate("ArticleDetail", {id: article.id})}
     >
       {article?.images?.[0] ? (
         <Image
@@ -38,22 +45,8 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
           {formatDate(article.create_date).split(' ')[0]}
         </Text>
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <View style={{ flexDirection: "row" }}>
-            {Array.from({ length: article.like_count })
-              .slice(0, 3)
-              .map(() => (
-                <UserIcon
-                  style={{ borderRadius: 10, marginRight: -12 }}
-                  color={article.is_liked ? "#FFD73F" : "#ddd"}
-                  width={20}
-                  height={20}
-                  key={Math.random()}
-                />
-              ))}
-          </View>
-          {/* <Text style={{ fontSize: 12 }}>{article.like_count}</Text> */}
           <TouchableOpacity
-            onPress={() => favoriteFunc(article.id, !!article.is_liked)}
+            onPress={handleArticleLike}
           >
             <StarIcon
               color={article.is_liked ? "#FFD73F" : "#ddd"}

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from "react-native-image-crop-picker";
-import { addProfileSpb, setProfileSpb } from '@/supaBase/api/myPage';
+import { addProfileSpb, uploadImageSpb } from '@/supaBase/api/myPage';
 import Toast from 'react-native-toast-message';
 import useStore from "@/store/store";
 import { useNavigation } from '@react-navigation/native';
@@ -46,7 +46,7 @@ const LoginDetail = () => {
     try{
       const user = {...userInfo}
       if(userInfo.profile) {
-        const profile = await setProfileSpb(profileImage);
+        const profile = await uploadImageSpb(profileImage, true);
         if(!profile) throw new Error('프로필 이미지 업로드 실패');
         user.profile = profile;
       } 
@@ -82,7 +82,7 @@ const LoginDetail = () => {
               <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
               :(
                 <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
-                  <Icon name="account-circle" size={180} color="#AEB6B9"   />
+                  <Icon name="account-circle" size={180} color="#AEB6B9" />
                   <View style={styles.noProfileContainer}>
                     <Icon name="camera" size={24} color="#AEB6B9"  />
                   </View>

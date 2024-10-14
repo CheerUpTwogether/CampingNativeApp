@@ -8,6 +8,7 @@ interface Input {
   multiline?: boolean;
   numberOfLines?: number;
   isBgWhite?: boolean;
+  style?: any
 }
 const Input = ({
   value,
@@ -16,9 +17,10 @@ const Input = ({
   multiline = false,
   numberOfLines = 1,
   isBgWhite = true,
+  style = {},
 }: Input) => {
   return (
-    <View>
+    <View style={style}>
       <TextInput
         onChangeText={setValue}
         value={value}
@@ -43,12 +45,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     fontSize: 16,
-    color: "#FDA758",
+    color: "#333",
     backgroundColor: "#FFF6ED",
   },
   textarea: {
-    height: "100%",
-    color: "#FDA758",
+    color: "#333",
+    textAlignVertical: "top"
   },
   bgWhite: {
     backgroundColor: "#fff",

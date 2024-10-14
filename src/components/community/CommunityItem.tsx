@@ -1,168 +1,100 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { View } from 'react-native'
 import { SettingsScreenNavigationProp } from '../router/Router';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const shareIcon = require("@/assets/icons/Share.png");
-const heartIcon = require("@/assets/icons/Heart.png");
-const chatIcon = require("@/assets/icons/Chat.png");
+import { formatDate } from '@/utils/date';
 
 const CommunityItem = ({item}: {item: Community}) => {
-  console.log(item)
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   
   const handleMove = (id: number) => {
     navigation.navigate("CommunityDetail", { CommunityId: id });
   };
 
+  const handleLike = () => {}
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={{ marginHorizontal: "4%", marginVertical: "2%" }}
+      style={styles.container}
       onPress={() => handleMove(item.id)}
     >
-      <View style={styles.userWrapper}>
-        <View style={styles.topWrapper}>
-          <View style={{ marginVertical: 3 }}>
-            <View style={styles.imageWrapper}>
-              {item?.profile?.profile ? 
-                <Image
-                  source={{ uri: item.profile.profile }}
-                  style={styles.userProfileImage}
-                />
-                : <Icon name="account-circle" size={180} color="#AEB6B9"   />
-              }
-            </View>
-            <Text style={styles.nickName}>{item.nickname}</Text>
-          </View>
-          <View style={styles.subjectWrapper}>
-            <Text style={styles.subject}>{item.subject}</Text>
-          </View>
-          <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-            <Image source={shareIcon} style={styles.icon1} />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.profileContainer}>
+        {
+          item.profile ?
+          <Image source={{uri: item.profile}} style={styles.profileImage}/> :
+          <Icon name="account-circle" size={44} color="#AEB6B9" style={{marginRight: 4}}/>
+        }
+        <Text style={styles.nickname}>{item.nickname}</Text>
       </View>
-
-      <View style={styles.contentWrapper}>
-        <Text style={styles.contentText}>{item.content}</Text>
-        <View style={styles.reactionContainer}>
-          <View style={styles.reactionWrapper}>
-            <Image style={styles.icon1} source={heartIcon} />
-            <Text style={styles.reactionText}>{item.like}</Text>
-          </View>
-          <View style={styles.reaction}>
-            <Image style={styles.icon2} source={chatIcon} />
-            <Text style={styles.reactionText}>{item.reply_count}</Text>
-          </View>
+      {
+        item?.images?.[0] ? 
+        <Image source={{uri: item?.images?.[0]}} style={styles.thumbImage}></Image>:
+        <View></View>
+      }
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.contents} numberOfLines={2}>{item.contents}</Text>
+      <View style={{flexDirection: 'row', marginTop: 8, justifyContent: 'space-between', alignContent: 'center', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={handleLike}>
+            <Icon name={item.is_liked ? 'heart' : 'heart-outline'} size={24} color="#AEB6B9" style={{marginRight: 2}}/>
+            <Text>{item.like_count}</Text>
+          </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}}>
+            <Icon name="comment-outline" size={24} color="#AEB6B9" style={{marginRight: 2, lineHeight: 24}}/>
+            <Text>{item.reply_count}</Text>
+          </View> 
         </View>
+        <Text style={{lineHeight: 24}}>{formatDate(item.create_date).split(' ')[0]}</Text>
       </View>
     </TouchableOpacity>
   )
 }
 
+const width = Dimensions.get('screen').width
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: "#efefef",
-  },
-  topWrapper: {
-    flexDirection: "row",
+  container: {
+    margin: 4,
     marginHorizontal: 12,
-    marginVertical: 6,
-    justifyContent: "space-between",
-    alignItems: "center",
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    padding: 16
   },
-  userWrapper: {
-    flexDirection: "row",
-    backgroundColor: "#FFF",
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 3,
-  },
-  iconWrapper: {
-    width: 25,
-    height: 25,
-    backgroundColor: "rgba(87, 51, 83, 0.2)",
-    borderRadius: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 8,
-  },
-  icon1: {
-    width: 15,
-    height: 12,
-  },
-  icon2: {
-    width: 15,
-    height: 15,
-  },
-
-  nickName: {
-    color: "#573353",
-    fontWeight: "500",
-  },
-  contentWrapper: {
-    backgroundColor: "#FFF",
-    height: 80,
-    padding: 10,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-  },
-  contentText: {
-    color: "#573353",
-  },
-  reactionContainer: {
-    flexDirection: "row",
-    gap: 20,
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-  },
-  reactionWrapper: {
+  profileContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
   },
-  reaction: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
+  profileImage: {
+    width: 40, 
+    height: 40, 
+    marginRight: 8, 
+    borderRadius: 100
   },
-  reactionText: {
-    fontSize: 12,
+  nickname: {
+    color: "#333",
+    fontSize: 14,
+    fontWeight: "500"
   },
-  imageWrapper: {
-    overflow: "hidden",
-    width: 40,
-    height: 40,
-    borderRadius: 30,
-    alignItems: "center",
+  thumbImage: {
+    width: width - 56,
+    height: width - 56,
+    resizeMode: "cover",
+    borderRadius: 10,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    marginVertical: 8
   },
-  dummyProfileImage: {
-    width: 100,
-    height: 130,
-  },
-  userProfileImage: {
-    width: 40,
-    height: 40,
-  },
-  subjectWrapper: {
-    flex: 1,
-    paddingBottom: 30,
-    marginLeft: 8,
-  },
-  subject: {
-    color: "#FDA758",
-    fontWeight: "600",
+  contentContainer: {},
+  title: {
+    color: "#333",
     fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 4
   },
+  contents: {
+    fontSize: 16,
+    marginTop: 4
+  }
 });
 
 export default CommunityItem

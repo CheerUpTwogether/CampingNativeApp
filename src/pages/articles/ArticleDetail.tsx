@@ -17,25 +17,28 @@ import StarIcon from "@/assets/icons/Star.svg";
 import { ScrollView } from "react-native-gesture-handler";
 import useStore from "@/store/store";
 import { useSharedValue } from "react-native-reanimated";
-import { setFavoriteSpb } from "@/supaBase/api/article";
+import { setLikeAriticleSpb } from "@/supaBase/api/article";
 const backIcon = require("@/assets/icons/Back.png");
 
 export const ArticleDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const { id } = route.params as {id: number};
+  const {articles, setArticles} = useStore();
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
-  const { id, is_liked, title, contents,create_date, images } = route.params as Article;
-  const [star, setStar] = useState(is_liked); 
-  const {articles, setArticles} = useStore();
-  const setFavorite = async () => {
-    await setFavoriteSpb(id, is_liked === null ? false : true);
-    const newArticles = articles.map((el: Article) => el.id === id ? {...el, is_liked: !is_liked} : el);
-    setArticles(newArticles);
-    setStar(is_liked === null ? true : !is_liked)
+  const {title, is_liked, contents, images, create_date} = articles.find((el: Article) => el.id === id);
+  const {userInfo} = useStore();
+  
+  const setLike = async () => {
+    const res = await setLikeAriticleSpb(userInfo.user_id, id, !!is_liked)
+    if(res) {
+      const newArticles = articles.map((el: Article) => el.id === id ? {...el, is_liked: !is_liked} : el);
+      setArticles(newArticles);
+    }
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: {item: string}) => {
     return (
       <Image
         source={{uri: item}}
@@ -56,9 +59,8 @@ export const ArticleDetail = () => {
       <TopBar
         leftIcon={backIcon}
         leftClick={navigation.goBack}
-        rightIcon={<StarIcon color={star ? "#FFD73F" : "#ddd"} width={28} height={28} />}
-        rightClick={setFavorite}
-        title="캠핑장 상세 정보"
+        rightIcon={<StarIcon color={is_liked ? "#FFD73F" : "#ddd"} width={28} height={28} />}
+        rightClick={setLike}
       />
 
       <ScrollView>

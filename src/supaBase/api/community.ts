@@ -4,17 +4,17 @@ import { showInfo } from "./alert";
 
 // 커뮤니티 조회
 export const getCommunitysSpb = async (
-  page: number = 0,
-  pageSize: number = 10
+  page_no: number = 1,
 ): Promise<Community[] | void> => {
   try {
-    const start = (page - 1) * pageSize;
-    const { data, error } = await supabase
-      .from("community")
-      .select("*, profile (user_id, nickname, profile)")
-      .range(start, pageSize);
+    const { data, error } = await supabase.rpc('get_community_list', {
+      page_no,
+      page_size: 10
+    });
 
+    console.log(data)
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return;
     }
@@ -58,27 +58,20 @@ export const getCommunitySpb = async (
 // 커뮤니티 생성(post)
 export const addCommunitySpb = async (
   user_id: string,
-  subject: string,
-  content: string,
-  nickname: string
+  title: string,
+  contents: string,
+  images: string[]
 ): Promise<boolean> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
     const { data, error } = await supabase
       .from("community")
-      .insert([{ user_id, subject, content, nickname }]);
+      .insert([{ user_id, title, contents, images }]);
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }
-    showInfo("success", "게시글이 성공적으로 생성되었습니다.");
     return true;
   } catch (error) {
     showInfo("error", (error as Error).message);

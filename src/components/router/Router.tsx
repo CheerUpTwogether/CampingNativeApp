@@ -42,19 +42,14 @@ export type RootStackParamList = {
     screen: keyof RootBottomParamList;
   };
   Add: {
-    subject: string;
-    content: string;
-    isEdit: boolean;
-    communityId: string;
-    initialSubject?: string;
-    initialContent?: string;
+    id: number;
   };
   CampingDetail: { campingInfo: CampingType };
   SettingDetail: undefined;
   ProfileDetail: undefined;
   CommunityDetail: { CommunityId: number };
   Intro: undefined;
-  ArticleDetail: { id: number; iconState?: boolean };
+  ArticleDetail: { id: number; };
   Community: undefined;
   EditProfile: undefined;
 };

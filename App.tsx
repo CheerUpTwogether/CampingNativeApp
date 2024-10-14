@@ -7,7 +7,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Router />
-      <Toast />
+      <Toast visibilityTime={1000}/>
     </NavigationContainer>
   );
 };

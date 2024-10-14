@@ -1,34 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, FlatList } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView, StyleSheet, Image, FlatList } from "react-native";
 import TopBar from "@/components/common/TopBar";
-//import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
-import {
-  getArticlesSpb,
-  setFavoriteSpb,
-} from "@/supaBase/api/article";
+import { getArticlesSpb } from "@/supaBase/api/article";
 import useStore from "@/store/store";
 
-const profile = { uri: "https://picsum.photos/200/300" };
 const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 
 const Articles = () => {
-  const [sortType, setSortType] = useState<string>("LATEST");
   const {articles, setArticles} = useStore();
   const [refresh, setRefresh] = useState(false);
-  const orderList = [
-    { title: "최신순", value: "LATEST" },
-    { title: "좋아요순", value: "FAVORITE" },
-  ];
-
+  const {userInfo} = useStore();
   useEffect(() => {
     getArticles()
   },[]);
 
   const getArticles = async () => {
     setRefresh(true);
-    const data: Article[] = await getArticlesSpb(sortType);
+    const data: Article[] = await getArticlesSpb(userInfo.user_id);
     data && setArticles(data);
     setRefresh(false);
   };

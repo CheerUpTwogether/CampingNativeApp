@@ -14,8 +14,7 @@ const Community = () => {
   }, []);
 
   const fetchCommunitysData = async (page?: number) => {
-    const data = await getCommunitysSpb(pageNo || page, 10);
-    console.log(data)
+    const data = await getCommunitysSpb(pageNo || page);
     if (data) setDataList(data);
   };
 
