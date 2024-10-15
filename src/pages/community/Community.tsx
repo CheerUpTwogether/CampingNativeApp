@@ -1,14 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { FlatList, SafeAreaView, StyleSheet} from "react-native";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text} from "react-native";
 import { getCommunitysSpb } from "@/supaBase/api/community";
 import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 
 const Community = () => {
   const {setCommunities, communities} = useStore();
   const [refresh, setRefresh] = useState(false);
   const [pageNo, setPageNo] = useState(1);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   useEffect(() => {
     fetchCommunitysData();
@@ -27,24 +40,36 @@ const Community = () => {
   };
 
   const pullDown = async() => {
-    setRefresh(true);
     setPageNo(1)
+    setCommunities([])
+    setRefresh(true);
     await fetchCommunitysData(1);
     setRefresh(false);
   };  
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar rightIsProfile={true} />
-      <FlatList
-        data={communities}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => <CommunityItem id={item.id} />}
-        style={{ marginBottom: 70 }}
-        onRefresh={pullDown}
-        refreshing={refresh}
-        onEndReached={handleEndReached} 
-      />
+      <BottomSheetModalProvider>
+        <TopBar rightIsProfile={true} />
+        <FlatList
+          data={communities}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({item}) => <CommunityItem id={item.id} handlePresentModalPress={handlePresentModalPress}/>}
+          style={{ marginBottom: 70 }}
+          onRefresh={pullDown}
+          refreshing={refresh}
+          onEndReached={handleEndReached} 
+        />
+        <BottomSheetModal ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetView style={styles.wrapper}>
+            <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheetModal>
+      </BottomSheetModalProvider>
     </SafeAreaView>
   );
 };

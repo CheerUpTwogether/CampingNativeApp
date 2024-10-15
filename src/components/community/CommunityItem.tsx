@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { View } from 'react-native'
 import { SettingsScreenNavigationProp } from '../router/Router';
@@ -9,10 +9,11 @@ import useStore from '@/store/store';
 import { setLikeCommunitySpb } from '@/supaBase/api/community';
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from 'react-native-reanimated';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
+
 const width = Dimensions.get('screen').width
 
-const CommunityItem = ({id}: {id: number}) => {
+const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresentModalPress: (id: number) => void}) => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const {setCommunities, communities, userInfo} = useStore();
   const item = {...communities.find((el: Community) => el.id === id)}
@@ -21,10 +22,6 @@ const CommunityItem = ({id}: {id: number}) => {
   const [showFullText, setShowFullText] = useState(false);
   const [isContentLong, setIsContentLong] = useState(false); // 긴 글인지 여부
   const [textLayoutLines, setTextLayoutLines] = useState(0); // 실제 텍스트 라인 수
-  
-  const handleMove = (id: number) => {
-    navigation.navigate("CommunityDetail", { CommunityId: id });
-  };
 
   const handleLike = async() => {
     const res = await setLikeCommunitySpb(userInfo.user_id, item.id, !!item.is_liked)
@@ -76,7 +73,6 @@ const CommunityItem = ({id}: {id: number}) => {
         <View></View>
       }
       <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
-      {/* <Text style={styles.contents} numberOfLines={2}>{item.contents}</Text> */}
       <Text
         style={styles.contents}
         numberOfLines={showFullText ? undefined : 2} // 전체 표시 여부에 따라 라인 제한
@@ -103,18 +99,16 @@ const CommunityItem = ({id}: {id: number}) => {
         </TouchableOpacity>
       )}
 
-
-
       <View style={{flexDirection: 'row', marginTop: 16, justifyContent: 'space-between', alignContent: 'center', alignItems: 'center'}}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}} onPress={handleLike}>
             <Icon name={item.is_liked ? 'heart' : 'heart-outline'} size={24} color={item.is_liked ? 'red' : '#AEB6B9'} style={{marginRight: 2}}/>
             <Text>{item.like_count}</Text>
           </TouchableOpacity>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}}>
+          <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', marginLeft: 8}} onPress={() => handlePresentModalPress(id)}>
             <Icon name="comment-outline" size={24} color="#AEB6B9" style={{marginRight: 2, lineHeight: 24}}/>
             <Text>{item.reply_count}</Text>
-          </View> 
+          </TouchableOpacity> 
         </View>
         <Text style={{lineHeight: 24}}>{formatDate(item.create_date).split(' ')[0]}</Text>
       </View>
@@ -165,7 +159,7 @@ const styles = StyleSheet.create({
   },
   moreButton: {
     fontSize: 14,
-    color: '#1e90ff',
+    color: '#aaa',
     marginTop: 5,
   },
 });
