@@ -2,8 +2,8 @@
 import React, {useState, useCallback} from 'react';
 import {TextInput, StyleSheet, View, Text, LayoutChangeEvent} from 'react-native';
 
-const DynamicTextInput = () => {
-  const [text, setText] = useState('');
+const DynamicTextInput = ({text, setText} : {text: string, setText:React.Dispatch<React.SetStateAction<string>>}) => {
+  //const [text, setText] = useState('');
   const [lines, setLines] = useState(1); // 기본 줄 수 1
   const [inputWidth, setInputWidth] = useState(0); // TextInput의 넓이
 
@@ -30,24 +30,20 @@ const DynamicTextInput = () => {
   };
 
   return (
-    <View >
-      <TextInput
-        style={[styles.textInput]} // 줄 수에 따라 높이 조정
-        value={text}
-        onChangeText={handleTextChange}
-        multiline={true}
-        numberOfLines={lines} // 동적으로 계산된 줄 수 적용
-        onLayout={onLayout} // TextInput의 레이아웃 변화 감지
-        placeholder='댓글을 입력하세요'
-      />
-    </View>
+    <TextInput
+      style={[styles.textInput]} // 줄 수에 따라 높이 조정
+      value={text}
+      onChangeText={handleTextChange}
+      multiline={true}
+      numberOfLines={lines} // 동적으로 계산된 줄 수 적용
+      onLayout={onLayout} // TextInput의 레이아웃 변화 감지
+      placeholder='댓글을 입력하세요'
+      placeholderTextColor="#555"
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
   textInput: {
     width: "100%",
     padding: 12,

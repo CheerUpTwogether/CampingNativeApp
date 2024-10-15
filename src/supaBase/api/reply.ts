@@ -8,11 +8,11 @@ export const getReplysSpb = async (
 ): Promise<ReplyType[]> => {
   try {
 
-    console.log(community_id)
     const { data, error } = await supabase
       .from("community_reply")
       .select("*, profile (user_id, nickname, profile)")
-      .eq("community_id", community_id);
+      .eq("community_id", community_id)
+      .order("create_date", { ascending: false });
 
     if (error) {
       showInfo("error", error.message);
@@ -32,25 +32,19 @@ export const addReplySpb = async ({
   reply,
   user_id,
 }: {
+  user_id: string;
   community_id: number;
   reply: string;
-  user_id: string;
 }): Promise<false | ReplyType> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
     const { data, error } = await supabase
-      .from("reply") // 댓글을 저장할 테이블 이름
+      .from("community_reply") // 댓글을 저장할 테이블 이름
       .insert([{ community_id, reply, user_id }]) // communityId를 community_id 컬럼에 매핑
-      .select("*, profile (user_id, nickname)")
+      .select("*, profile (user_id, nickname, profile)")
       .single();
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }

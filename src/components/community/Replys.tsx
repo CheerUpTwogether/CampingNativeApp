@@ -12,16 +12,14 @@ import {
 import Input from "@/components/common/Input";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from "@/utils/date";
-import { getReplysSpb } from "@/supaBase/api/reply";
+import { addReplySpb, getReplysSpb } from "@/supaBase/api/reply";
 import useStore from "@/store/store";
 import DynamicTextInput from "../common/DynamicTextInput";
 
 const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
-  const [inputText, setInputText] = useState("");
   const [replys, setReplys] = useState<ReplyType[]>([]);
-  const [replyId, setReplyId] = useState(0);
-  const [replyContent, setReplyContent] = useState("");
-  const userInfo = useStore().userInfo;
+  const [reply, setReply] = useState('');
+  const {user_id} = useStore().userInfo;
 
   useEffect(() => {
     getReplys();
@@ -30,8 +28,16 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const getReplys = async () => {
     const data = await getReplysSpb(communityId);
     setReplys(data);
-    console.log(data)
   };
+
+  const addComment = async() => {
+    const data = await addReplySpb({
+      community_id: communityId,
+      user_id,
+      reply
+    });
+    if(data) setReplys([data, ...replys])
+  }
 
   return (
     <View style={styles.replyContainer}>
@@ -46,7 +52,7 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
               }
               <Text style={styles.nickname}>{item?.profile?.nickname || ''}</Text>
             </View>
-            <Text style={{color: '#333'}}>{item.reply}</Text>
+            <Text style={{color: '#333', fontSize: 16}}>{item.reply}</Text>
           </View>
         )}
         data={replys}
@@ -58,15 +64,9 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
             </View>
             <View style={styles.inputContainer}>
               <View style={styles.inputWrapper}>
-                {/* <Input
-                  value={inputText}
-                  setValue={setInputText}
-                  placeholder="댓글을 입력해주세요."
-                  isBgWhite={false}
-                /> */}
-                <DynamicTextInput />
+                <DynamicTextInput setText={setReply} text={reply}/>
               </View>
-              <TouchableOpacity style={styles.sendButton} >
+              <TouchableOpacity style={styles.sendButton} onPress={addComment}>
                 <Text style={styles.sendButtonText}>등록</Text>
               </TouchableOpacity>
             </View>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   replyContainer: {
     backgroundColor: "#fff",
     marginHorizontal: 12,
-    paddingTop: "4%",
+    paddingTop: 8,
     marginBottom: 12,
   },
   contentsWrapper: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   nickname: {
     color: "#333",
     fontSize: 14,
-    fontWeight: "500"
+    fontWeight: "600"
   },
 
 
