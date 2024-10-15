@@ -4,7 +4,7 @@ import { formatDate } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../router/Router";
-import StarIcon from "@/assets/icons/Star.svg";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import useStore from "@/store/store";
 import { setLikeAriticleSpb } from "@/supaBase/api/article";
@@ -48,11 +48,7 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
           <TouchableOpacity
             onPress={handleArticleLike}
           >
-            <StarIcon
-              color={article.is_liked ? "#FFD73F" : "#ddd"}
-              width={24}
-              height={24}
-            />
+            <Icon name={article.is_liked ? 'heart' : 'heart-outline'} size={24} color={article.is_liked ? 'red' : '#AEB6B9'} style={{marginRight: 2}}/>
           </TouchableOpacity>
         </View>
       </View>

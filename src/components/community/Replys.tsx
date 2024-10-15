@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from "@/utils/date";
 import { getReplysSpb } from "@/supaBase/api/reply";
 import useStore from "@/store/store";
+import DynamicTextInput from "../common/DynamicTextInput";
 
 const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const [inputText, setInputText] = useState("");
@@ -57,12 +58,13 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
             </View>
             <View style={styles.inputContainer}>
               <View style={styles.inputWrapper}>
-                <Input
+                {/* <Input
                   value={inputText}
                   setValue={setInputText}
                   placeholder="댓글을 입력해주세요."
                   isBgWhite={false}
-                />
+                /> */}
+                <DynamicTextInput />
               </View>
               <TouchableOpacity style={styles.sendButton} >
                 <Text style={styles.sendButtonText}>등록</Text>
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: 'flex-start',
     borderRadius: 12,
     marginTop: 8,
   },  
