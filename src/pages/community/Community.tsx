@@ -5,22 +5,22 @@ import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
+import Replys from "@/components/community/Replys";
 
 const Community = () => {
   const {setCommunities, communities} = useStore();
   const [refresh, setRefresh] = useState(false);
   const [pageNo, setPageNo] = useState(1);
+  const [communityId, setCommunityId] = useState(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
   const snapPoints = useMemo(() => ['25%', '50%'], []);
 
   // callbacks
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = useCallback((newCommunityId: number) => {
     bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    setCommunityId(newCommunityId)
   }, []);
 
   useEffect(() => {
@@ -63,10 +63,9 @@ const Community = () => {
         <BottomSheetModal ref={bottomSheetModalRef}
         index={1}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}
       >
-        <BottomSheetView style={styles.wrapper}>
-            <Text>Awesome 🎉</Text>
+        <BottomSheetView>
+          <Replys communityId={communityId}/>
         </BottomSheetView>
       </BottomSheetModal>
       </BottomSheetModalProvider>

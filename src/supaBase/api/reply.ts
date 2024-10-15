@@ -7,15 +7,11 @@ export const getReplysSpb = async (
   community_id: number
 ): Promise<ReplyType[]> => {
   try {
-    const isSignIn = await isSignInUser();
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return [];
-    }
 
+    console.log(community_id)
     const { data, error } = await supabase
-      .from("reply")
-      .select("*, profile (user_id, nickname)")
+      .from("community_reply")
+      .select("*, profile (user_id, nickname, profile)")
       .eq("community_id", community_id);
 
     if (error) {

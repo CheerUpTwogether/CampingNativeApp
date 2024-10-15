@@ -105,19 +105,19 @@ const CustomBottomTab: React.FC<BottomTabBarProps> = ({
           switch (label) {
             case "Home":
               return (
-                <Icon name={bool? 'home-variant': "home-variant-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'home-variant': "home-variant-outline"} size={32} color={bool ? "#6a994e" : "#999"} />
               );
             case "Articles":
               return (
-                <Icon name={bool? 'clipboard': "clipboard-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'clipboard': "clipboard-outline"} size={32} color={bool ? "#6a994e" : "#999"} />
               );
             case "Community":
               return (
-                <Icon name={bool? 'text-box': "text-box-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'text-box': "text-box-outline"} size={32} color={bool ? "#6a994e" : "#999"} />
               );
             default:
               return (
-                <Icon name={bool? 'cog': "cog-outline"} size={32} color={bool ? "#386641" : "#999"} />
+                <Icon name={bool? 'cog': "cog-outline"} size={32} color={bool ? "#6a994e" : "#999"} />
               );
           }
         };

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     color: "#333",
-    backgroundColor: "#FFF6ED",
+    backgroundColor: "#efefef",
   },
   textarea: {
     color: "#333",

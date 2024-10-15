@@ -1,20 +1,15 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { View } from 'react-native'
-import { SettingsScreenNavigationProp } from '../router/Router';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { formatDate } from '@/utils/date';
 import useStore from '@/store/store';
-import { setLikeCommunitySpb } from '@/supaBase/api/community';
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from 'react-native-reanimated';
-import {BottomSheetModal, BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet';
+import { setLikeCommunitySpb } from '@/supaBase/api/community';
+import { formatDate } from '@/utils/date';
 
 const width = Dimensions.get('screen').width
 
 const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresentModalPress: (id: number) => void}) => {
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
   const {setCommunities, communities, userInfo} = useStore();
   const item = {...communities.find((el: Community) => el.id === id)}
   const ref = React.useRef<ICarouselInstance>(null);
