@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, SafeAreaView, StyleSheet} from "react-native";
-import TopBar from "@/components/common/TopBar";
 import { getCommunitysSpb } from "@/supaBase/api/community";
+import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 
@@ -29,10 +29,9 @@ const Community = () => {
   const pullDown = async() => {
     setRefresh(true);
     setPageNo(1)
-    setRefresh(true)
     await fetchCommunitysData(1);
     setRefresh(false);
-  };
+  };  
 
   return (
     <SafeAreaView style={styles.wrapper}>

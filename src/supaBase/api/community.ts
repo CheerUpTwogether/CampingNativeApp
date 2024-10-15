@@ -7,12 +7,12 @@ export const getCommunitysSpb = async (
   page_no: number = 1,
 ): Promise<Community[] | void> => {
   try {
+    console.log(page_no)
     const { data, error } = await supabase.rpc('get_community_list', {
       page_no,
       page_size: 10
     });
 
-    console.log(data)
     if (error) {
       console.log(error)
       showInfo("error", error.message);

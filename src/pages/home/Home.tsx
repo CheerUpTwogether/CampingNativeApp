@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, Platform, FlatList } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import { getCampingsApi } from "@/apis/camping";
+import { getCampingsApi } from "@/api";
 import { OPENAPI_SERVICE_KEY } from "@env";
 import CampingItem from "@/components/home/CampingItem";
 
@@ -64,7 +64,6 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
     backgroundColor: "#F5F7F8",
   },
 });
