@@ -75,7 +75,7 @@ const Community = ({route}: CommunityProps) => {
           index={1}
           snapPoints={snapPoints}
         >
-        <BottomSheetView style={{paddingBottom: 12}}>
+        <BottomSheetView style={{paddingBottom: 100, flex: 1,}}>
           <Replys communityId={communityId}/>
         </BottomSheetView>
       </BottomSheetModal>

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from "@/utils/date";
-import { addReplySpb, deleteReplySpb, getReplysSpb } from "@/supaBase/api/reply";
+import { addReplySpb, deleteReplySpb, getReplysSpb, updateReplySpb } from "@/supaBase/api/reply";
 import useStore from "@/store/store";
 import DynamicTextInput from "../common/DynamicTextInput";
 
@@ -19,6 +19,7 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const [replys, setReplys] = useState<ReplyType[]>([]);
   const [reply, setReply] = useState('');
   const [editId, setEditId] = useState(0);
+  const [editReply, setEditReply] = useState('');
   const {userInfo, setCommunities, communities} = useStore();
 
   useEffect(() => {
@@ -48,6 +49,13 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
     setReplys(replys.filter(el => el.id !== id))
   }
 
+  const updateReply = async() => {
+    const data = await updateReplySpb(editId, editReply);
+    setReplys(replys.map((el: ReplyType) => el.id === editId ? {...el, reply: editReply} : el))
+    setEditId(0)
+    setEditReply('')
+  }
+  
   return (
     <View style={styles.replyContainer}>
       <FlatList
@@ -82,7 +90,7 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
               {
                 item.user_id === userInfo.user_id && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity onPress={() => setEditId(item.id)}>
+                    <TouchableOpacity onPress={() => {setEditId(item.id); setEditReply(item.reply)}}>
                       <Icon name="pencil" size={20} color="#169b9a" style={{marginRight: 4}}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => deleteReply(item.id)}>
@@ -94,12 +102,17 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
             </View>
             {
               editId === item.id ? (
-                <View style={styles.inputContainer}>
-                  <View style={styles.inputWrapper}>
-                    <DynamicTextInput setText={setReply} text={reply}/>
+                <View>
+                  <View style={styles.inputContainer}>
+                    <View style={styles.replyInputWrapper}>
+                      <DynamicTextInput setText={setEditReply} text={editReply}/>
+                    </View>
+                    <TouchableOpacity style={styles.sendButton} onPress={updateReply}>
+                      <Text style={styles.sendButtonText}>수정</Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={styles.sendButton} onPress={addReply}>
-                    <Text style={styles.sendButtonText}>등록</Text>
+                  <TouchableOpacity onPress={() => {setEditId(0); setEditReply('')}}>
+                    <Text style={{paddingLeft: 12, marginTop:4}}>취소</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
@@ -141,14 +154,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },  
   inputWrapper: {
-    width: width - 120,
+    width: width - 124, 
     marginLeft: 4,
   },
   sendButton: {
     width: 80,
     alignItems: "center",
     backgroundColor: "#6a994e",
-    padding: 12,
+    padding: 14,
     borderRadius: 10,
   },
   sendButtonText: {
@@ -170,6 +183,10 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   },
 
+  replyInputWrapper: {
+    width: width - 140, 
+    marginLeft: 4,
+  },
 
 
   commentContainer: {

@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
     marginVertical: 8
   },
-  contentContainer: {},
   title: {
     color: "#333",
     fontSize: 18,

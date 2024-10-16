@@ -1,9 +1,8 @@
 
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {TextInput, StyleSheet, View, Text, LayoutChangeEvent} from 'react-native';
 
 const DynamicTextInput = ({text, setText} : {text: string, setText:React.Dispatch<React.SetStateAction<string>>}) => {
-  //const [text, setText] = useState('');
   const [lines, setLines] = useState(1); // 기본 줄 수 1
   const [inputWidth, setInputWidth] = useState(0); // TextInput의 넓이
 
@@ -11,7 +10,6 @@ const DynamicTextInput = ({text, setText} : {text: string, setText:React.Dispatc
   const onLayout = useCallback((event: LayoutChangeEvent) => {
     const {width} = event.nativeEvent.layout;
     setInputWidth(width); // 현재 TextInput의 너비를 설정
-    console.log(width)
   }, []);
 
   // 텍스트 길이에 따라 줄 수 계산
@@ -28,6 +26,12 @@ const DynamicTextInput = ({text, setText} : {text: string, setText:React.Dispatc
     // 최대 5줄로 제한 (필요시 이 값을 조정 가능)
     setLines(newLines <= 5 ? newLines : 5);
   };
+
+  useEffect(() => {
+    if(!text.length) {
+      setLines(1)
+    }
+  },[text])
 
   return (
     <TextInput

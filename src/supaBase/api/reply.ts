@@ -75,20 +75,15 @@ export const deleteReplySpb = async (id: number) => {
   }
 };
 
-export const setReplysSpb = async ({ id, reply }: updateReplyType) => {
+export const updateReplySpb = async (id: number, reply: string) => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
     const { error } = await supabase
-      .from("reply")
+      .from("community_reply")
       .update({ reply })
       .eq("id", id);
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }
