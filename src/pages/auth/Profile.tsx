@@ -7,6 +7,8 @@ import Toast from 'react-native-toast-message';
 import useStore from "@/store/store";
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { SettingsScreenNavigationProp } from '@/types/route';
+import TopBar from '@/components/common/TopBar';
+const backIcon = require("@/assets/icons/Back.png");
 
 const Profile = () => {
   const setUserData = useStore((state) => state.setUserData);
@@ -110,80 +112,94 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* 탑바 */}
+      {
+        !route.params?.init && (
+          <TopBar
+            leftIcon={backIcon}
+            leftClick={() => {
+              if (navigation.canGoBack()) navigation.goBack()
+              else navigation.replace("BottomTab", {"screen": 'Home'})
+            }}
+          />
+        )
+      }
+
       <ScrollView contentContainerStyle={styles.wrapper}>
-          <View style={styles.profileImageWrapper}>
-            {userInfo.profile ?
-              ( 
-                <View>
-                  <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
-                    <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
-                    <View style={styles.noProfileContainer}>
-                      <Icon name="camera" size={24} color="#AEB6B9"  />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setUserInfo({...userInfo, profile: ''})}>
-                    <Text style={{textAlign: 'center', color: '#386641', marginTop: 8}}>기본 사진으로 변경</Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
+        {/* 프로필 사진 */}
+        <View style={styles.profileImageWrapper}>
+          {userInfo.profile ?
+            ( 
+              <View>
                 <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
-                  <Icon name="account-circle" size={180} color="#AEB6B9" />
+                  <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
                   <View style={styles.noProfileContainer}>
                     <Icon name="camera" size={24} color="#AEB6B9"  />
                   </View>
                 </TouchableOpacity>
-              )
-            }
+                <TouchableOpacity onPress={() => setUserInfo({...userInfo, profile: ''})}>
+                  <Text style={{textAlign: 'center', color: '#386641', marginTop: 8}}>기본 사진으로 변경</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
+                <Icon name="account-circle" size={180} color="#AEB6B9" />
+                <View style={styles.noProfileContainer}>
+                  <Icon name="camera" size={24} color="#AEB6B9"  />
+                </View>
+              </TouchableOpacity>
+            )
+          }
+        </View>
+        {/* 닉네임/소개 */}
+        <View style={{marginTop: 24}}>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>닉네임</Text>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="닉네임을 입력해주세요."
+              placeholderTextColor="#999"
+              value={userInfo.nickname}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, nickname: text })
+              }
+              autoCapitalize="none"
+              maxLength={12}
+            />
+            <Text style={{ color: "#386641", fontSize: 12, marginBottom: 8 }}>
+              * 닉네임은 12자까지 입력할 수 있습니다.
+            </Text>
           </View>
-          <View style={{marginTop: 24}}>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.textStyle}>닉네임</Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="닉네임을 입력해주세요."
-                placeholderTextColor="#999"
-                value={userInfo.nickname}
-                onChangeText={(text) =>
-                  setUserInfo({ ...userInfo, nickname: text })
-                }
-                autoCapitalize="none"
-                maxLength={12}
-              />
-              <Text style={{ color: "#386641", fontSize: 12, marginBottom: 8 }}>
-                * 닉네임은 12자까지 입력할 수 있습니다.
-              </Text>
-            </View>
 
-            <View style={styles.inputWrapper}>
-              <Text style={styles.textStyle}>소개</Text>
-              <TextInput
-                style={[styles.inputStyle, { height: 100 }]}
-                placeholder="나를 소개해주세요."
-                placeholderTextColor="#999"
-                autoCorrect={false}
-                autoCapitalize="none"
-                value={userInfo.introduce}
-                onChangeText={(text) =>
-                  setUserInfo({ ...userInfo, introduce: text })
-                }
-                multiline={true}
-                numberOfLines={3}
-                maxLength={100}
-              />
-              <Text style={{ color: "#386641", fontSize: 12 }}>
-                * 소개는 100자까지 입력할 수 있습니다.
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              style={{ marginVertical: 12, marginHorizontal: 24 }}
-              onPress={setProfile}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.saveButton}>저장하기</Text>
-            </TouchableOpacity>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.textStyle}>소개</Text>
+            <TextInput
+              style={[styles.inputStyle, { height: 100 }]}
+              placeholder="나를 소개해주세요."
+              placeholderTextColor="#999"
+              autoCorrect={false}
+              autoCapitalize="none"
+              value={userInfo.introduce}
+              onChangeText={(text) =>
+                setUserInfo({ ...userInfo, introduce: text })
+              }
+              multiline={true}
+              numberOfLines={3}
+              maxLength={100}
+            />
+            <Text style={{ color: "#386641", fontSize: 12 }}>
+              * 소개는 100자까지 입력할 수 있습니다.
+            </Text>
           </View>
-        
+
+          <TouchableOpacity
+            style={{ marginVertical: 12, marginHorizontal: 24 }}
+            onPress={setProfile}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.saveButton}>저장하기</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

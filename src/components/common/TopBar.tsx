@@ -61,7 +61,7 @@ const TopBar: React.FC<TopBarProps> = ({
         <TouchableOpacity
           onPress={() => {
             if (rightClick) rightClick()
-            else navigation.replace('Profile', {init: false})
+            else navigation.navigate('Profile', {init: false})
           }}
         >
           {rightIsProfile ? (
