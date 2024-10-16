@@ -28,6 +28,7 @@ export type RootStackParamList = {
   ArticleDetail: { id: number; };
   Community: { refresh: boolean };
   EditProfile: undefined;
+  profile: {authData: { user?: User; session: Session; }}
 };
 // `route` 객체의 타입을 정의
 type CommunityScreenRouteProp = RouteProp<RootStackParamList, 'Community'>;

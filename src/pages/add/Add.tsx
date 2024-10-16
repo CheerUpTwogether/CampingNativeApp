@@ -48,7 +48,6 @@ const Add: React.FC = () => {
   const updateCommunity = async(images) => {
     // 게시물 수정
     const res = await updateCommunitySpb(
-      userInfo.user_id,
       form.title,
       form.contents,
       images as string[],

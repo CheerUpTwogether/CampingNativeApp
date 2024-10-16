@@ -52,7 +52,7 @@ const Login = () => {
       if (profileDataError) {
         
         Toast.show({ type: "success", text1: '정보를 등록해주세요' });
-        navigation.replace('LoginDetail', {authData})
+        navigation.replace('Profile', {params: {init: true}})
         return;
       }
 
@@ -82,7 +82,7 @@ const Login = () => {
           navigation.replace('BottomTab', {screen: 'Home'});
           return;
         }
-        navigation.replace('LoginDetail', {authData});
+        navigation.replace('LoginDetail');
   }
   
 

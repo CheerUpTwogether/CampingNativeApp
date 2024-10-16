@@ -110,3 +110,10 @@ export const addProfileSpb = async ({nickname, introduce, profile}: User) => {
   .from("profile")
   .insert({ nickname, introduce, profile });
 }
+
+export const updateProfileSpb = async ({nickname, introduce, profile, user_id}: User) => {
+  return await supabase
+  .from("profile")
+  .update({ nickname, introduce, profile })
+  .eq("id", user_id);
+}

@@ -52,12 +52,15 @@ export const addCommunitySpb = async (
 
 // 커뮤니티 수정(put)
 export const updateCommunitySpb = async (
-user_id: string, title: string, contents: string, images: string[], communityId: string
+  title: string, 
+  contents: string, 
+  images: string[], 
+  communityId: string
 ): Promise<boolean> => {
   try {
     const { data, error } = await supabase
       .from("community")
-      .update({ user_id, title, contents, images })
+      .update({ title, contents, images })
       .eq("id", communityId);
 
     if (error) {

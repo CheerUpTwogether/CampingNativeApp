@@ -13,6 +13,7 @@ interface User {
   nickname: string;
   introduce: string;
   profile: string;
+  user_id?: string;
 }
 
 interface UserEditData {
