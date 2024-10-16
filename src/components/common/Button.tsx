@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     padding: 16,
-    marginTop: 20,
   },
   btnPastel: {
     backgroundColor: "#FFF",
