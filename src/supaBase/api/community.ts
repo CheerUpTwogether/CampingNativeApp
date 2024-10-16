@@ -127,21 +127,16 @@ export const deleteCommunitySpb = async (
   communityId: number
 ): Promise<boolean> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
+    // 
     const { data, error } = await supabase
       .from("community")
-      .delete()
+      .update({ is_deleted: true })
       .eq("id", communityId); // communityId가 숫자형이므로, eq()에서 숫자로 처리
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
-      return false;
+      return false; 
     }
     showInfo("success", "게시글이 성공적으로 삭제되었습니다.");
     return true;

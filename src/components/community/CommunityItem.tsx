@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useStore from '@/store/store';
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from 'react-native-reanimated';
-import { setLikeCommunitySpb } from '@/supaBase/api/community';
+import { deleteCommunitySpb, setLikeCommunitySpb } from '@/supaBase/api/community';
 import { formatDate } from '@/utils/date';
 
 const width = Dimensions.get('screen').width
@@ -18,6 +18,7 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
   const [isContentLong, setIsContentLong] = useState(false); // 긴 글인지 여부
   const [textLayoutLines, setTextLayoutLines] = useState(0); // 실제 텍스트 라인 수
 
+  // 좋아요
   const handleLike = async() => {
     const res = await setLikeCommunitySpb(userInfo.user_id, item.id, !!item.is_liked)
     if(res) {
@@ -30,15 +31,35 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
     }
   }
 
+  // 커뮤니티 삭제
+  const deleteCommunity = async() => {
+    const res = await deleteCommunitySpb(id)
+    if(res) setCommunities(communities.filter((el: Community) => el.id !== id));
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.profileContainer}>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+        <View style={styles.profileContainer}>
+          {
+            item.profile ?
+            <Image source={{uri: item.profile}} style={styles.profileImage}/> :
+            <Icon name="account-circle" size={44} color="#AEB6B9" style={{marginRight: 4}}/>
+          }
+          <Text style={styles.nickname}>{item.nickname}</Text>
+        </View>
         {
-          item.profile ?
-          <Image source={{uri: item.profile}} style={styles.profileImage}/> :
-          <Icon name="account-circle" size={44} color="#AEB6B9" style={{marginRight: 4}}/>
+          item.user_id === userInfo.user_id  && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity>
+                <Icon name="pencil" size={20} color="#169b9a" style={{marginRight: 4}}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={deleteCommunity}>
+                <Icon name="delete" size={20} color="#ef4957" style={{marginRight: 4}}/>
+              </TouchableOpacity>
+            </View>
+          )
         }
-        <Text style={styles.nickname}>{item.nickname}</Text>
       </View>
       {
         item?.images?.length ? 
@@ -57,12 +78,12 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
             width={width}
             height={width - 28} 
             onProgressChange={progress}
-          />
+          />  
           <Pagination.Basic
             progress={progress}
             data={item?.images ? item?.images : []}
             dotStyle={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: 100 }}
-            containerStyle={{ gap: 5, marginTop: 10 }}
+            containerStyle={{ gap: 5 }}
           />
         </View>:
         <View></View>
