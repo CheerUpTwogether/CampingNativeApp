@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import uuid from "react-native-uuid";
 import useStore from "@/store/store";
 import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
 import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
-import { RootStackParamList } from "@/components/router/Router";
-import { addCommunitySpb, setCommunitySpb } from "@/supaBase/api/community";
+import { addCommunitySpb } from "@/supaBase/api/community";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { uploadImageSpb } from "@/supaBase/api/myPage";
+import { AddScreenNavigationProp } from "@/types/route";
 const backIcon = require("@/assets/icons/Back.png");
-
-type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;
 
 const Add: React.FC = () => {
   const navigation = useNavigation<AddScreenNavigationProp>();
@@ -26,8 +23,7 @@ const Add: React.FC = () => {
     contents: initObj?.contents || '',
     images: initObj?.images || [],
   })
-
-
+  
    // 이미지 선택
    const selectImage = async () => {
     try {
@@ -36,27 +32,35 @@ const Add: React.FC = () => {
         multiple: true,
         maxFiles: 5 - form.images.length,
       });
-      
+
       const newImages = [...form.images];
       
       res.forEach(el => {
         newImages.push({uri: el.path, type: el.mime, name: String(uuid.v4())});
       });
 
-      
-      setForm({...form, images: newImages});
-      
+      setForm({...form, images: newImages});      
     } catch (e) {
       console.log(e);
     }
   };
 
-  const updateCommunity = () => {
-    const notUploadedImages = form.images.filter(el => typeof el !== 'string');
-    
+  const updateCommunity = (images) => {
+    console.log(images)
   }
 
-  const addCommunity = async() => {
+  const addCommunity = async(images) => {
+    // 게시물 업로드
+    const res = await addCommunitySpb(
+      userInfo.user_id,
+      form.title,
+      form.contents,
+      images as string[]
+    )
+    if(!res) return
+  }
+
+  const uploadImage = async () => {
     const notUploadedImages = form.images.filter(el => typeof el !== 'string');
     let images = [...form.images]
     const uploadPromises = notUploadedImages.map(async (el) => {
@@ -65,40 +69,25 @@ const Add: React.FC = () => {
         images = images.map(image => image?.name === el.name ? res : image);
       }
     });
-
-     // 모든 업로드가 완료될 때까지 기다림
+    // 모든 업로드가 완료될 때까지 기다림
     await Promise.all(uploadPromises);
-
-    // 게시물 업로드
-    const res = await addCommunitySpb(
-      userInfo.user_id,
-      form.title,
-      form.contents,
-      images as string[]
-    );
-
-    if(res) {
-      Toast.show({
-        type: "success",
-        text1: "게시글을 생성했어요.",
-      });
-      navigation.navigate("BottomTab", {
-        screen: "Community",
-        params: { refresh: true },
-      });
-    }
-  }
-
+    return images
+  };
 
   const handleSubmit = async () => {
-    if(!!initObj?.id) updateCommunity()
-    else addCommunity()
+    const images = await uploadImage();
+    if(!!initObj?.id) updateCommunity(images)
+    else addCommunity(images)
+    
+    Toast.show({
+      type: "success",
+      text1: `게시글을 ${!!initObj?.id ? '수정' : '생성'}했어요.`,
+    });
+    navigation.navigate("BottomTab", {
+      screen: "Community",
+      params: { refresh: !!initObj?.id ? false : true },
+    });
   };
-
-  const handleLeftPress = () => {
-    navigation.goBack();
-  };
-
 
   // 선택한 이미지 제거
   const removeImg = (item: FormImageFile) => {
@@ -140,7 +129,7 @@ const Add: React.FC = () => {
       <TopBar
         title={initObj?.id ? "수정하기" : "새 글 쓰기"}
         leftIcon={backIcon}
-        leftClick={handleLeftPress}
+        leftClick={() => navigation.goBack()}
         rightIcon={<Text style={{color: '#386641', fontSize: 16, fontWeight: '500'}}>등록</Text>}
         rightClick={handleSubmit}
       />

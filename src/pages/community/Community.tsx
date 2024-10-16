@@ -14,10 +14,12 @@ const Community = ({route}: CommunityProps) => {
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
 
   useEffect(() => {
     if (route?.params?.refresh) {
       pullDown()
+      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [route?.params?.refresh]);
 
@@ -66,6 +68,7 @@ const Community = ({route}: CommunityProps) => {
           onRefresh={pullDown}
           refreshing={refresh}
           onEndReached={handleEndReached} 
+          ref={flatListRef} 
         />
         <BottomSheetModal 
           ref={bottomSheetModalRef}

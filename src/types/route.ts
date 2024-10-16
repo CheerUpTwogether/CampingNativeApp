@@ -1,4 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { Session } from "@supabase/supabase-js";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
@@ -37,3 +38,5 @@ export interface CommunityProps {
 
 export type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
+
+export type AddScreenNavigationProp = StackNavigationProp<RootStackParamList, "Add">;

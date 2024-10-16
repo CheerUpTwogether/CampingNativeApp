@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useStore from '@/store/store';
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from 'react-native-reanimated';
 import { deleteCommunitySpb, setLikeCommunitySpb } from '@/supaBase/api/community';
 import { formatDate } from '@/utils/date';
+import { SettingsScreenNavigationProp } from '@/types/route';
 
 const width = Dimensions.get('screen').width
 
 const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresentModalPress: (id: number) => void}) => {
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   const {setCommunities, communities, userInfo} = useStore();
   const item = {...communities.find((el: Community) => el.id === id)}
   const ref = React.useRef<ICarouselInstance>(null);
@@ -37,6 +40,11 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
     if(res) setCommunities(communities.filter((el: Community) => el.id !== id));
   }
 
+  // 커뮤니티 수정 폼 이동
+  const goEditForm = () => {
+    navigation.navigate("Add", {id: item.id})
+  }
+
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -51,7 +59,7 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
         {
           item.user_id === userInfo.user_id  && (
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={goEditForm}>
                 <Icon name="pencil" size={20} color="#169b9a" style={{marginRight: 4}}/>
               </TouchableOpacity>
               <TouchableOpacity onPress={deleteCommunity}>
