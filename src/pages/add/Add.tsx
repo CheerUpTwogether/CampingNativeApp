@@ -82,7 +82,10 @@ const Add: React.FC = () => {
         type: "success",
         text1: "게시글을 생성했어요.",
       });
-      navigation.navigate("BottomTab", { screen: "Community" });
+      navigation.navigate("BottomTab", {
+        screen: "Community",
+        params: { refresh: true },
+      });
     }
   }
 
@@ -90,34 +93,6 @@ const Add: React.FC = () => {
   const handleSubmit = async () => {
     if(!!initObj?.id) updateCommunity()
     else addCommunity()
-    // if (initObj?.id) {
-    //   const res = await setCommunitySpb(
-    //     user_id: userInfo.user_id,
-    //     Number(communityId),
-    //     subject,
-    //     content,
-    //     userInfo.nickname
-    //   );
-    //   if(!res) return 
-    //   navigation.navigate("CommunityDetail", {
-    //     CommunityId: Number(communityId),
-    //   });
-    // } else {
-    //   const res = await addCommunitySpb(
-    //     userInfo.user_id,
-    //     form.title,
-    //     form.contents,
-    //     []
-    //     //form.images
-    //   );
-    //   if(!res) return 
-    // }
-
-    // Toast.show({
-    //   type: "success",
-    //   text1: initObj?.id ? "게시글을 수정했어요." : "게시글을 생성했어요.",
-    // });
-    // navigation.navigate("BottomTab", { screen: "Community" });
   };
 
   const handleLeftPress = () => {
@@ -178,7 +153,7 @@ const Add: React.FC = () => {
       <Input
         value={form.contents}
         setValue={(contents) => setForm({...form, contents})}
-        placeholder="제목을 입력해주세요."
+        placeholder="내용을 입력해주세요."
         style={{marginHorizontal: 12}}
         multiline={true}
         numberOfLines={20}

@@ -3,7 +3,7 @@ import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
 // 커뮤니티 조회
-export const getCommunitysSpb = async (
+export const getCommunitiesSpb = async (
   page_no: number = 1,
 ): Promise<Community[] | void> => {
   try {
@@ -37,9 +37,8 @@ export const addCommunitySpb = async (
     const { data, error } = await supabase
       .from("community")
       .insert([{ user_id, title, contents, images }]);
-
+      
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return false;
     }

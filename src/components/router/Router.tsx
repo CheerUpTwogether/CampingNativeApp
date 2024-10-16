@@ -16,46 +16,12 @@ import Signup from "@/pages/auth/Signup";
 import CampingDetail from "@/pages/home/CampingDetail";
 import ProfileDetail from "@/pages/settings/ProfileDetail";
 import Intro from "@/pages/auth/Intro";
-import CommunityDetail from "@/pages/community/CommunityDetail";
 import EditProfile from "@/pages/settings/EditProfile";
-import { ArticleDetail } from "../../pages/articles/ArticleDetail";
-import { Session } from "@supabase/supabase-js";
+import { ArticleDetail } from "@/pages/articles/ArticleDetail";
 import LoginDetail from "@/pages/auth/LoginDetail";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
-
-export type RootBottomParamList = {
-  Home: undefined;
-  Articles: undefined;
-  Community: undefined | string;
-  Settings: undefined | string;
-};
-
-export type RootStackParamList = {
-  Login: undefined;
-  LoginDetail: {authData: { user?: User; session: Session; }}
-  Signup: undefined;
-  Splash: undefined;
-  BottomTab: {
-    screen: keyof RootBottomParamList;
-  };
-  Add: {
-    id: number;
-  };
-  CampingDetail: { campingInfo: CampingType };
-  SettingDetail: undefined;
-  ProfileDetail: undefined;
-  CommunityDetail: { CommunityId: number };
-  Intro: undefined;
-  ArticleDetail: { id: number; };
-  Community: undefined;
-  EditProfile: undefined;
-};
-
-export type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
 
 const renderTabBar = (props: BottomTabBarProps) => (
   <CustomBottomTab {...props} />
@@ -88,7 +54,6 @@ const Router = () => {
       <StackTab.Screen name="CampingDetail" component={CampingDetail} />
       <StackTab.Screen name="SettingDetail" component={SettingDetail} />
       <StackTab.Screen name="ProfileDetail" component={ProfileDetail} />
-      <StackTab.Screen name="CommunityDetail" component={CommunityDetail} />
       <StackTab.Screen name="ArticleDetail" component={ArticleDetail} />
       <StackTab.Screen name="EditProfile" component={EditProfile} />
     </StackTab.Navigator>

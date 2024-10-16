@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text} from "react-native";
-import { getCommunitysSpb } from "@/supaBase/api/community";
+import { CommunityProps } from "@/types/route";
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
+import { getCommunitiesSpb } from "@/supaBase/api/community";
 import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
-import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import Replys from "@/components/community/Replys";
 
-const Community = () => {
+const Community = ({route}: CommunityProps) => {
   const {setCommunities, communities} = useStore();
   const [refresh, setRefresh] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  useEffect(() => {
+    if (route?.params?.refresh) {
+      pullDown()
+    }
+  }, [route?.params?.refresh]);
 
   // variables
   const snapPoints = useMemo(() => ['25%', '50%'], []);
@@ -28,7 +35,7 @@ const Community = () => {
   }, []);
 
   const fetchCommunitysData = async (page?: number) => {
-    const data = await getCommunitysSpb(pageNo || page);
+    const data = await getCommunitiesSpb(pageNo || page);
     if (data) setCommunities(data);
   };
 
@@ -60,11 +67,12 @@ const Community = () => {
           refreshing={refresh}
           onEndReached={handleEndReached} 
         />
-        <BottomSheetModal ref={bottomSheetModalRef}
-        index={1}
-        snapPoints={snapPoints}
-      >
-        <BottomSheetView>
+        <BottomSheetModal 
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+        <BottomSheetView style={{paddingBottom: 12}}>
           <Replys communityId={communityId}/>
         </BottomSheetView>
       </BottomSheetModal>

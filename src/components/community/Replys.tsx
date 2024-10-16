@@ -9,7 +9,6 @@ import {
   
   Dimensions,
 } from "react-native";
-import Input from "@/components/common/Input";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from "@/utils/date";
 import { addReplySpb, getReplysSpb } from "@/supaBase/api/reply";
@@ -19,7 +18,7 @@ import DynamicTextInput from "../common/DynamicTextInput";
 const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const [replys, setReplys] = useState<ReplyType[]>([]);
   const [reply, setReply] = useState('');
-  const {user_id} = useStore().userInfo;
+  const {userInfo, setCommunities, communities} = useStore();
 
   useEffect(() => {
     getReplys();
@@ -33,28 +32,19 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const addComment = async() => {
     const data = await addReplySpb({
       community_id: communityId,
-      user_id,
+      user_id: userInfo.user_id,
       reply
     });
-    if(data) setReplys([data, ...replys])
+    if(data) {
+      setReplys([data, ...replys])
+      setReply('')
+      setCommunities(communities.map((el: Community) => el.id === communityId ? {...el, reply_count: el.reply_count + 1} : el))
+    }
   }
 
   return (
     <View style={styles.replyContainer}>
       <FlatList
-        renderItem={({item}) => (
-          <View style={styles.commentWrapper}>
-            <View style={styles.profileContainer}>
-              {
-                item?.profile?.profile ?
-                <Image source={{uri: item?.profile?.profile}} style={styles.profileImage}/> :
-                <Icon name="account-circle" size={32} color="#AEB6B9" style={{marginRight: 4}}/>
-              }
-              <Text style={styles.nickname}>{item?.profile?.nickname || ''}</Text>
-            </View>
-            <Text style={{color: '#333', fontSize: 16}}>{item.reply}</Text>
-          </View>
-        )}
         data={replys}
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={
@@ -72,6 +62,20 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
             </View>
           </View>
         }
+        renderItem={({item}) => (
+          <View style={styles.commentWrapper}>
+            <View style={styles.profileContainer}>
+              {
+                item?.profile?.profile ?
+                <Image source={{uri: item?.profile?.profile}} style={styles.profileImage}/> :
+                <Icon name="account-circle" size={36} color="#AEB6B9" style={{marginRight: 4, marginLeft: -2,}}/>
+              }
+              <Text style={styles.nickname}>{item?.profile?.nickname || ''}</Text>
+            </View>
+            <Text style={{color: '#333', fontSize: 16}}>{item.reply}</Text>
+          </View>
+        )}
+        style={{paddingBottom: 100}}
       />
     </View>
   );
@@ -179,8 +183,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   profileImage: {
-    width: 40, 
-    height: 40, 
+    width: 32, 
+    height: 32, 
     marginRight: 8, 
     borderRadius: 100
   },
