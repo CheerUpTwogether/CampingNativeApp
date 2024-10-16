@@ -18,7 +18,6 @@ import ProfileDetail from "@/pages/settings/ProfileDetail";
 import Intro from "@/pages/auth/Intro";
 import EditProfile from "@/pages/settings/EditProfile";
 import { ArticleDetail } from "@/pages/articles/ArticleDetail";
-import LoginDetail from "@/pages/auth/LoginDetail";
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
@@ -46,7 +45,6 @@ const Router = () => {
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
-      <StackTab.Screen name="LoginDetail" component={LoginDetail} />
       <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="Intro" component={Intro} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />

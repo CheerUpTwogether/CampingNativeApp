@@ -12,7 +12,6 @@ export type RootBottomParamList = {
 
 export type RootStackParamList = {
   Login: undefined;
-  LoginDetail: {authData: { user?: User; session: Session; }}
   Signup: undefined;
   Splash: undefined;
   BottomTab: {
