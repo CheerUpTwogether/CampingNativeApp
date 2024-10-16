@@ -8,12 +8,13 @@ import useStore from "@/store/store";
 const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 
 const Articles = () => {
-  const {articles, setArticles} = useStore();
+  const { articles, setArticles } = useStore();
   const [refresh, setRefresh] = useState(false);
-  const {userInfo} = useStore();
+  const { userInfo } = useStore();
   useEffect(() => {
-    getArticles()
-  },[]);
+    getArticles();
+    console.log("ars");
+  }, []);
 
   const getArticles = async () => {
     setRefresh(true);
@@ -24,14 +25,14 @@ const Articles = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar
-        rightIsProfile={true}
-      />
-      <FlatList 
-        data={articles} 
-        renderItem={({item}) => <ArticleFlatList article={item} />} 
-        keyExtractor={(item) => item.id.toString()} 
-        ListHeaderComponent={<Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />}
+      <TopBar rightIsProfile={true} />
+      <FlatList
+        data={articles}
+        renderItem={({ item }) => <ArticleFlatList article={item} />}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={
+          <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
+        }
         onRefresh={getArticles}
         refreshing={refresh}
         style={{ marginBottom: 70 }}
@@ -50,9 +51,9 @@ const styles = StyleSheet.create({
   },
   ArticleInfoImg: {
     height: 80,
-    width: '100%',
+    width: "100%",
     resizeMode: "cover",
-    marginBottom: 8
+    marginBottom: 8,
   },
 });
 

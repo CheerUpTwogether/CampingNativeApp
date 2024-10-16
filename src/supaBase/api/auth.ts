@@ -2,10 +2,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
+// 구글 로그인
+export const googleLoginSpb = (idToken: string) => {
+  return supabase.auth.signInWithIdToken({
+    provider: "google",
+    token: idToken,
+  });
+};
+
 // 카카오 로그인
 export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
   return supabase.auth.signInWithIdToken({
-    provider: 'kakao',
+    provider: "kakao",
     token: idToken,
     access_token: accessToken,
   });
@@ -13,7 +21,7 @@ export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
 
 // 프로필 가져오기
 export const getProfileSpb = (uid: string) => {
-  return supabase.from('profile').select('*').eq('user_id', uid).single();
+  return supabase.from("profile").select("*").eq("user_id", uid).single();
 };
 
 export const signUpSpb = async (
