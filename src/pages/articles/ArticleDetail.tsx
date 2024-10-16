@@ -6,19 +6,20 @@ import {
   Dimensions,
   Text,
   Image,
+  ScrollView
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import TopBar from "@/components/common/TopBar";
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
-import { formatDate } from "@/utils/date";
-const { width: screenWidth } = Dimensions.get("window");
-
-import StarIcon from "@/assets/icons/Star.svg";
-import { ScrollView } from "react-native-gesture-handler";
 import useStore from "@/store/store";
 import { useSharedValue } from "react-native-reanimated";
 import { setLikeAriticleSpb } from "@/supaBase/api/article";
+import { formatDate } from "@/utils/date";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import TopBar from "@/components/common/TopBar";
+
 const backIcon = require("@/assets/icons/Back.png");
+const { width: screenWidth } = Dimensions.get("window");
+
 
 export const ArticleDetail = () => {
   const navigation = useNavigation();
@@ -59,7 +60,7 @@ export const ArticleDetail = () => {
       <TopBar
         leftIcon={backIcon}
         leftClick={navigation.goBack}
-        rightIcon={<StarIcon color={is_liked ? "#FFD73F" : "#ddd"} width={28} height={28} />}
+        rightIcon={<Icon color={is_liked ? "red" : "#ddd"} size={28} name={is_liked ? 'heart' : 'heart-outline'} />}
         rightClick={setLike}
       />
 
