@@ -9,9 +9,8 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../router/Router";
-
-const CampingItem: React.FC<{item: CampingType}> = ({ item }) => {
+import { RootStackParamList } from "@/types/route";
+const CampingItem: React.FC<{ item: CampingType }> = ({ item }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <View key={item.firstImageUrl} style={styles.container}>
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 12,
     backgroundColor: "#fff",
-    borderRadius: 10
+    borderRadius: 10,
   },
   thumbImage: {
     width: "100%",
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
   },
   facltNm: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#000",
   },
   divNmContainer: {
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: "#cdd993",
     color: "#386641",
-    fontWeight: '500'
+    fontWeight: "500",
   },
   faclDetailContainer: {
     paddingHorizontal: 8,
