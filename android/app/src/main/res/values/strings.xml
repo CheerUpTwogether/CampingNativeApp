@@ -1,4 +1,0 @@
-<resources>
-    <string name="app_name">CampingNativeApp</string>
-    <string name="kakao_app_key">{key}</string>
-</resources>

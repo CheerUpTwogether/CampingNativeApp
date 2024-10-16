@@ -1,11 +1,22 @@
 import React, { useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { RootStackParamList } from "@/components/router/Router";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { RootStackParamList } from "@/types/route";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import { getProfileSpb, kakaoLoginSpb } from "@/supaBase/api/auth";
 import useStore from "@/store/store";
-import { KakaoOAuthToken, login, loginWithKakaoAccount } from "@react-native-seoul/kakao-login";
+import {
+  KakaoOAuthToken,
+  login,
+  loginWithKakaoAccount,
+} from "@react-native-seoul/kakao-login";
 import KakaoSvg from "@/assets/images/kakao.svg";
 import Toast from "react-native-toast-message";
 import { Session, User } from "@supabase/supabase-js";
@@ -19,83 +30,72 @@ type SettingsScreenNavigationProp =
 const Login = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const setUserData = useStore((state) => state.setUserData);
-  
+
   const signInWithKakao = async (): Promise<void> => {
-    try { 
-      const {idToken, accessToken}: KakaoOAuthToken = await login();
+    try {
+      const { idToken, accessToken }: KakaoOAuthToken = await login();
       if (idToken) {
-        const {data: authData, error: authDataError} = await kakaoLoginSpb(
+        const { data: authData, error: authDataError } = await kakaoLoginSpb(
           idToken,
-          accessToken,
+          accessToken
         );
-        
+
         if (authDataError) {
-          Toast.show({ type: "error", text1: '카카오 로그인에 실패했어요' });
+          Toast.show({ type: "error", text1: "카카오 로그인에 실패했어요" });
           return;
         }
-        
-        getUserProfile(authData)
-        
+
+        getUserProfile(authData);
       }
-      
     } catch (error) {
-      Toast.show({ type: "error", text1: '카카오 로그인에 실패했어요' });
+      Toast.show({ type: "error", text1: "카카오 로그인에 실패했어요" });
     }
-    
   };
 
-  const getUserProfile = async (authData: { user?: User; session: Session; }) => {    
-      const {data: profileData, error: profileDataError} = await getProfileSpb(
-        authData.session.user.id,
+  const getUserProfile = async (authData: {
+    user?: User;
+    session: Session;
+  }) => {
+    const { data: profileData, error: profileDataError } = await getProfileSpb(
+      authData.session.user.id
+    );
+
+    if (profileDataError) {
+      Toast.show({ type: "success", text1: "정보를 등록해주세요" });
+      navigation.replace("LoginDetail", { authData });
+      return;
+    }
+
+    if (profileData) {
+      // 여기에 zutand profileData 정보가지고 전역설정
+      const { user_id, nickname, created_at, profile, introduce } = profileData;
+
+      setUserData(user_id, nickname, created_at, profile, introduce);
+
+      await setItemSession(
+        authData.session.access_token,
+        authData.session.refresh_token
       );
 
-      if (profileDataError) {
-        
-        Toast.show({ type: "success", text1: '정보를 등록해주세요' });
-        navigation.replace('LoginDetail', {authData})
-        return;
-      }
-
-        if (profileData) {
-          // 여기에 zutand profileData 정보가지고 전역설정
-          const {
-            user_id,
-            nickname,
-            created_at,
-            profile,
-            introduce,
-          } = profileData;
-
-          setUserData(
-            user_id,
-            nickname,
-            created_at,
-            profile,
-            introduce,
-          );
-
-          await setItemSession(
-            authData.session.access_token,
-            authData.session.refresh_token,
-          );
-          
-          navigation.replace('BottomTab', {screen: 'Home'});
-          return;
-        }
-        navigation.replace('LoginDetail', {authData});
-  }
-  
+      navigation.replace("BottomTab", { screen: "Home" });
+      return;
+    }
+    navigation.replace("LoginDetail", { authData });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.wrapper} >
+      <View style={styles.wrapper}>
         <Image source={loginBackground} style={styles.imgBackground} />
 
         <View style={styles.welcomeWrapper}>
           <Text style={styles.welcomeText}>Camping Together</Text>
         </View>
 
-        <TouchableOpacity style={styles.googleWrapper} onPress={signInWithKakao}>
+        <TouchableOpacity
+          style={styles.googleWrapper}
+          onPress={signInWithKakao}
+        >
           <Image source={googleIcon} style={styles.socialImg} />
           <Text style={styles.socialText}>구글로 시작하기</Text>
         </TouchableOpacity>
@@ -104,7 +104,6 @@ const Login = () => {
           <KakaoSvg />
           <Text style={styles.socialText}>카카오로 시작하기</Text>
         </TouchableOpacity>
-        
       </View>
     </SafeAreaView>
   );
@@ -113,11 +112,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-
   },
   wrapper: {
     flex: 1,
-    alignContent: "center", 
+    alignContent: "center",
     alignItems: "center",
     alignSelf: "center",
     justifyContent: "center",
@@ -127,7 +125,7 @@ const styles = StyleSheet.create({
     width: 350,
     height: 230,
     zIndex: -2,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   welcomeWrapper: {
     alignItems: "center",
@@ -148,7 +146,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 12,
     marginBottom: 8,
-    width: 300
+    width: 300,
   },
   googleWrapper: {
     flexDirection: "row",
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 12,
     marginBottom: 8,
-    width: 300
+    width: 300,
   },
   socialImg: {
     width: 23,
