@@ -7,7 +7,7 @@ import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
 import TopBar from "@/components/common/TopBar";
 import Input from "@/components/common/Input";
-import { addCommunitySpb } from "@/supaBase/api/community";
+import { addCommunitySpb, updateCommunitySpb } from "@/supaBase/api/community";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { uploadImageSpb } from "@/supaBase/api/myPage";
 import { AddScreenNavigationProp } from "@/types/route";
@@ -45,8 +45,17 @@ const Add: React.FC = () => {
     }
   };
 
-  const updateCommunity = (images) => {
-    console.log(images)
+  const updateCommunity = async(images) => {
+    // 게시물 수정
+    const res = await updateCommunitySpb(
+      userInfo.user_id,
+      form.title,
+      form.contents,
+      images as string[],
+      route.params?.id
+    )
+    setCommunities(communities.map((el: Community) => el.id === Number(route.params?.id) ? {...el, images} : el));
+    if(!res) return
   }
 
   const addCommunity = async(images) => {
@@ -78,11 +87,6 @@ const Add: React.FC = () => {
     const images = await uploadImage();
     if(!!initObj?.id) updateCommunity(images)
     else addCommunity(images)
-    
-    Toast.show({
-      type: "success",
-      text1: `게시글을 ${!!initObj?.id ? '수정' : '생성'}했어요.`,
-    });
     navigation.navigate("BottomTab", {
       screen: "Community",
       params: { refresh: !!initObj?.id ? false : true },

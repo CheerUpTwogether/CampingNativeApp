@@ -42,6 +42,7 @@ export const addCommunitySpb = async (
       showInfo("error", error.message);
       return false;
     }
+    showInfo("success", "게시글이 성공적으로 생성되었습니다.");
     return true;
   } catch (error) {
     showInfo("error", (error as Error).message);
@@ -49,7 +50,30 @@ export const addCommunitySpb = async (
   }
 };
 
-// 아티클 좋아요
+// 커뮤니티 수정(put)
+export const updateCommunitySpb = async (
+user_id: string, title: string, contents: string, images: string[], communityId: string
+): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase
+      .from("community")
+      .update({ user_id, title, contents, images })
+      .eq("id", communityId);
+
+    if (error) {
+      showInfo("error", error.message);
+      return false;
+    }
+
+    showInfo("success", "게시글이 성공적으로 수정되었습니다.");
+    return true;
+  } catch (error) {
+    showInfo("error", (error as Error).message);
+    return false;
+  }
+};
+
+// 게시글 좋아요
 export const setLikeCommunitySpb = async (
   user_id: string,
   community_id: number,
@@ -81,41 +105,6 @@ export const setLikeCommunitySpb = async (
       showInfo("success", "게시글에 좋아요를 누르셨습니다!");
       return true;
     }
-  } catch (error) {
-    showInfo("error", (error as Error).message);
-    return false;
-  }
-};
-
-
-
-// 커뮤니티 수정(put)
-export const setCommunitySpb = async (
-  communityId: number,
-  subject: string,
-  content: string,
-  nickname: string
-): Promise<boolean> => {
-  try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
-    const { data, error } = await supabase
-      .from("community")
-      .update({ subject, content })
-      .eq("id", communityId);
-
-    if (error) {
-      showInfo("error", error.message);
-      return false;
-    }
-
-    showInfo("success", "게시글이 성공적으로 수정되었습니다.");
-    return true;
   } catch (error) {
     showInfo("error", (error as Error).message);
     return false;
