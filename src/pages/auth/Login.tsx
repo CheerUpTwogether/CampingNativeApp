@@ -92,7 +92,7 @@ const Login = () => {
       navigation.replace("BottomTab", { screen: "Home" });
       return;
     }
-    navigation.replace("Profile", { authData });
+    navigation.replace("Profile");
   };
 
   return (
