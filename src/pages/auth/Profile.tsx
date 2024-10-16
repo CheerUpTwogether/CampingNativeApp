@@ -24,6 +24,7 @@ const Profile = () => {
     name: '',
   })
 
+
   const selectImage = async () => {
     try {
       const file = await ImagePicker.openPicker({
@@ -93,8 +94,9 @@ const Profile = () => {
         const profile = await uploadImageSpb(profileImage, true);
         if(!profile) throw new Error('프로필 이미지 업로드 실패');
         user.profile = profile;
-      } 
+      }  
       
+      console.log(route.params?.init)
       if(route.params?.init) addProfile(user)
       else updateProfile(user)
     } catch(e) {

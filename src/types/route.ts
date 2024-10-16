@@ -1,6 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Session } from "@supabase/supabase-js";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 export type RootBottomParamList = {
@@ -27,7 +26,7 @@ export type RootStackParamList = {
   ArticleDetail: { id: number; };
   Community: { refresh: boolean };
   EditProfile: undefined;
-  profile: {authData: { user?: User; session: Session; }}
+  Profile: {init: boolean}
 };
 // `route` 객체의 타입을 정의
 type CommunityScreenRouteProp = RouteProp<RootStackParamList, 'Community'>;
