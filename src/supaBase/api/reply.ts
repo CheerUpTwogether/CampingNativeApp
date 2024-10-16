@@ -60,18 +60,13 @@ export const addReplySpb = async ({
 // 커뮤니티 댓글 삭제
 export const deleteReplySpb = async (id: number) => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-    const { data, error } = await supabase.from("reply").delete().eq("id", id);
+    const { data, error } = await supabase.from("community_reply").delete().eq("id", id);
 
     if (error) {
       showInfo("error", error.message);
       return false;
     }
+
     showInfo("success", "댓글이 성공적으로 삭제되었습니다.");
 
     return true;

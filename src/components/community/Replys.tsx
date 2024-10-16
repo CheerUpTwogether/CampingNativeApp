@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { formatDate } from "@/utils/date";
-import { addReplySpb, getReplysSpb } from "@/supaBase/api/reply";
+import { addReplySpb, deleteReplySpb, getReplysSpb } from "@/supaBase/api/reply";
 import useStore from "@/store/store";
 import DynamicTextInput from "../common/DynamicTextInput";
 
 const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
   const [replys, setReplys] = useState<ReplyType[]>([]);
   const [reply, setReply] = useState('');
+  const [editId, setEditId] = useState(0);
   const {userInfo, setCommunities, communities} = useStore();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
     setReplys(data);
   };
 
-  const addComment = async() => {
+  const addReply = async() => {
     const data = await addReplySpb({
       community_id: communityId,
       user_id: userInfo.user_id,
@@ -40,6 +41,11 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
       setReply('')
       setCommunities(communities.map((el: Community) => el.id === communityId ? {...el, reply_count: el.reply_count + 1} : el))
     }
+  }
+
+  const deleteReply = async(id: number) => {
+    const data = await deleteReplySpb(id);
+    setReplys(replys.filter(el => el.id !== id))
   }
 
   return (
@@ -56,7 +62,7 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
               <View style={styles.inputWrapper}>
                 <DynamicTextInput setText={setReply} text={reply}/>
               </View>
-              <TouchableOpacity style={styles.sendButton} onPress={addComment}>
+              <TouchableOpacity style={styles.sendButton} onPress={addReply}>
                 <Text style={styles.sendButtonText}>등록</Text>
               </TouchableOpacity>
             </View>
@@ -64,15 +70,42 @@ const Replys: React.FC<{ communityId: number }> = ({ communityId }) => {
         }
         renderItem={({item}) => (
           <View style={styles.commentWrapper}>
-            <View style={styles.profileContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+              <View style={styles.profileContainer}>
+                {
+                  item?.profile?.profile ?
+                  <Image source={{uri: item?.profile?.profile}} style={styles.profileImage}/> :
+                  <Icon name="account-circle" size={36} color="#AEB6B9" style={{marginRight: 4, marginLeft: -2,}}/>
+                }
+                <Text style={styles.nickname}>{item?.profile?.nickname || ''}</Text>
+              </View>
               {
-                item?.profile?.profile ?
-                <Image source={{uri: item?.profile?.profile}} style={styles.profileImage}/> :
-                <Icon name="account-circle" size={36} color="#AEB6B9" style={{marginRight: 4, marginLeft: -2,}}/>
+                item.user_id === userInfo.user_id && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TouchableOpacity onPress={() => setEditId(item.id)}>
+                      <Icon name="pencil" size={20} color="#169b9a" style={{marginRight: 4}}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => deleteReply(item.id)}>
+                      <Icon name="delete" size={20} color="#ef4957" style={{marginRight: 4}}/>
+                    </TouchableOpacity>
+                  </View>
+                )
               }
-              <Text style={styles.nickname}>{item?.profile?.nickname || ''}</Text>
             </View>
-            <Text style={{color: '#333', fontSize: 16}}>{item.reply}</Text>
+            {
+              editId === item.id ? (
+                <View style={styles.inputContainer}>
+                  <View style={styles.inputWrapper}>
+                    <DynamicTextInput setText={setReply} text={reply}/>
+                  </View>
+                  <TouchableOpacity style={styles.sendButton} onPress={addReply}>
+                    <Text style={styles.sendButtonText}>등록</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <Text style={{color: '#333', fontSize: 16}}>{item.reply}</Text>
+              )
+            }
           </View>
         )}
         style={{paddingBottom: 100}}

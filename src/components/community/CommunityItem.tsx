@@ -109,8 +109,8 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
         {item.contents}
       </Text>
 
-            {/* 더보기 버튼: 2줄 이상이고, 전체 글을 표시하지 않을 때만 보여줌 */}
-            {isContentLong && !showFullText && (
+      {/* 더보기 버튼: 2줄 이상이고, 전체 글을 표시하지 않을 때만 보여줌 */}
+      {isContentLong && !showFullText && (
         <TouchableOpacity onPress={() => setShowFullText(true)}>
           <Text style={styles.moreButton}>더보기</Text>
         </TouchableOpacity>
