@@ -4,6 +4,8 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontistoIcon from 'react-native-vector-icons/Fontisto';
+import { SettingsScreenNavigationProp } from "@/types/route";
+import { useNavigation } from "@react-navigation/native";
 
 
 interface TopBarProps {
@@ -26,6 +28,7 @@ const TopBar: React.FC<TopBarProps> = ({
   title,
 }) => {
   const {userInfo} = useStore();
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
   return (
     <View style={styles.wrapper}>
       {leftIcon ? (
@@ -56,7 +59,10 @@ const TopBar: React.FC<TopBarProps> = ({
 
       {rightIcon || rightIsProfile ? (
         <TouchableOpacity
-          onPress={() => {if (rightClick) {rightClick()}}}
+          onPress={() => {
+            if (rightClick) rightClick()
+            else navigation.replace('Profile', {init: false})
+          }}
         >
           {rightIsProfile ? (
             userInfo.profile ?

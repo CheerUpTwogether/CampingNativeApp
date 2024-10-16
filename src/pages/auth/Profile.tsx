@@ -14,9 +14,9 @@ const Profile = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const {userInfo: initialUserInfo} = useStore();
   const [userInfo, setUserInfo] = useState({
-    nickname: "",
-    introduce: "",
-    profile: '',
+    nickname: initialUserInfo?.nickname ? initialUserInfo.nickname : "",
+    introduce: initialUserInfo?.introduce ? initialUserInfo.introduce : "",
+    profile: initialUserInfo?.profile ? initialUserInfo.profile : "",
   });
   const [profileImage, setProfileImage] = useState<CropPickerImage>({
     uri: '',
@@ -82,23 +82,24 @@ const Profile = () => {
       text1: `${userInfo.nickname}님의 정보를 수정했어요`, // userInfo에서 직접 가져오기
     });
 
-    setUserData(userInfo);
+    setUserData({...initialUserInfo, ...userInfo});
     
-    navigation.replace("BottomTab", {"screen": 'Home'})
+    if(navigation.canGoBack()) navigation.goBack()
+    else navigation.replace("BottomTab", {"screen": 'Home'})
   }
 
   const setProfile = async () => {
     try{
       const user = {...userInfo}
-      if(userInfo.profile) {
+      if(userInfo.profile && initialUserInfo.profile !== userInfo.profile) {
         const profile = await uploadImageSpb(profileImage, true);
         if(!profile) throw new Error('프로필 이미지 업로드 실패');
         user.profile = profile;
       }  
       
-      console.log(route.params?.init)
       if(route.params?.init) addProfile(user)
       else updateProfile(user)
+
     } catch(e) {
       Toast.show({
         type: "error",
@@ -112,8 +113,19 @@ const Profile = () => {
       <ScrollView contentContainerStyle={styles.wrapper}>
           <View style={styles.profileImageWrapper}>
             {userInfo.profile ?
-              <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
-              :(
+              ( 
+                <View>
+                  <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
+                    <Image source={{ uri: userInfo.profile }} style={styles.profileImage}/>
+                    <View style={styles.noProfileContainer}>
+                      <Icon name="camera" size={24} color="#AEB6B9"  />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setUserInfo({...userInfo, profile: ''})}>
+                    <Text style={{textAlign: 'center', color: '#386641', marginTop: 8}}>기본 사진으로 변경</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
                 <TouchableOpacity style={styles.noProfileWapper} onPress={selectImage}>
                   <Icon name="account-circle" size={180} color="#AEB6B9" />
                   <View style={styles.noProfileContainer}>
