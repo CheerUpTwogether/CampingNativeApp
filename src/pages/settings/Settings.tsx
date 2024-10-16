@@ -7,11 +7,11 @@ import { getMyCommunitiesSpb } from "@/supaBase/api/community";
 import FeedGallery from "@/components/common/FeedGallery";
 
 const Settings = () => {
-  const {userInfo} = useStore();
-  const [myCommunities, setMyCommunities] = useState<Community[]>([]);
+  const {userInfo, myCommunities, setMyCommunities} = useStore();
 
   const getMyCommunities = async () => {
-    const data = await getMyCommunitiesSpb();
+    const data = await getMyCommunitiesSpb(1);
+    console.log(data)
     setMyCommunities(data);
   } 
 
@@ -42,9 +42,11 @@ const Settings = () => {
       {/* 피드 리스트 */}
       {myCommunities.length ? (
         <FeedGallery feedList={myCommunities} />
-        ) : (
-          <View></View>
-        )}
+      ) : (
+        <View>
+          <Text>{myCommunities.length}</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -55,6 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   profileContainer: {
+    backgroundColor: '#fff',
     height: 160,
     paddingVertical: 24,
     paddingHorizontal: 12,

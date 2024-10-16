@@ -247,18 +247,16 @@ export const getUsersSpb = async () => {
 
 
 export const getMyCommunitiesSpb  = async (page_no: number = 1) => {
-  const { data, error } = await supabase.rpc('get_community_list', {
+  const { data, error } = await supabase.rpc('get_my_community_list', {
     page_no,
     page_size: 10
   });
 
-  console.log(data)
   if (error) {
     console.log(error)
     showInfo("error", error.message);
     return;
   }
 
-  
   return data;
 };  

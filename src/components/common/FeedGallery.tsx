@@ -23,7 +23,7 @@ const renderRow = (rowData, rowIndex, navigation) => (
             />
           ) : (
             <View style={[styles.image, styles.icon]}>
-              <Icon name="image-remove" size={60} color="#aaa"/>
+              <Icon name="image-off" size={60} color="#aaa"/>
             </View>
           )}
 
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     height: imageSize,
     borderWidth: 0.5,
     borderColor: '#ddd',
+    backgroundColor: "#efefef"
   },
   icon: {
     justifyContent: 'center',
