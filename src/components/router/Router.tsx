@@ -17,8 +17,8 @@ import CampingDetail from "@/pages/home/CampingDetail";
 import ProfileDetail from "@/pages/settings/ProfileDetail";
 import Intro from "@/pages/auth/Intro";
 import EditProfile from "@/pages/settings/EditProfile";
+import Profile from "@/pages/auth/Profile";
 import { ArticleDetail } from "@/pages/articles/ArticleDetail";
-import Profile from '@/pages/auth/Profile'
 
 const BottomTabNav = createBottomTabNavigator();
 const StackTab = createStackNavigator();
