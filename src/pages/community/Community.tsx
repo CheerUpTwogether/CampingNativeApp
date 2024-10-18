@@ -1,35 +1,47 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text} from "react-native";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import { CommunityProps } from "@/types/route";
-import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { getCommunitiesSpb } from "@/supaBase/api/community";
 import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
+import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
 
-const Community = ({route}: CommunityProps) => {
-  const {setCommunities, communities} = useStore();
+const Community = ({ route }: CommunityProps) => {
+  const { setCommunities, communities } = useStore();
   const [refresh, setRefresh] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
+  const [loading, setLoading] = useState(true);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
 
   useEffect(() => {
     if (route?.params?.refresh) {
-      pullDown()
+      pullDown();
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [route?.params?.refresh]);
 
   // variables
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback((newCommunityId: number) => {
     bottomSheetModalRef.current?.present();
-    setCommunityId(newCommunityId)
+    setCommunityId(newCommunityId);
   }, []);
 
   useEffect(() => {
@@ -37,48 +49,63 @@ const Community = ({route}: CommunityProps) => {
   }, []);
 
   const fetchCommunitysData = async (page?: number) => {
+    setLoading(true);
     const data = await getCommunitiesSpb(pageNo || page);
     if (data) setCommunities(data);
+    setLoading(false);
   };
 
   const handleEndReached = () => {
     setPageNo((prev) => {
-      fetchCommunitysData(prev + 1)
-      return prev + 1
+      fetchCommunitysData(prev + 1);
+      return prev + 1;
     });
   };
 
-  const pullDown = async() => {
-    setPageNo(1)
-    setCommunities([])
+  const pullDown = async () => {
+    setPageNo(1);
+    setCommunities([]);
     setRefresh(true);
     await fetchCommunitysData(1);
     setRefresh(false);
-  };  
+  };
+
+  const skeletonData = Array(5).fill({});
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <BottomSheetModalProvider>
         <TopBar rightIsProfile={true} />
         <FlatList
-          data={communities}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({item}) => <CommunityItem id={item.id} handlePresentModalPress={handlePresentModalPress}/>}
+          data={loading ? skeletonData : communities}
+          keyExtractor={(item, index) =>
+            loading ? `skeleton-${index}` : item.id.toString()
+          }
+          renderItem={({ item }) =>
+            loading ? (
+              <SkeletonCommunityItem />
+            ) : (
+              <CommunityItem
+                id={item.id}
+                handlePresentModalPress={handlePresentModalPress}
+              />
+            )
+          }
           style={{ marginBottom: 70 }}
           onRefresh={pullDown}
           refreshing={refresh}
-          onEndReached={handleEndReached} 
-          ref={flatListRef} 
+          onEndReached={handleEndReached}
+          ref={flatListRef}
         />
-        <BottomSheetModal 
+        <BottomSheetModal
           ref={bottomSheetModalRef}
           index={1}
           snapPoints={snapPoints}
         >
-        <BottomSheetView style={{paddingBottom: 100, flex: 1,}}>
-          <Replys communityId={communityId}/>
-        </BottomSheetView>
-      </BottomSheetModal>
+          <BottomSheetView style={{ paddingBottom: 100, flex: 1 }}>
+            <Replys communityId={communityId} />
+          </BottomSheetView>
+        </BottomSheetModal>
       </BottomSheetModalProvider>
     </SafeAreaView>
   );

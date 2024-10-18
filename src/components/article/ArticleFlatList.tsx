@@ -3,28 +3,34 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { formatDate } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../router/Router";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { RootStackParamList } from "@/types/route";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import useStore from "@/store/store";
 import { setLikeAriticleSpb } from "@/supaBase/api/article";
 
-const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
+const ArticleFlatList: React.FC<ArticleFlatListProps> = ({ article }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const {setArticles, articles, userInfo} = useStore();
+  const { setArticles, articles, userInfo } = useStore();
 
-  const handleArticleLike  = async () => {
-    const res = await setLikeAriticleSpb(userInfo.user_id, article.id, !!article.is_liked)
-    if(res) {
-      const newArticles = articles.map((el: Article) => el.id === article.id ? {...el, is_liked: !article.is_liked} : el);
+  const handleArticleLike = async () => {
+    const res = await setLikeAriticleSpb(
+      userInfo.user_id,
+      article.id,
+      !!article.is_liked
+    );
+    if (res) {
+      const newArticles = articles.map((el: Article) =>
+        el.id === article.id ? { ...el, is_liked: !article.is_liked } : el
+      );
       setArticles(newArticles);
     }
-  }
+  };
 
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate("ArticleDetail", {id: article.id})}
+      onPress={() => navigation.navigate("ArticleDetail", { id: article.id })}
     >
       {article?.images?.[0] ? (
         <Image
@@ -34,7 +40,6 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
       ) : (
         <View style={styles.thumbImage}></View>
       )}
-    
 
       <Text style={styles.title}>{article.title}</Text>
       <Text numberOfLines={2} style={styles.content}>
@@ -42,13 +47,16 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({article}) => {
       </Text>
       <View style={styles.etc}>
         <Text style={styles.createDate}>
-          {formatDate(article.create_date).split(' ')[0]}
+          {formatDate(article.create_date).split(" ")[0]}
         </Text>
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <TouchableOpacity
-            onPress={handleArticleLike}
-          >
-            <Icon name={article.is_liked ? 'heart' : 'heart-outline'} size={24} color={article.is_liked ? 'red' : '#AEB6B9'} style={{marginRight: 2}}/>
+          <TouchableOpacity onPress={handleArticleLike}>
+            <Icon
+              name={article.is_liked ? "heart" : "heart-outline"}
+              size={24}
+              color={article.is_liked ? "red" : "#AEB6B9"}
+              style={{ marginRight: 2 }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
   createDate: {
     color: "#999",
     fontSize: 16,
-  },  
+  },
   etc: {
     flexDirection: "row",
     justifyContent: "space-between",
