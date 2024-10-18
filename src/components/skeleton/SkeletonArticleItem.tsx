@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { View, StyleSheet, Animated } from "react-native";
 
-const SkeletonCampingItem = () => {
+const SkeletonArticleItem = () => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -32,22 +32,20 @@ const SkeletonCampingItem = () => {
 
   return (
     <View style={styles.container}>
-      {/* 사진 */}
+      {/* 이미지 */}
       <Animated.View style={[styles.thumbImage, animatedStyle]} />
 
-      {/* 컨텐츠 영역 */}
-      <View style={styles.faclContainer}>
-        <Animated.View style={[styles.addr, animatedStyle]} />
-        <Animated.View style={[styles.facltNm, animatedStyle]} />
-      </View>
+      {/* 제목 */}
+      <Animated.View style={[styles.titleSkeleton, animatedStyle]} />
 
-      {/* 상세 정보 */}
-      <View style={styles.faclDetailContainer}>
-        <View style={styles.divNmContainer}>
-          <Animated.View style={[styles.mangeDivNm, animatedStyle]} />
-          <Animated.View style={[styles.mangeDivNm, animatedStyle]} />
-        </View>
-        <Animated.View style={[styles.resveCl, animatedStyle]} />
+      {/* 내용 */}
+      <Animated.View style={[styles.contentSkeleton, animatedStyle]} />
+      <Animated.View style={[styles.contentSkeleton, animatedStyle]} />
+
+      {/* 날짜&좋아요 아이콘 */}
+      <View style={styles.etc}>
+        <Animated.View style={[styles.dateSkeleton, animatedStyle]} />
+        <Animated.View style={[styles.likeIconSkeleton, animatedStyle]} />
       </View>
     </View>
   );
@@ -55,58 +53,50 @@ const SkeletonCampingItem = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: 12,
     marginBottom: 8,
     padding: 16,
-    marginHorizontal: 12,
-    backgroundColor: "#FFF",
+    backgroundColor: "#fff",
     borderRadius: 10,
   },
   thumbImage: {
     width: "100%",
-    height: 180,
+    height: 200,
     borderRadius: 10,
+    marginBottom: 16,
     backgroundColor: "#E0E0E0",
   },
-  facltNm: {
-    height: 24,
+  titleSkeleton: {
+    height: 20,
     width: "60%",
+    borderRadius: 4,
+    marginBottom: 16,
     backgroundColor: "#E0E0E0",
+  },
+  contentSkeleton: {
+    height: 16,
+    width: "100%",
     borderRadius: 4,
     marginBottom: 8,
-  },
-  divNmContainer: {
-    flexDirection: "row",
-  },
-  faclContainer: {
-    padding: 8,
-  },
-  mangeDivNm: {
-    width: 60,
-    height: 24,
     backgroundColor: "#E0E0E0",
-    borderRadius: 100,
-    marginRight: 8,
   },
-  faclDetailContainer: {
-    paddingHorizontal: 8,
-    paddingBottom: 8,
+  etc: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
   },
-  addr: {
+  dateSkeleton: {
     height: 16,
+    width: "30%",
     backgroundColor: "#E0E0E0",
     borderRadius: 4,
-    marginBottom: 8,
-    width: "80%",
   },
-  resveCl: {
-    width: 100,
-    height: 16,
+  likeIconSkeleton: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
     backgroundColor: "#E0E0E0",
-    borderRadius: 4,
   },
 });
 
-export default SkeletonCampingItem;
+export default SkeletonArticleItem;
