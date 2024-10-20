@@ -182,54 +182,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600"
   },
-
   replyInputWrapper: {
     width: width - 140, 
     marginLeft: 4,
   },
-
-
-  commentContainer: {
-    backgroundColor: "#FFF",
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-  },
- 
-  otherProfileWrapper: {
-    width: 32,
-    height: 32,
-    overflow: "hidden",
-    alignItems: "center",
-    borderRadius: 30,
-  },
-  otherProfile: {
-    width: 140,
-    height: 160,
-  },
-  commentText: {
-    marginHorizontal: "4%",
-    marginBottom: 12,
-    color: "#573353",
-  },
-  deleteText: {
-    color: "#F44336",
-    fontSize: 10,
-    paddingTop: 8,
-    paddingLeft: 8,
-  },
-  editText: {
-    color: "#999",
-    fontSize: 10,
-    paddingTop: 8,
-    paddingLeft: 8,
-  },
-  
   nickName: {
-    color: "#573353",
-    fontWeight: "500",
-  },
-  id: {
-    color: "rgba(87, 51, 83, 0.4)",
+    color: "#333",
     fontWeight: "500",
   },
   profileImage: {
@@ -238,11 +196,5 @@ const styles = StyleSheet.create({
     marginRight: 8, 
     borderRadius: 100
   },
-  
-  content: {
-    fontSize: 15,
-    color: "#573353",
-  },
- 
 });
 export default Replys;

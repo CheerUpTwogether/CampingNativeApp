@@ -180,7 +180,7 @@ const Add: React.FC = () => {
       </View>
       <Modal transparent={true} animationType="fade" visible={loading}>
         <View style={styles.modalOverlay}>
-          <ActivityIndicator size="large" color="#386641" />
+          <ActivityIndicator size="large" color="#fff" />
         </View>
       </Modal>
     </SafeAreaView>
