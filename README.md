@@ -1,79 +1,67 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🏕️ Camping Together
+Camping Together는 OPEN API를 활용한 캠핑 커뮤니티 앱입니다.  
+OPEN API를 활용해 캠핑장 리스트를 불러오며 캠핑 관련 아티클을 확인할 수 있습니다.  
+또한 캠핑을 좋아하는 사람들의 커뮤니티 기능도 제공합니다.
+<br/>
+<br/>
 
-# Getting Started
+## 🪄 주요 기능
+- 캠핑장 리스트/상세보기
+- 아티클 리스트/상세/좋아요
+- 커뮤니티 게시판(리스트, 글 작성/수정/삭제, 댓글 리스트, 댓글 작성/수정/삭제)
+- 마이페이지(프로필 변경)
+<br/>
+<br/>
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## 🧑🏻‍💻 CONTRIBUTORS
 
-## Step 1: Start the Metro Server
+<table>
+  <tr>
+    <td align="center" width="212px">
+      <a href="https://github.com/mymain838" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/56489988?v=4" alt="강현 프로필" width="120px"/>
+      </a>
+    </td>
+    <td align="center" width="212px">
+      <a href="https://github.com/AmitaWhite" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/49367874?v=4" alt="성민 프로필" width="120px"/>
+      </a>
+    </td>
+    <td align="center" width="212px">
+      <a href="https://github.com/dhdpekfa1" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/149291445?v=4" alt="예닮 프로필" width="120px"/>
+      </a>
+    </td>
+    <td align="center" width="212px">
+      <a href="https://github.com/dayoung-woo" target="_blank">
+        <img src="https://github.com/dayoung-woo.png?width=100px" alt="다영 프로필" width="120px"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/mymain838" target="_blank">
+        강현
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/AmitaWhite" target="_blank">
+        성민
+      </a>
+    </td>
+     <td align="center">
+      <a href="https://github.com/dhdpekfa1" target="_blank">
+        예닮
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/dayoung-woo" target="_blank">
+        다영
+      </a>
+    </td>
+  </tr>
+</table>
+<br/>
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### For iOS
-
-```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🛠️ 기술 스택
+<img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white"> <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/react native-61DAFB?style=for-the-badge&logo=react&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/zustand-453F39?style=for-the-badge">
