@@ -7,21 +7,17 @@ import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
+import uuid  from 'react-native-uuid';
 
 const Community = ({route}: CommunityProps) => {
   const {setCommunities, communities} = useStore();
   const [refresh, setRefresh] = useState(false);
+  const [reached, setReached] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
-
-  useEffect(() => {
-    if (route?.params?.refresh) {
-      pullDown()
-      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
-    }
-  }, [route?.params?.refresh]);
+  let isFinish = false
 
   // variables
   const snapPoints = useMemo(() => ['25%', '50%'], []);
@@ -37,11 +33,19 @@ const Community = ({route}: CommunityProps) => {
   }, []);
 
   const fetchCommunitysData = async (page?: number) => {
-    const data = await getCommunitiesSpb(pageNo || page);
-    if (data) setCommunities(data);
+    const data = await getCommunitiesSpb(page || pageNo);
+    if (data) {
+      if(page === 1) setCommunities(data);
+      else setCommunities([...communities, ...data]);
+      if(data.length < 10) isFinish = true
+    } else {
+      isFinish = true
+    }
   };
 
   const handleEndReached = () => {
+    if(isFinish || reached) return
+    setReached(true)
     setPageNo((prev) => {
       fetchCommunitysData(prev + 1)
       return prev + 1
@@ -49,10 +53,11 @@ const Community = ({route}: CommunityProps) => {
   };
 
   const pullDown = async() => {
-    setPageNo(1)
     setCommunities([])
     setRefresh(true);
+    setReached(false);
     await fetchCommunitysData(1);
+    setPageNo(1)
     setRefresh(false);
   };  
 
@@ -62,7 +67,6 @@ const Community = ({route}: CommunityProps) => {
         <TopBar rightIsProfile={true} />
         <FlatList
           data={communities}
-          keyExtractor={(item) => item.id.toString()}
           renderItem={({item}) => <CommunityItem id={item.id} handlePresentModalPress={handlePresentModalPress}/>}
           style={{ marginBottom: 70 }}
           onRefresh={pullDown}
@@ -86,7 +90,6 @@ const Community = ({route}: CommunityProps) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
     backgroundColor: "#efefef",
   },
   topWrapper: {

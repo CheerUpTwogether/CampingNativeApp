@@ -11,6 +11,7 @@ export const getArticlesSpb = async (user_uuid: string): Promise<Article[]> => {
     });
     
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return [];
     }

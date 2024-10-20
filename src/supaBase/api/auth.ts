@@ -114,6 +114,7 @@ export const autoSignInSpb = async (): Promise<boolean> => {
     });
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }
