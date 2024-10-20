@@ -15,7 +15,6 @@ const Articles = () => {
   const { userInfo } = useStore();
   useEffect(() => {
     getArticles();
-    console.log("ars");
   }, []);
 
   const getArticles = async () => {

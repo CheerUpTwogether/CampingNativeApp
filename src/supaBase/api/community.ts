@@ -7,14 +7,12 @@ export const getCommunitiesSpb = async (
   page_no: number = 1,
 ): Promise<Community[] | void> => {
   try {
-    console.log(page_no)
     const { data, error } = await supabase.rpc('get_community_list', {
       page_no,
       page_size: 10
     });
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return;
     }
@@ -126,7 +124,6 @@ export const deleteCommunitySpb = async (
       .eq("id", communityId); // communityId가 숫자형이므로, eq()에서 숫자로 처리
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return false; 
     }
@@ -253,7 +250,6 @@ export const getMyCommunitiesSpb  = async (page_no: number = 1) => {
   });
 
   if (error) {
-    console.log(error)
     showInfo("error", error.message);
     return;
   }
