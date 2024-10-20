@@ -44,7 +44,6 @@ export const addReplySpb = async ({
       .single();
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return false;
     }
@@ -71,7 +70,7 @@ export const deleteReplySpb = async (id: number) => {
 
     return true;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
@@ -83,7 +82,6 @@ export const updateReplySpb = async (id: number, reply: string) => {
       .eq("id", id);
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return false;
     }
@@ -92,6 +90,6 @@ export const updateReplySpb = async (id: number, reply: string) => {
 
     return true;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };

@@ -55,7 +55,6 @@ export const setUserSpb = async ({
       .eq("user_id", uid);
 
     if (error) {
-      console.log(error);
       showInfo("error", error.message);
       return false;
     }

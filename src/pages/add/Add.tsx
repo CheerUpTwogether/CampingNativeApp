@@ -41,7 +41,7 @@ const Add: React.FC = () => {
 
       setForm({...form, images: newImages});      
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

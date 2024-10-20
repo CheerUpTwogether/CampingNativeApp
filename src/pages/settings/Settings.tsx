@@ -11,7 +11,6 @@ const Settings = () => {
 
   const getMyCommunities = async () => {
     const data = await getMyCommunitiesSpb(1);
-    console.log(data)
     setMyCommunities(data);
   } 
 

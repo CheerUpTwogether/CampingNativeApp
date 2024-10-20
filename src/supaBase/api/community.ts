@@ -13,7 +13,6 @@ export const getCommunitiesSpb = async (
     });
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return;
     }
@@ -125,7 +124,6 @@ export const deleteCommunitySpb = async (
       .eq("id", communityId); // communityId가 숫자형이므로, eq()에서 숫자로 처리
 
     if (error) {
-      console.log(error)
       showInfo("error", error.message);
       return false; 
     }
@@ -252,7 +250,6 @@ export const getMyCommunitiesSpb  = async (page_no: number = 1) => {
   });
 
   if (error) {
-    console.log(error)
     showInfo("error", error.message);
     return;
   }
