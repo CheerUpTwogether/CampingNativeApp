@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import { CommunityProps } from "@/types/route";
-import {
+import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
@@ -121,6 +121,7 @@ const Community = ({ route }: CommunityProps) => {
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
+      <BottomSheet children={<Replys communityId={communityId} />} />
     </SafeAreaView>
   );
 };

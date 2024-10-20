@@ -1,15 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { ImageBackground, SafeAreaView, StyleSheet, Text } from "react-native";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootStackParamList, SettingsScreenNavigationProp } from "../components/router/Router";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useStore from "@/store/store";
 import Toast from "react-native-toast-message";
 import { autoSignInSpb } from "@/supaBase/api/auth";
 import { getUserSpb } from "@/supaBase/api/myPage";
-
-const splashScreen = require("@/assets/images/SplashScreen.png");
+import { SettingsScreenNavigationProp } from "@/types/route";
+import Icon from "@/assets/icons/logo.svg";
 
 const Splash = () => {
   const setUserData = useStore((state) => state.setUserData);
@@ -67,7 +65,8 @@ const Splash = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <Text>Camping Together</Text>
+      <Icon width={250} height={250}/>
+      <Text style={styles.text}>Camping Together</Text>
     </SafeAreaView>
   );
 };
@@ -75,14 +74,15 @@ const Splash = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#fff"
   },
-  backgroundImage: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  text: {
+    fontSize: 36,
+    fontWeight: "700",
+    color: "#386641",
+  }
 });
 
 export default Splash;
