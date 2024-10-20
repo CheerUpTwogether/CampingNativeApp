@@ -7,18 +7,13 @@ import React, {
 } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
 import { CommunityProps } from "@/types/route";
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
 import { getCommunitiesSpb } from "@/supaBase/api/community";
 import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
 import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
-import uuid  from 'react-native-uuid';
+import BottomSheet from "@/components/common/BottomSheet";
 
 const Community = ({ route }: CommunityProps) => {
   const { setCommunities, communities } = useStore();
@@ -27,8 +22,8 @@ const Community = ({ route }: CommunityProps) => {
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
   const [loading, setLoading] = useState(true);
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (route?.params?.refresh) {
@@ -44,8 +39,8 @@ const Community = ({ route }: CommunityProps) => {
 
   // callbacks
   const handlePresentModalPress = useCallback((newCommunityId: number) => {
-    bottomSheetModalRef.current?.present();
     setCommunityId(newCommunityId);
+    setShow(true)
   }, []);
 
   useEffect(() => {
@@ -83,45 +78,34 @@ const Community = ({ route }: CommunityProps) => {
     setPageNo(1)
     setRefresh(false);
   };
-
+  
   const skeletonData = Array(5).fill({});
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <BottomSheetModalProvider>
-        <TopBar rightIsProfile={true} />
-        <FlatList
-          data={loading ? skeletonData : communities}
-          keyExtractor={(item, index) =>
-            loading ? `skeleton-${index}` : item.id.toString()
-          }
-          renderItem={({ item }) =>
-            loading ? (
-              <SkeletonCommunityItem />
-            ) : (
-              <CommunityItem
-                id={item.id}
-                handlePresentModalPress={handlePresentModalPress}
-              />
-            )
-          }
-          style={{ marginBottom: 70 }}
-          onRefresh={pullDown}
-          refreshing={refresh}
-          onEndReached={handleEndReached}
-          ref={flatListRef}
-        />
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-        >
-          <BottomSheetView style={{ paddingBottom: 100, flex: 1 }}>
-            <Replys communityId={communityId} />
-          </BottomSheetView>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
-      <BottomSheet children={<Replys communityId={communityId} />} />
+      <TopBar rightIsProfile={true} />
+      <FlatList
+        data={loading ? skeletonData : communities}
+        keyExtractor={(item, index) =>
+          loading ? `skeleton-${index}` : item.id.toString()
+        }
+        renderItem={({ item }) =>
+          loading ? (
+            <SkeletonCommunityItem />
+          ) : (
+            <CommunityItem
+              id={item.id}
+              handlePresentModalPress={handlePresentModalPress}
+            />
+          )
+        }
+        style={{ marginBottom: 70 }}
+        onRefresh={pullDown}
+        refreshing={refresh}
+        onEndReached={handleEndReached}
+        ref={flatListRef}
+      />
+      <BottomSheet isShow={show} setIsShow={setShow} size={0.9} component={<Replys communityId={communityId} />} />
     </SafeAreaView>
   );
 };

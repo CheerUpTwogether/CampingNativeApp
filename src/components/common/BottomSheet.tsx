@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 
 export interface BottomSheetProps {
-  component?: (props: {closeModal: () => void}) => React.ReactNode;
+  component?: React.ReactNode;
   isShow: boolean;
-  setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsShow: (isShow: boolean) => void;
   size: number;
   onClose?: () => void;
   minHeight?: number;
@@ -32,6 +32,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   const closeModal = () => {
     closeBottomSheet.start(() => {
       setIsShow(false);
+      console.log('teat')
       if (onClose) {
         onClose();
       }
@@ -114,7 +115,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             <View style={styles.bottomSheetTopBar} />
           </View>
           <View style={styles.bottomSheetContentsWrapper}>
-            {component ? component({closeModal}) : null}
+            {component ? component : <View />}
           </View>
         </Animated.View>
       </View>
