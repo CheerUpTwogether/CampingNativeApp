@@ -18,10 +18,12 @@ import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
 import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
+import uuid  from 'react-native-uuid';
 
 const Community = ({ route }: CommunityProps) => {
   const { setCommunities, communities } = useStore();
   const [refresh, setRefresh] = useState(false);
+  const [reached, setReached] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [communityId, setCommunityId] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,6 +36,8 @@ const Community = ({ route }: CommunityProps) => {
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [route?.params?.refresh]);
+  
+  let isFinish = false
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], []);
@@ -50,23 +54,33 @@ const Community = ({ route }: CommunityProps) => {
 
   const fetchCommunitysData = async (page?: number) => {
     setLoading(true);
-    const data = await getCommunitiesSpb(pageNo || page);
-    if (data) setCommunities(data);
+    const data = await getCommunitiesSpb(page || pageNo);
+    if (data) {
+      if(page === 1) setCommunities(data);
+      else setCommunities([...communities, ...data]);
+      if(data.length < 10) isFinish = true
+    } else {
+      isFinish = true
+    }
     setLoading(false);
   };
 
   const handleEndReached = () => {
+    if(isFinish || reached) return
+    setReached(true)
     setPageNo((prev) => {
       fetchCommunitysData(prev + 1);
       return prev + 1;
     });
   };
 
-  const pullDown = async () => {
-    setPageNo(1);
-    setCommunities([]);
+
+  const pullDown = async() => {
+    setCommunities([])
     setRefresh(true);
+    setReached(false);
     await fetchCommunitysData(1);
+    setPageNo(1)
     setRefresh(false);
   };
 
@@ -113,7 +127,6 @@ const Community = ({ route }: CommunityProps) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
     backgroundColor: "#efefef",
   },
   topWrapper: {
