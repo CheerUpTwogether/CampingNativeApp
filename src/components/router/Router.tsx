@@ -11,7 +11,6 @@ import Splash from "../../pages/Splash";
 import CustomBottomTab from "./CustomBottomTab";
 import Add from "../../pages/add/Add";
 import Login from "@/pages/auth/Login";
-import Signup from "@/pages/auth/Signup";
 import CampingDetail from "@/pages/home/CampingDetail";
 import Intro from "@/pages/auth/Intro";
 import Profile from "@/pages/auth/Profile";
@@ -43,7 +42,6 @@ const Router = () => {
     <StackTab.Navigator screenOptions={{ headerShown: false }}>
       <StackTab.Screen name="Splash" component={Splash} />
       <StackTab.Screen name="Login" component={Login} />
-      <StackTab.Screen name="Signup" component={Signup} />
       <StackTab.Screen name="Intro" component={Intro} />
       <StackTab.Screen name="BottomTab" component={BottomTab} />
       <StackTab.Screen name="Add" component={Add} />

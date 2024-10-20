@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import uuid from "react-native-uuid";
 import useStore from "@/store/store";
@@ -23,6 +23,7 @@ const Add: React.FC = () => {
     contents: initObj?.contents || '',
     images: initObj?.images || [],
   })
+  const [loading, setLoading] = useState(false);
   
    // 이미지 선택
    const selectImage = async () => {
@@ -83,6 +84,7 @@ const Add: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const images = await uploadImage();
     if(!!initObj?.id) updateCommunity(images)
     else addCommunity(images)
@@ -90,6 +92,7 @@ const Add: React.FC = () => {
       screen: "Community",
       params: { refresh: !!initObj?.id ? false : true },
     });
+    setLoading(false);
   };
 
   // 선택한 이미지 제거
@@ -175,6 +178,11 @@ const Add: React.FC = () => {
           사진은 최대 5장까지 등록 가능합니다.
         </Text>
       </View>
+      <Modal transparent={true} animationType="fade" visible={loading}>
+        <View style={styles.modalOverlay}>
+          <ActivityIndicator size="large" color="#386641" />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -231,6 +239,12 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     margin: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 

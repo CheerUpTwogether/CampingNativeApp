@@ -12,7 +12,6 @@ export type RootBottomParamList = {
 
 export type RootStackParamList = {
   Login: undefined;
-  Signup: undefined;
   Splash: undefined;
   BottomTab: {
     screen: keyof RootBottomParamList;

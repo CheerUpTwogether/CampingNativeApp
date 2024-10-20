@@ -5,6 +5,7 @@ import useStore from "@/store/store";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getMyCommunitiesSpb } from "@/supaBase/api/community";
 import FeedGallery from "@/components/common/FeedGallery";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Settings = () => {
   const {userInfo, myCommunities, setMyCommunities} = useStore();
@@ -14,9 +15,11 @@ const Settings = () => {
     setMyCommunities(data);
   } 
 
-  useEffect(() => {
-    getMyCommunities()
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      getMyCommunities()
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.wrapper}>

@@ -37,6 +37,7 @@ export const addCommunitySpb = async (
       .insert([{ user_id, title, contents, images }]);
       
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }

@@ -98,7 +98,7 @@ function Intro() {
         <View style={styles.startButtonWrapper}>
           <Button
             label="시작하기" 
-            onPress={() => navigation.navigate("Signup")}
+            onPress={() => navigation.navigate("Login")}
           />
         </View>
       )}
