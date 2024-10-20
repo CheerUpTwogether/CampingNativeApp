@@ -25,7 +25,7 @@ const Settings = () => {
         {userInfo.profile ? (
           <Image
             source={{ uri: userInfo.profile }} 
-            style={{ width: 120, height: 120 }}
+            style={{ width: 110, height: 110, borderRadius: 100, margin: 10 }}
           />
         ) : (
           <Icon name="account-circle" size={120} color="#AEB6B9" />
@@ -39,11 +39,11 @@ const Settings = () => {
       </View>
 
       {/* 피드 리스트 */}
-      {myCommunities.length ? (
+      {myCommunities?.length ? (
         <FeedGallery feedList={myCommunities} />
       ) : (
         <View>
-          <Text>{myCommunities.length}</Text>
+          <Text>{myCommunities?.length}</Text>
         </View>
       )}
     </SafeAreaView>
