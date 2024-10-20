@@ -27,15 +27,12 @@ const Community = ({ route }: CommunityProps) => {
 
   useEffect(() => {
     if (route?.params?.refresh) {
-      pullDown();
+      //pullDown();
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [route?.params?.refresh]);
   
   let isFinish = false
-
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback((newCommunityId: number) => {
@@ -78,7 +75,7 @@ const Community = ({ route }: CommunityProps) => {
     setPageNo(1)
     setRefresh(false);
   };
-  
+
   const skeletonData = Array(5).fill({});
 
   return (
@@ -146,68 +143,6 @@ const styles = StyleSheet.create({
   icon2: {
     width: 15,
     height: 15,
-  },
-
-  nickName: {
-    color: "#573353",
-    fontWeight: "500",
-  },
-  contentWrapper: {
-    backgroundColor: "#FFF",
-    height: 80,
-    padding: 10,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-  },
-  contentText: {
-    color: "#573353",
-  },
-  reactionContainer: {
-    flexDirection: "row",
-    gap: 20,
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-  },
-  reactionWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
-  },
-  reaction: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 3,
-  },
-  reactionText: {
-    fontSize: 12,
-  },
-  imageWrapper: {
-    overflow: "hidden",
-    width: 40,
-    height: 40,
-    borderRadius: 30,
-    alignItems: "center",
-  },
-  dummyProfileImage: {
-    width: 100,
-    height: 130,
-  },
-  userProfileImage: {
-    width: 40,
-    height: 40,
-  },
-  subjectWrapper: {
-    flex: 1,
-    paddingBottom: 30,
-    marginLeft: 8,
-  },
-  subject: {
-    color: "#FDA758",
-    fontWeight: "600",
-    fontSize: 16,
   },
 });
 

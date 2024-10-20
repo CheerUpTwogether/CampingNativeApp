@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from "@react-navigation/native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useStore from '@/store/store';
@@ -20,6 +20,7 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
   const [showFullText, setShowFullText] = useState(false);
   const [isContentLong, setIsContentLong] = useState(false); // 긴 글인지 여부
   const [textLayoutLines, setTextLayoutLines] = useState(0); // 실제 텍스트 라인 수
+  const [isLoadedImage, setIsLoaedImage] = useState(false);
 
   // 좋아요
   const handleLike = async() => {
@@ -50,9 +51,13 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
         <View style={styles.profileContainer}>
           {
-            item.profile ?
-            <Image source={{uri: item.profile}} style={styles.profileImage}/> :
-            <Icon name="account-circle" size={44} color="#AEB6B9" style={{marginRight: 4}}/>
+            item.profile ?(
+              <View>
+                 <Image source={{uri: item.profile}} style={styles.profileImage} /> 
+              </View>
+            ): (
+              <Icon name="account-circle" size={44} color="#AEB6B9" style={{marginRight: 4}}/>
+            )
           }
           <Text style={styles.nickname}>{item.nickname}</Text>
         </View>
@@ -77,10 +82,14 @@ const CommunityItem = ({id, handlePresentModalPress}: {id: number, handlePresent
             data={item?.images}
             renderItem={({ item }: {item: string}) => {
               return (
-                <Image
-                  source={{uri: item}}
-                  style={styles.thumbImage}
-                />
+                <View>
+                  {!isLoadedImage && <View style={styles.thumbImage}><ActivityIndicator size="large" color="black" /></View>}
+                  <Image
+                    source={{uri: item}}
+                    style={[styles.thumbImage, {opacity: isLoadedImage ? 1 : 0}]}
+                    onLoad={() => setIsLoaedImage(true)}
+                  />
+                </View>
               );
             }}
             width={width}
@@ -167,9 +176,12 @@ const styles = StyleSheet.create({
     height: width - 56,
     resizeMode: "cover",
     borderRadius: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "#E0E0E0",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 8
   },
+  
   title: {
     color: "#333",
     fontSize: 18,
@@ -184,6 +196,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
     marginTop: 5,
+  },
+  skeleton: {
+    width: width - 56,
+    height: width - 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    borderRadius: 10,
   },
 });
 
