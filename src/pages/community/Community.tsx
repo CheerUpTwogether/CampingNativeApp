@@ -96,7 +96,7 @@ const Community = ({ route }: CommunityProps) => {
             />
           )
         }
-        style={{ marginBottom: 70 }}
+        style={{ marginBottom: 70, paddingBottom: 80 }}
         onRefresh={pullDown}
         refreshing={refresh}
         onEndReached={handleEndReached}

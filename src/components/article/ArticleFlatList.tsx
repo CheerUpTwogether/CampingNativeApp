@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, ActivityIndicator } from "react-native";
 import { formatDate } from "@/utils/date";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -12,7 +12,8 @@ import { setLikeAriticleSpb } from "@/supaBase/api/article";
 const ArticleFlatList: React.FC<ArticleFlatListProps> = ({ article }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { setArticles, articles, userInfo } = useStore();
-
+  const [isLoadedImage, setIsLoaedImage] = useState(false);
+  
   const handleArticleLike = async () => {
     const res = await setLikeAriticleSpb(
       userInfo.user_id,
@@ -33,10 +34,14 @@ const ArticleFlatList: React.FC<ArticleFlatListProps> = ({ article }) => {
       onPress={() => navigation.navigate("ArticleDetail", { id: article.id })}
     >
       {article?.images?.[0] ? (
-        <Image
-          source={{ uri: article.images?.[0] }}
-          style={styles.thumbImage}
-        />
+        <View>
+          {!isLoadedImage && <View style={styles.thumbImage}><ActivityIndicator size="large" color="black" /></View>}
+          <Image
+            source={{ uri: article.images?.[0] }}
+            style={isLoadedImage && styles.thumbImage }
+            onLoad={() => setIsLoaedImage(true)}
+          />
+        </View>
       ) : (
         <View style={styles.thumbImage}></View>
       )}
@@ -77,6 +82,9 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
     borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
   },
   title: {
     fontSize: 20,
