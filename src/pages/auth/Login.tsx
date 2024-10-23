@@ -17,15 +17,12 @@ import {
 } from "@/supaBase/api/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import useStore from "@/store/store";
-import {
-  KakaoOAuthToken,
-  login,
-  loginWithKakaoAccount,
-} from "@react-native-seoul/kakao-login";
+import { KakaoOAuthToken, login } from "@react-native-seoul/kakao-login";
 import { GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY } from "@env";
 import Toast from "react-native-toast-message";
 import { Session, User } from "@supabase/supabase-js";
 import { setItemSession } from "@/utils/storage";
+import useTokenExpirationCheck from "@/hooks/useTokenExpirationCheck";
 import KakaoSvg from "@/assets/images/kakao.svg";
 const googleIcon = require("@/assets/icons/GoogleIcon.png");
 const loginBackground = require("@/assets/images/LoginBackground.png");
@@ -34,6 +31,7 @@ type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const Login = () => {
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const setUserData = useStore((state) => state.setUserData);
 
@@ -57,17 +55,33 @@ const Login = () => {
           idToken
         );
 
-        if (authDataError) {
+        if (authDataError || !authData) {
+          console.error("Supabase 로그인 실패: ", authDataError);
           Toast.show({ type: "error", text1: "구글 로그인에 실패했어요" });
           return;
         }
 
-        getUserProfile(authData);
+        // 유저 프로필 불러오기
+        const userProfile = await getUserProfile(authData);
+        if (!userProfile) {
+          console.error("유저 프로필 불러오기 실패");
+          Toast.show({
+            type: "error",
+            text1: "유저 정보를 불러오지 못했습니다.",
+          });
+          return;
+        }
+
+        // 세션 만료 시간 체크
+        if (authData.session?.expires_at) {
+          setSessionExpiresAt(authData.session.expires_at);
+        }
       } else {
         Toast.show({ type: "error", text1: "ID 토큰을 가져오지 못했습니다." });
       }
     } catch (e) {
       Toast.show({ type: "error", text1: "구글 로그인에 실패했어요" });
+      console.error("구글 로그인 오류: ", e);
     }
   };
 
@@ -104,14 +118,22 @@ const Login = () => {
       Toast.show({ type: "success", text1: "정보를 등록해주세요" });
       navigation.replace("Profile", { init: true });
       // navigation.replace("Profile", { params: { init: true } });
-      return;
+      return null;
     }
 
     if (profileData) {
-      // 여기에 zutand profileData 정보가지고 전역설정
       const { user_id, nickname, created_at, profile, introduce } = profileData;
 
-      setUserData(user_id, nickname, created_at, profile, introduce);
+      // 유저 전체 정보를 상태로 저장 (첫 로그인 시 정보를 못 불러오는 현상 방지하는 역할)
+      const userInfo = {
+        user_id,
+        nickname,
+        created_at,
+        profile,
+        introduce,
+      };
+
+      setUserData(userInfo);
 
       await setItemSession(
         authData.session.access_token,
@@ -119,9 +141,10 @@ const Login = () => {
       );
 
       navigation.replace("BottomTab", { screen: "Home" });
-      return;
+      return profileData;
     }
     navigation.replace("Profile", { init: true });
+    return null;
   };
 
   return (
@@ -130,7 +153,7 @@ const Login = () => {
         <Image source={loginBackground} style={styles.imgBackground} />
 
         <View style={styles.welcomeWrapper}>
-          <Text style={styles.welcomeText}>Camping Together</Text>
+          <Text style={styles.welcomeText}>Camping Go</Text>
         </View>
 
         <TouchableOpacity
@@ -176,6 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "700",
     color: "#386641",
+    fontStyle: "italic",
   },
   kakaoWrapper: {
     flexDirection: "row",

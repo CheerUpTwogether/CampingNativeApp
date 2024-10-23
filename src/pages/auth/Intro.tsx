@@ -15,8 +15,8 @@ import Carousel, {
   ICarouselInstance,
   Pagination,
 } from "react-native-reanimated-carousel";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootStackParamList } from "@/components/router/Router";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "@/types/route";
 
 const Intoduce1 = require("@/assets/images/Introduce1.png");
 const Intoduce2 = require("@/assets/images/Introduce2.png");
@@ -24,9 +24,6 @@ const Intoduce3 = require("@/assets/images/Introduce3.png");
 const Intoduce4 = require("@/assets/images/Introduce4.png");
 
 const { width, height } = Dimensions.get("window");
-
-type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
 
 interface Entry {
   title: string;
@@ -43,7 +40,7 @@ const entries: Entry[] = [
 function Intro() {
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const count = 0;
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
@@ -103,7 +100,7 @@ function Intro() {
       ) : (
         <View style={styles.startButtonWrapper}>
           <Button
-            label="시작하기" 
+            label="시작하기"
             onPress={() => navigation.navigate("Login")}
           />
         </View>

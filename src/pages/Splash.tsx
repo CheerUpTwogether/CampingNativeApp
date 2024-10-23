@@ -65,8 +65,8 @@ const Splash = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <Icon width={250} height={250}/>
-      <Text style={styles.text}>Camping Together</Text>
+      <Icon width={250} height={250} />
+      <Text style={styles.text}>Camping Go</Text>
     </SafeAreaView>
   );
 };
@@ -74,15 +74,16 @@ const Splash = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: "#fff"
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   text: {
     fontSize: 36,
     fontWeight: "700",
     color: "#386641",
-  }
+    fontStyle: "italic",
+  },
 });
 
 export default Splash;
