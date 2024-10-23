@@ -12,8 +12,9 @@ import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
+import BottomSheet from "@gorhom/bottom-sheet";
 import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
-        
+
 const Community = ({ route }: CommunityProps) => {
   const { setCommunities, communities } = useStore();
   const [refresh, setRefresh] = useState(false);
@@ -36,7 +37,7 @@ const Community = ({ route }: CommunityProps) => {
   // callbacks
   const handlePresentModalPress = useCallback((newCommunityId: number) => {
     setCommunityId(newCommunityId);
-    setShow(true)
+    setShow(true);
   }, []);
 
   useEffect(() => {
@@ -100,7 +101,12 @@ const Community = ({ route }: CommunityProps) => {
         onEndReached={handleEndReached}
         ref={flatListRef}
       />
-      <BottomSheet isShow={show} setIsShow={setShow} size={0.9} component={<Replys communityId={communityId} />} />
+      <BottomSheet
+        isShow={show}
+        setIsShow={setShow}
+        size={0.9}
+        component={<Replys communityId={communityId} />}
+      />
     </SafeAreaView>
   );
 };
