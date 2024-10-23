@@ -1,109 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, Image, FlatList } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import Dropdown from "@/components/common/Dropdown";
 import ArticleFlatList from "@/components/article/ArticleFlatList";
-import {
-  getArticlesSpb,
-  getFavoriteArticleIdSpb,
-  setFavoriteSpb,
-} from "@/supaBase/api/article";
+import { getArticlesSpb } from "@/supaBase/api/article";
 import useStore from "@/store/store";
+import SkeletonArticleItem from "@/components/skeleton/SkeletonArticleItem";
 
-const menu = require("@/assets/icons/menu.png");
-const profile = { uri: "https://picsum.photos/200/300" };
 const ArticleInfoImg = require("@/assets/images/ArticleInfo.png");
 
 const Articles = () => {
-  const [sortType, setSortType] = useState<string>("LATEST");
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [myFavoriteArticles, setMyFavoriteArticles] = useState<
-    ArticleFavoriteAId[]
-  >([]);
-  const orderList = [
-    { title: "최신순", value: "LATEST" },
-    { title: "좋아요순", value: "FAVORITE" },
-  ];
-  const setFavoriteFunc = useStore().setFavoriteFunc;
-
-  useFocusEffect(
-    React.useCallback(() => {
-      getArticles();
-      getFavoriteArticles();
-      setFavoriteFunc(setFavorite);
-    }, [])
-  );
-
+  const { articles, setArticles } = useStore();
+  const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { userInfo } = useStore();
   useEffect(() => {
     getArticles();
-    getFavoriteArticles();
-  }, [sortType]);
+  }, []);
 
   const getArticles = async () => {
-    const data: Article[] = await getArticlesSpb(sortType);
+    setLoading(true);
+    const data: Article[] = await getArticlesSpb(userInfo.user_id);
     data && setArticles(data);
+    setLoading(false);
   };
 
-  const getFavoriteArticles = async () => {
-    const data: ArticleFavoriteAId[] = await getFavoriteArticleIdSpb();
-    data && setMyFavoriteArticles(data);
-  };
-  const setFavorite = async (articleId: number, mode: boolean) => {
-    await setFavoriteSpb(articleId, mode);
-    getArticles();
-    getFavoriteArticles();
-  };
+  const skeletonData = Array(5).fill({});
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar
-        title="아티클"
-        leftIcon={menu}
-        rightIsProfile={true}
-        rightIcon={profile}
+      <TopBar rightIsProfile={true} />
+      <FlatList
+        data={loading ? skeletonData : articles} // 로딩 중일 때 스켈레톤 데이터 렌더링
+        renderItem={({ item }) =>
+          loading ? (
+            <SkeletonArticleItem /> // 스켈레톤 컴포넌트 렌더링
+          ) : (
+            <ArticleFlatList article={item} />
+          )
+        }
+        keyExtractor={(item, index) =>
+          loading ? `skeleton-${index}` : item.id.toString()
+        }
+        ListHeaderComponent={
+          <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
+        }
+        onRefresh={getArticles}
+        refreshing={refresh}
+        style={{ marginBottom: 70 }}
       />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollAreaContainer}
-      >
-        <Image source={ArticleInfoImg} style={styles.ArticleInfoImg} />
-        <View style={{ alignItems: "flex-end", marginVertical: 12 }}>
-          <Dropdown
-            options={orderList}
-            onSelect={(selectedItem) =>
-              setSortType(selectedItem?.value || "LATEST")
-            }
-            defaultValue={orderList[0]}
-          />
-        </View>
-
-        <ArticleFlatList
-          articles={articles}
-          myFavoriteArticles={myFavoriteArticles}
-        />
-      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    backgroundColor: "#FFF3E9",
-  },
-  container: {
-    padding: 12,
+    backgroundColor: "#efefef",
   },
   scrollAreaContainer: {
     flexGrow: 1,
     paddingBottom: 100,
   },
   ArticleInfoImg: {
-    height: 150,
+    height: 80,
     width: "100%",
-    resizeMode: "contain",
+    resizeMode: "cover",
+    marginBottom: 8,
   },
 });
 

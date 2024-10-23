@@ -3,23 +3,14 @@ import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
 // 커뮤니티 조회
-export const getCommunitysSpb = async (
-  page: number = 0,
-  pageSize: number = 10
+export const getCommunitiesSpb = async (
+  page_no: number = 1,
 ): Promise<Community[] | void> => {
   try {
-    const isSignIn = await isSignInUser();
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return;
-    }
-
-    const start = page * (pageSize - 1) === 0 ? 0 : page * (pageSize - 1) - 1;
-    const end = start + pageSize - 1;
-    const { data, error } = await supabase
-      .from("community")
-      .select("*, profile (user_id, email, nickname)")
-      .range(start, end);
+    const { data, error } = await supabase.rpc('get_community_list', {
+      page_no,
+      page_size: 10
+    });
 
     if (error) {
       showInfo("error", error.message);
@@ -33,54 +24,18 @@ export const getCommunitysSpb = async (
   }
 };
 
-// 커뮤니티 상세 조회
-export const getCommunitySpb = async (
-  communityId: number
-): Promise<Community[] | null> => {
-  try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return null;
-    }
-    const { data, error } = await supabase
-      .from("community")
-      .select("*, profile (user_id, email, nickname, profileimagepath)")
-      .eq("id", communityId)
-      .single();
-
-    if (error) {
-      showInfo("error", error.message);
-      // return null;
-      console.log(error.message);
-    }
-    return data;
-  } catch (error) {
-    showInfo("error", (error as Error).message);
-    return null;
-  }
-};
-
 // 커뮤니티 생성(post)
 export const addCommunitySpb = async (
   user_id: string,
-  subject: string,
-  content: string,
-  nickname: string
+  title: string,
+  contents: string,
+  images: string[]
 ): Promise<boolean> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
     const { data, error } = await supabase
       .from("community")
-      .insert([{ user_id, subject, content, nickname }]);
-
+      .insert([{ user_id, title, contents, images }]);
+      
     if (error) {
       showInfo("error", error.message);
       return false;
@@ -94,23 +49,16 @@ export const addCommunitySpb = async (
 };
 
 // 커뮤니티 수정(put)
-export const setCommunitySpb = async (
-  communityId: number,
-  subject: string,
-  content: string,
-  nickname: string
+export const updateCommunitySpb = async (
+  title: string, 
+  contents: string, 
+  images: string[], 
+  communityId: string
 ): Promise<boolean> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
     const { data, error } = await supabase
       .from("community")
-      .update({ subject, content })
+      .update({ title, contents, images })
       .eq("id", communityId);
 
     if (error) {
@@ -126,26 +74,58 @@ export const setCommunitySpb = async (
   }
 };
 
+// 게시글 좋아요
+export const setLikeCommunitySpb = async (
+  user_id: string,
+  community_id: number,
+  isDelete: boolean
+): Promise<boolean> => {
+  try {
+    if (isDelete) {
+      const { data, error: deleteError } = await supabase
+        .from("community_like")
+        .delete()
+        .eq("user_id", user_id)
+        .eq("community_id", community_id);
+
+      if (deleteError) {
+        showInfo("error", deleteError.message);
+        return false;
+      }
+      showInfo("success", "게시글에 좋아요를 취소하였습니다.");
+      return true;
+    } else {
+      const { error: insertError } = await supabase
+        .from("community_like")
+        .insert({ community_id, user_id});
+
+      if (insertError) {
+        showInfo("error", insertError.message);
+        return false;
+      }
+      showInfo("success", "게시글에 좋아요를 누르셨습니다!");
+      return true;
+    }
+  } catch (error) {
+    showInfo("error", (error as Error).message);
+    return false;
+  }
+};
+
 // 커뮤니티 삭제
 export const deleteCommunitySpb = async (
   communityId: number
 ): Promise<boolean> => {
   try {
-    const isSignIn = await isSignInUser();
-
-    if (!isSignIn) {
-      showInfo("error", "로그인 후에 이용해주세요.");
-      return false;
-    }
-
+    // 
     const { data, error } = await supabase
       .from("community")
-      .delete()
+      .update({ is_deleted: true })
       .eq("id", communityId); // communityId가 숫자형이므로, eq()에서 숫자로 처리
 
     if (error) {
       showInfo("error", error.message);
-      return false;
+      return false; 
     }
     showInfo("success", "게시글이 성공적으로 삭제되었습니다.");
     return true;
@@ -261,3 +241,18 @@ export const getUsersSpb = async () => {
     .select("profileimagepath, user_id");
   return data;
 };
+
+
+export const getMyCommunitiesSpb  = async (page_no: number = 1) => {
+  const { data, error } = await supabase.rpc('get_my_community_list', {
+    page_no,
+    page_size: 10
+  });
+
+  if (error) {
+    showInfo("error", error.message);
+    return;
+  }
+
+  return data;
+};  

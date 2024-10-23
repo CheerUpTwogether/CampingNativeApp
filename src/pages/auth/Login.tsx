@@ -1,206 +1,205 @@
 import React, { useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import Button from "@/components/common/Button";
-import InputWithIcon from "@/components/common/InputWithIcon";
-import LinearGradient from "react-native-linear-gradient";
-import { RootStackParamList } from "@/components/router/Router";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { RootStackParamList } from "@/types/route";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-
-const helpIcon = require("@/assets/icons/Help.png");
-const googleIcon = require("@/assets/icons/GoogleIcon.png");
-const facebookIcon = require("@/assets/icons/FacebookIcon.png");
-const loginBackground = require("@/assets/images/LoginBackground.png");
-import LockIcon from "@/assets/icons/Lock.svg";
-import MailIcon from "@/assets/icons/Email.svg";
-import { loginValid } from "@/utils/validateHelper";
-import CheckBox from "@/components/common/CheckBox";
-
-import WelcomeModal from "@/components/common/WelcomeModal";
-import { signInSpb } from "@/supaBase/api/auth";
-import { getUserSpb } from "@/supaBase/api/myPage";
+import {
+  getProfileSpb,
+  kakaoLoginSpb,
+  googleLoginSpb,
+} from "@/supaBase/api/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import useStore from "@/store/store";
+import {
+  KakaoOAuthToken,
+  login,
+  loginWithKakaoAccount,
+} from "@react-native-seoul/kakao-login";
+import { GOOGLE_IOS_API_KEY, GOOGLE_WEB_API_KEY } from "@env";
+import Toast from "react-native-toast-message";
+import { Session, User } from "@supabase/supabase-js";
+import { setItemSession } from "@/utils/storage";
+import KakaoSvg from "@/assets/images/kakao.svg";
+const googleIcon = require("@/assets/icons/GoogleIcon.png");
+const loginBackground = require("@/assets/images/LoginBackground.png");
 
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
 const Login = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAutoLogin, setIsAutoLogin] = useState(false);
-  const [isVisibleModal, setisVisibleModal] = useState(false);
   const setUserData = useStore((state) => state.setUserData);
 
-  const clickLoginBtn = async () => {
-    if (loginValid({ email, password })) {
-      // 로그인이 되어있는지 확인.
-      const isLogin = await signInSpb(email, password, isAutoLogin);
+  const signInWithGoogle = async (): Promise<void> => {
+    try {
+      GoogleSignin.configure({
+        scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+        webClientId: GOOGLE_WEB_API_KEY,
+        iosClientId: GOOGLE_IOS_API_KEY,
+      });
 
-      if (!isLogin) return;
+      await GoogleSignin.signOut();
 
-      // 로그인한 유저 프로필 정보
-      const data = await getUserSpb();
+      // Google Play Services 확인 및 ID 토큰 가져오기
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken;
 
-      // zustand 전역 상태 관리
-      setUserData(data);
+      if (idToken) {
+        const { data: authData, error: authDataError } = await googleLoginSpb(
+          idToken
+        );
 
-      setisVisibleModal(true);
+        if (authDataError) {
+          Toast.show({ type: "error", text1: "구글 로그인에 실패했어요" });
+          return;
+        }
+
+        getUserProfile(authData);
+      } else {
+        Toast.show({ type: "error", text1: "ID 토큰을 가져오지 못했습니다." });
+      }
+    } catch (e) {
+      Toast.show({ type: "error", text1: "구글 로그인에 실패했어요" });
     }
   };
 
-  const moveSignup = () => {
-    navigation.replace("Signup");
-  };
-  const movehome = () => {
-    setisVisibleModal(false);
-    navigation.replace("BottomTab", { screen: "Home" });
+  const signInWithKakao = async (): Promise<void> => {
+    try {
+      const { idToken, accessToken }: KakaoOAuthToken = await login();
+      if (idToken) {
+        const { data: authData, error: authDataError } = await kakaoLoginSpb(
+          idToken,
+          accessToken
+        );
+
+        if (authDataError) {
+          Toast.show({ type: "error", text1: "카카오 로그인에 실패했어요" });
+          return;
+        }
+
+        getUserProfile(authData);
+      }
+    } catch (error) {
+      Toast.show({ type: "error", text1: "카카오 로그인에 실패했어요" });
+    }
   };
 
-  const iconColor = (text: string) => (!!text ? "#FDA758" : "#999");
+  const getUserProfile = async (authData: {
+    user?: User;
+    session: Session;
+  }) => {
+    const { data: profileData, error: profileDataError } = await getProfileSpb(
+      authData.session.user.id
+    );
+
+    if (profileDataError) {
+      Toast.show({ type: "success", text1: "정보를 등록해주세요" });
+      navigation.replace("Profile", { init: true });
+      // navigation.replace("Profile", { params: { init: true } });
+      return;
+    }
+
+    if (profileData) {
+      // 여기에 zutand profileData 정보가지고 전역설정
+      const { user_id, nickname, created_at, profile, introduce } = profileData;
+
+      setUserData(user_id, nickname, created_at, profile, introduce);
+
+      await setItemSession(
+        authData.session.access_token,
+        authData.session.refresh_token
+      );
+
+      navigation.replace("BottomTab", { screen: "Home" });
+      return;
+    }
+    navigation.replace("Profile", { init: true });
+  };
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <ScrollView style={styles.wrapper} showsHorizontalScrollIndicator={false}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.wrapper}>
         <Image source={loginBackground} style={styles.imgBackground} />
-        <LinearGradient
-          colors={[
-            "rgba(255, 255, 255, 0)",
-            "rgba(255, 255, 255, 0)",
-            "#FFF3E9",
-          ]}
-          locations={[0, 0.8, 1]} // 각 색상의 위치 설정
-          style={styles.gradient}
-        />
-        <View style={styles.subGradient} />
 
-        <View style={styles.helpContainer}>
-          <TouchableOpacity style={styles.helpWrapper}>
-            <Image source={helpIcon} style={styles.helpIcon} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.welcomeWrapper}>
-          <Text style={styles.welcomeText}>환영해요!</Text>
+          <Text style={styles.welcomeText}>Camping Together</Text>
         </View>
 
-        <View style={{ flex: 1 }}>
-          <View style={styles.socialWrapper}>
-            <Image source={googleIcon} style={styles.socialImg} />
-            <Text style={styles.socialText}>Continue with Google</Text>
-          </View>
+        <TouchableOpacity
+          style={styles.googleWrapper}
+          onPress={signInWithGoogle}
+        >
+          <Image source={googleIcon} style={styles.socialImg} />
+          <Text style={styles.socialText}>구글로 시작하기</Text>
+        </TouchableOpacity>
 
-          <View style={styles.socialWrapper}>
-            <Image source={facebookIcon} style={styles.socialImg} />
-            <Text style={styles.socialText}>Continue with Facebook</Text>
-          </View>
-
-          <Text style={styles.formTitle}>이메일로 로그인하기</Text>
-          <View style={styles.formWrapper}>
-            <InputWithIcon
-              value={email}
-              setValue={setEmail}
-              placeholder="이메일을 입력해주세요."
-              isBgWhite={false}
-              icon={
-                <MailIcon width={50} height={20} color={iconColor(email)} />
-              }
-            />
-            <InputWithIcon
-              value={password}
-              setValue={setPassword}
-              placeholder="비밀번호"
-              isBgWhite={false}
-              secureTextEntry={true}
-              icon={
-                <LockIcon width={50} height={22} color={iconColor(password)} />
-              }
-            />
-            <View style={styles.CheckBoxGroupContainer}>
-              <View style={styles.CheckBoxContainer}>
-                <CheckBox
-                  isChecked={isAutoLogin}
-                  setIsChecked={setIsAutoLogin}
-                />
-                <Text>자동 로그인</Text>
-              </View>
-            </View>
-
-            <Button label="로그인" onPress={clickLoginBtn} />
-            <Text style={styles.formTitle}>비밀번호 찾기</Text>
-            <TouchableOpacity style={styles.signupBtn} onPress={moveSignup}>
-              <Text style={styles.defaultText}>아직 회원이 아니세요?</Text>
-              <Text style={styles.boldText}>회원가입</Text>
-            </TouchableOpacity>
-            <WelcomeModal isVisible={isVisibleModal} onClose={movehome} />
-          </View>
-        </View>
-      </ScrollView>
+        <TouchableOpacity style={styles.kakaoWrapper} onPress={signInWithKakao}>
+          <KakaoSvg />
+          <Text style={styles.socialText}>카카오로 시작하기</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     flex: 1,
     backgroundColor: "white",
   },
-  imgBackground: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    zIndex: -2,
-  },
-  gradient: {
-    position: "absolute",
-    left: 0,
-    width: "100%",
-    height: "46%",
-    zIndex: -1,
-  },
-  subGradient: {
-    width: "100%",
-    height: "54%",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    backgroundColor: "#FFF3E9",
-    zIndex: -1,
-  },
-  helpContainer: { alignItems: "flex-end" },
-  helpWrapper: {
-    marginTop: 30,
-    marginRight: 20,
-    width: 44,
-    height: 44,
-    justifyContent: "center",
+  wrapper: {
+    flex: 1,
+    alignContent: "center",
     alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "rgba(87, 51, 83, 0.2)",
+    alignSelf: "center",
+    justifyContent: "center",
   },
-  helpIcon: {
-    width: 22,
-    height: 22,
+  imgBackground: {
+    marginBottom: 50,
+    width: 350,
+    height: 230,
+    zIndex: -2,
+    alignSelf: "center",
   },
   welcomeWrapper: {
     alignItems: "center",
-    marginTop: 230,
     marginBottom: 60,
   },
   welcomeText: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#573353",
+    color: "#386641",
   },
-  socialWrapper: {
+  kakaoWrapper: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 29,
-    backgroundColor: "#FFF",
+    gap: 20,
+    backgroundColor: "#FFE401",
+    paddingVertical: 10,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+    width: 300,
+  },
+  googleWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 28,
+    backgroundColor: "#efefef",
     paddingVertical: 16,
     marginHorizontal: 16,
     borderRadius: 12,
     marginBottom: 8,
+    width: 300,
   },
   socialImg: {
     width: 23,
@@ -208,37 +207,7 @@ const styles = StyleSheet.create({
   },
   socialText: {
     fontSize: 16,
-    color: "#573353",
-  },
-  formWrapper: {
-    height: "100%",
-    backgroundColor: "#FFF",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 5,
-  },
-  formTitle: {
-    fontSize: 16,
-    color: "#573353",
-    textAlign: "center",
-    backgroundColor: "#fff",
-    marginTop: 20,
-    paddingVertical: 12,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    marginBottom: 1,
-  },
-  signupBtn: {
-    flexDirection: "row",
-    justifyContent: "center",
-    paddingBottom: 20,
-  },
-  defaultText: {
-    color: "#573353",
-  },
-  boldText: {
-    color: "#573353",
-    fontWeight: "700",
+    color: "#333",
   },
   socialContainer: {
     flexDirection: "row",

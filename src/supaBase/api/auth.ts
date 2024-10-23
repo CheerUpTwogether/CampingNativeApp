@@ -2,6 +2,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import supabase from "../supabaseClient";
 import { showInfo } from "./alert";
 
+// 구글 로그인
+export const googleLoginSpb = (idToken: string) => {
+  return supabase.auth.signInWithIdToken({
+    provider: "google",
+    token: idToken,
+  });
+};
+
+// 카카오 로그인
+export const kakaoLoginSpb = (idToken: string, accessToken: string) => {
+  return supabase.auth.signInWithIdToken({
+    provider: "kakao",
+    token: idToken,
+    access_token: accessToken,
+  });
+};
+
+// 프로필 가져오기
+export const getProfileSpb = (uid: string) => {
+  return supabase.from("profile").select("*").eq("user_id", uid).single();
+};
+
 export const signUpSpb = async (
   email: string,
   password: string,
@@ -9,7 +31,7 @@ export const signUpSpb = async (
 ): Promise<boolean> => {
   const { data, error: nicknameError } = await supabase
     .from("profile")
-    .select("user_id")
+    .select("nickname")
     .eq("nickname", nickname);
 
   if (nicknameError) {
@@ -81,7 +103,7 @@ export const signInSpb = async (
 };
 
 export const autoSignInSpb = async (): Promise<boolean> => {
-  const token = await AsyncStorage.getItem("userToken");
+  const token = await AsyncStorage.getItem("session_token");
 
   if (token) {
     const { access_token, refresh_token } = token && JSON.parse(token);
@@ -92,6 +114,7 @@ export const autoSignInSpb = async (): Promise<boolean> => {
     });
 
     if (error) {
+      console.log(error)
       showInfo("error", error.message);
       return false;
     }

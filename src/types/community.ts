@@ -1,13 +1,3 @@
-interface CommunityResponse<T> {
-  result: {
-    content: T;
-  };
-  replys: [];
-}
-interface CommunityDetailResponse {
-  result: Community[];
-  replys: [];
-}
 
 interface Profile {
   user_id: string;
@@ -17,17 +7,40 @@ interface Profile {
 
 // 커뮤니티 타입 상세
 interface Community {
-  id: number;
-  user_id: string;
-  subject: string;
-  content: string;
+  contents: string;
+  create_date: string;
+  id: number,
+  images: string[];
+  is_liked: boolean;
+  like_count: number;
   nickname: string;
-  like: number;
-  like_check: boolean;
+  profile: string;
   reply_count: number;
-  profileimagepath?: string;
-  replys?: Reply[];
+  title: string;
+  user_id: string;
 }
+
+type ImageFile= {uri: string, type: string, name: string}
+type FormImageFile =  string | {uri: string, type: string, name: string}
+
+interface CommunityForm {
+  title: string,
+  contents: string,
+  images: FormImageFile[]
+}
+
+// interface Community {
+//   id: number;
+//   user_id: string;
+//   subject: string;
+//   content: string;
+//   nickname: string;
+//   like: number;
+//   like_check: boolean;
+//   reply_count: number;
+//   profile?: User;
+//   replys?: Reply[];
+// }
 
 interface Reply {
   replyId: number;
@@ -51,5 +64,5 @@ interface CommunityReply {
 
 interface UserProfile {
   user_id: string;
-  profileimagepath: string;
+  profile: string;
 }

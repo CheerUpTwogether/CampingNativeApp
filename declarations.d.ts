@@ -9,4 +9,7 @@ declare module "@env" {
   export const OPENAPI_SERVICE_KEY: string;
   export const SUPABASE_URL: string;
   export const SUPABASE_KEY: string;
+  export const GOOGLE_WEB_API_KEY: string;
+  export const GOOGLE_ANDROID_API_KEY: string;
+  export const GOOGLE_IOS_API_KEY: string;
 }

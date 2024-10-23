@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
-import { ImageBackground, SafeAreaView, StyleSheet } from "react-native";
+import { ImageBackground, SafeAreaView, StyleSheet, Text } from "react-native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
-import { RootStackParamList } from "../components/router/Router";
+import { RootStackParamList, SettingsScreenNavigationProp } from "../components/router/Router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useStore from "@/store/store";
 import Toast from "react-native-toast-message";
@@ -10,8 +10,6 @@ import { autoSignInSpb } from "@/supaBase/api/auth";
 import { getUserSpb } from "@/supaBase/api/myPage";
 
 const splashScreen = require("@/assets/images/SplashScreen.png");
-type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
 
 const Splash = () => {
   const setUserData = useStore((state) => state.setUserData);
@@ -27,7 +25,7 @@ const Splash = () => {
       }
 
       // 저장된 정보가 없을 경우
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem("session_token");
       if (!token) {
         navigation.replace("Login");
         return;
@@ -69,7 +67,7 @@ const Splash = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <ImageBackground style={styles.backgroundImage} source={splashScreen} />
+      <Text>Camping Together</Text>
     </SafeAreaView>
   );
 };

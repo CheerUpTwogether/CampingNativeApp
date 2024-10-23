@@ -1,157 +1,133 @@
-import React, { useState, useEffect } from "react";
-import { RootStackParamList } from "@/components/router/Router";
-import { useNavigation } from "@react-navigation/native";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { FlatList, SafeAreaView, StyleSheet, Text } from "react-native";
+import { CommunityProps } from "@/types/route";
 import {
-  FlatList,
-  SafeAreaView,
-  ListRenderItem,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
-import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { getCommunitiesSpb } from "@/supaBase/api/community";
 import TopBar from "@/components/common/TopBar";
-import { getCommunitysSpb, getUsersSpb } from "@/supaBase/api/community";
+import CommunityItem from "@/components/community/CommunityItem";
+import useStore from "@/store/store";
+import Replys from "@/components/community/Replys";
+import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
+import uuid from "react-native-uuid";
 
-const leftIcon = require("@/assets/icons/menu.png");
-const shareIcon = require("@/assets/icons/Share.png");
-const heartIcon = require("@/assets/icons/Heart.png");
-const chatIcon = require("@/assets/icons/Chat.png");
-const profileImage = require("@/assets/images/Introduce1.png");
-
-type SettingsScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
-
-const Community = () => {
-  const [dataList, setDataList] = useState<Community[]>([]);
-  const [userProfileData, setUserProfileData] = useState<UserProfile[]>([]);
-  const [mergedData, setMergedData] = useState<
-    (Community & { profileimagepath: string })[]
-  >([]);
+const Community = ({ route }: CommunityProps) => {
+  const { setCommunities, communities } = useStore();
   const [refresh, setRefresh] = useState(false);
-  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const [reached, setReached] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
+  const [communityId, setCommunityId] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
+
+  useEffect(() => {
+    if (route?.params?.refresh) {
+      pullDown();
+      flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    }
+  }, [route?.params?.refresh]);
+
+  let isFinish = false;
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback((newCommunityId: number) => {
+    bottomSheetModalRef.current?.present();
+    setCommunityId(newCommunityId);
+  }, []);
 
   useEffect(() => {
     fetchCommunitysData();
-    fetchUserProfileData();
-    console.log(dataList);
-  }, [refresh]);
+  }, []);
 
-  useEffect(() => {
-    if (dataList.length && userProfileData.length) {
-      const merged = dataList.map((item) => {
-        const userProfile = userProfileData.find(
-          (profile) => profile.user_id === item.user_id
-        );
-        return {
-          ...item,
-          profileimagepath: userProfile ? userProfile.profileimagepath : "",
-        };
-      });
-      setMergedData(merged);
-    }
-  }, [dataList, userProfileData]);
-
-  const fetchUserProfileData = async () => {
-    const data: UserProfile[] | null = await getUsersSpb();
+  const fetchCommunitysData = async (page?: number) => {
+    setLoading(true);
+    const data = await getCommunitiesSpb(page || pageNo);
     if (data) {
-      setUserProfileData(data);
+      if (page === 1) setCommunities(data);
+      else setCommunities([...communities, ...data]);
+      if (data.length < 10) isFinish = true;
+    } else {
+      isFinish = true;
     }
+    setLoading(false);
   };
-  const fetchCommunitysData = async () => {
-    const data = await getCommunitysSpb();
-    if (data) {
-      const sortedData = data.sort((a, b) => b.id - a.id);
-      setDataList(sortedData);
-    }
+
+  const handleEndReached = () => {
+    if (isFinish || reached) return;
+    setReached(true);
+    setPageNo((prev) => {
+      fetchCommunitysData(prev + 1);
+      return prev + 1;
+    });
+  };
+
+  const pullDown = async () => {
+    setCommunities([]);
+    setRefresh(true);
+    setReached(false);
+    await fetchCommunitysData(1);
+    setPageNo(1);
     setRefresh(false);
   };
 
-  const handleMove = (id: number) => {
-    navigation.navigate("CommunityDetail", { CommunityId: id });
-  };
-
-  const pullDown = () => {
-    setRefresh(true);
-  };
-
-  const renderItem: ListRenderItem<
-    Community & { profileimagepath: string }
-  > = ({ item }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{ marginHorizontal: "4%", marginVertical: "2%" }}
-        onPress={() => handleMove(item.id)}
-      >
-        <View style={styles.userWrapper}>
-          <View style={styles.topWrapper}>
-            <View style={{ marginVertical: 3 }}>
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={
-                    item.profileimagepath
-                      ? { uri: item.profileimagepath }
-                      : profileImage
-                  }
-                  style={
-                    item.profileimagepath
-                      ? styles.userProfileImage
-                      : styles.dummyProfileImage
-                  }
-                />
-              </View>
-              <Text style={styles.nickName}>{item.nickname}</Text>
-            </View>
-            <View style={styles.subjectWrapper}>
-              <Text style={styles.subject}>{item.subject}</Text>
-            </View>
-            <TouchableOpacity style={styles.iconWrapper} activeOpacity={0.8}>
-              <Image source={shareIcon} style={styles.icon1} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.contentWrapper}>
-          <Text style={styles.contentText}>{item.content}</Text>
-          <View style={styles.reactionContainer}>
-            <View style={styles.reactionWrapper}>
-              <Image style={styles.icon1} source={heartIcon} />
-              <Text style={styles.reactionText}>{item.like}</Text>
-            </View>
-            <View style={styles.reaction}>
-              <Image style={styles.icon2} source={chatIcon} />
-              <Text style={styles.reactionText}>{item.reply_count}</Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  const skeletonData = Array(5).fill({});
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar title="커뮤니티" leftIcon={leftIcon} />
-      <FlatList
-        data={mergedData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        style={{ marginBottom: 70 }}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={pullDown} />
-        }
-      />
+      <BottomSheetModalProvider>
+        <TopBar rightIsProfile={true} />
+        <FlatList
+          data={loading ? skeletonData : communities}
+          keyExtractor={(item, index) =>
+            loading ? `skeleton-${index}` : item.id.toString()
+          }
+          renderItem={({ item }) =>
+            loading ? (
+              <SkeletonCommunityItem />
+            ) : (
+              <CommunityItem
+                id={item.id}
+                handlePresentModalPress={handlePresentModalPress}
+              />
+            )
+          }
+          style={{ marginBottom: 70 }}
+          onRefresh={pullDown}
+          refreshing={refresh}
+          onEndReached={handleEndReached}
+          ref={flatListRef}
+        />
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+        >
+          <BottomSheetView style={{ paddingBottom: 100, flex: 1 }}>
+            <Replys communityId={communityId} />
+          </BottomSheetView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    backgroundColor: "#FFF3E9",
+    backgroundColor: "#efefef",
+    marginBottom: 50,
   },
   topWrapper: {
     flexDirection: "row",

@@ -1,69 +1,79 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Platform } from "react-native";
+import { SafeAreaView, StyleSheet, Platform, FlatList } from "react-native";
 import TopBar from "@/components/common/TopBar";
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from "@react-navigation/native";
-import { RootBottomParamList } from "../../components/router/Router";
-import { getCampingsApi } from "@/apis/camping";
+import { getCampingsApi } from "@/api";
 import { OPENAPI_SERVICE_KEY } from "@env";
-import CampingFlatList from "@/components/home/CampingFlatList";
+import CampingItem from "@/components/home/CampingItem";
+import SkeletonCampingItem from "@/components/skeleton/SkeletonCampingItem";
 
-const menu = require("../../assets/icons/menu.png");
 const profile = { uri: "https://picsum.photos/200/300" };
 
 const Home = () => {
   const [campings, setCampings] = useState<CampingsType>([]);
-  const navigation = useNavigation<NavigationProp<RootBottomParamList>>();
-  const handleLeft = () => navigation.navigate("Settings");
-  const [pageNo, setPageNo] = useState(2);
+  const [pageNo, setPageNo] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     getCampings();
-  }, [pageNo]);
+  }, []);
 
-  const getCampings = async () => {
+  const getCampings = async (no?: number) => {
+    setLoading(true);
     const serviceKey = OPENAPI_SERVICE_KEY;
     const data = await getCampingsApi({
-      //MobileOS: Platform.OS === "ios" ? "ETC" : "AND",
       MobileOS: "AND",
       MobileApp: "캠핑 투게더",
-      serviceKey:
-        "S0Hye%2FT7xZSp8W%2FQ1Md2miGHRKrwGW%2FJQ8%2BQ7OTXdsiJxECs7cki9ujGX9TMlwfxfsV%2Fupe61%2FJw4jfbeqgAog%3D%3D",
+      serviceKey: serviceKey,
       _type: "json",
-      pageNo,
+      pageNo: no || pageNo,
     });
-    console.log(data);
 
     const campingList = data?.response?.body?.items?.item;
-
-    if (campingList)
-      setCampings((prev) =>
-        pageNo === 1 ? campingList : [...prev, ...campingList]
-      );
+    if (campingList) setCampings((prev) => [...prev, ...campingList]);
+    setLoading(false);
+  };
+  const handleRefresh = async () => {
+    setPageNo(1);
+    setRefresh(true);
+    setCampings([]);
+    await getCampings();
+    setRefresh(false);
   };
 
   const handleEndReached = () => {
-    setPageNo((prev) => prev + 1);
+    setPageNo((prev) => {
+      getCampings(prev + 1);
+      return prev + 1;
+    });
   };
+
+  const skeletonData = Array(5).fill({});
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <TopBar title="캠핑투게더" rightIsProfile={true} rightIcon={profile} />
-      <CampingFlatList campings={campings} onEndReached={handleEndReached} />
+      <TopBar rightIsProfile={true} />
+      <FlatList
+        data={loading ? skeletonData : campings}
+        keyExtractor={(item, index) =>
+          loading ? `skeleton-${index}` : item.facltNm
+        }
+        renderItem={({ item }) =>
+          loading ? <SkeletonCampingItem /> : <CampingItem item={item} />
+        }
+        onEndReached={handleEndReached}
+        onRefresh={handleRefresh}
+        refreshing={refresh}
+        style={{ marginBottom: 70 }}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
     backgroundColor: "#F5F7F8",
-    marginBottom: 40,
   },
-  scrollAreaContainer: { flexGrow: 1, paddingBottom: 100 },
 });
 
 export default Home;

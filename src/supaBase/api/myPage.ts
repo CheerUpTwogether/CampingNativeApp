@@ -55,7 +55,6 @@ export const setUserSpb = async ({
       .eq("user_id", uid);
 
     if (error) {
-      console.log(error);
       showInfo("error", error.message);
       return false;
     }
@@ -68,11 +67,12 @@ export const setUserSpb = async ({
   }
 };
 
-export const setProfileSpb = async (image): Promise<string> => {
-  const fileName = `${uuid.v4()}${image.name}`;
-  const { data, error: uploadError } = await supabase.storage
-    .from("profileBucket") // 버킷 이름
-    .upload(`profile-images/${fileName}`, image, {
+export const uploadImageSpb = async (image: ImageFile, isProfileBucket: boolean): Promise<string> => {
+  const bucket = isProfileBucket ? "profileBucket" : "communityBucket"
+  const path = isProfileBucket ? 'profile-images/' : ''
+  const { error: uploadError } = await supabase.storage
+    .from(bucket) // 버킷 이름
+    .upload(`${path}${image.name}`, image, {
       contentType: image.type,
     });
 
@@ -82,21 +82,18 @@ export const setProfileSpb = async (image): Promise<string> => {
   }
 
   // 파일의 URL 생성
-  const { data: file } = supabase.storage
-    .from("profileBucket")
-    .getPublicUrl(`profile-images/${fileName}`);
+  const { data } = supabase.storage
+    .from(bucket)
+    .getPublicUrl(`${path}${image.name}`);
 
-  const uid = await getSignInUserId();
-  await setProfileImagePathSpb(file.publicUrl, uid);
-
-  return file.publicUrl;
+  return data.publicUrl;
 };
 
-export const setProfileImagePathSpb = async (profileimagepath, uid) => {
-  // profile 테이블의 profileimagepath 컬럼을 업데이트합니다.
+export const setProfileImagePathSpb = async (profile, uid) => {
+  // profile 테이블의 profile 컬럼을 업데이트합니다.
   const { data, error } = await supabase
     .from("profile")
-    .update({ profileimagepath })
+    .update({ profile })
     .eq("user_id", uid);
   if (error) {
     showInfo("error", "프로필 이미지 업로드 하는데 실패하였습니다.");
@@ -105,3 +102,17 @@ export const setProfileImagePathSpb = async (profileimagepath, uid) => {
   showInfo("success", "프로필 이미지가 성공적으로 업데이트되었습니다.");
   return true;
 };
+
+
+export const addProfileSpb = async ({nickname, introduce, profile}: User) => {
+  return await supabase
+  .from("profile")
+  .insert({ nickname, introduce, profile });
+}
+
+export const updateProfileSpb = async ({nickname, introduce, profile, user_id}: User) => {
+  return await supabase
+  .from("profile")
+  .update({ nickname, introduce, profile })
+  .eq("user_id", user_id);
+}
