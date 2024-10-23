@@ -113,7 +113,11 @@ function Intro() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginVertical: 20, justifyContent: "center" },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#FFF",
+  },
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF",
