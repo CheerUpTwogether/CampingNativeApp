@@ -18,7 +18,7 @@ import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
 import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
-import uuid  from 'react-native-uuid';
+import uuid from "react-native-uuid";
 
 const Community = ({ route }: CommunityProps) => {
   const { setCommunities, communities } = useStore();
@@ -36,8 +36,8 @@ const Community = ({ route }: CommunityProps) => {
       flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [route?.params?.refresh]);
-  
-  let isFinish = false
+
+  let isFinish = false;
 
   // variables
   const snapPoints = useMemo(() => ["25%", "50%"], []);
@@ -56,31 +56,30 @@ const Community = ({ route }: CommunityProps) => {
     setLoading(true);
     const data = await getCommunitiesSpb(page || pageNo);
     if (data) {
-      if(page === 1) setCommunities(data);
+      if (page === 1) setCommunities(data);
       else setCommunities([...communities, ...data]);
-      if(data.length < 10) isFinish = true
+      if (data.length < 10) isFinish = true;
     } else {
-      isFinish = true
+      isFinish = true;
     }
     setLoading(false);
   };
 
   const handleEndReached = () => {
-    if(isFinish || reached) return
-    setReached(true)
+    if (isFinish || reached) return;
+    setReached(true);
     setPageNo((prev) => {
       fetchCommunitysData(prev + 1);
       return prev + 1;
     });
   };
 
-
-  const pullDown = async() => {
-    setCommunities([])
+  const pullDown = async () => {
+    setCommunities([]);
     setRefresh(true);
     setReached(false);
     await fetchCommunitysData(1);
-    setPageNo(1)
+    setPageNo(1);
     setRefresh(false);
   };
 
@@ -128,6 +127,7 @@ const Community = ({ route }: CommunityProps) => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "#efefef",
+    marginBottom: 50,
   },
   topWrapper: {
     flexDirection: "row",

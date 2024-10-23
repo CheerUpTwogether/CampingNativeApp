@@ -1,6 +1,14 @@
 import * as React from "react";
 import Button from "@/components/common/Button";
-import {  Dimensions, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import Carousel, {
@@ -15,8 +23,8 @@ const Intoduce2 = require("@/assets/images/Introduce2.png");
 const Intoduce3 = require("@/assets/images/Introduce3.png");
 const Intoduce4 = require("@/assets/images/Introduce4.png");
 
-const {width, height} = Dimensions.get("window");
- 
+const { width, height } = Dimensions.get("window");
+
 type SettingsScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
 
@@ -24,7 +32,6 @@ interface Entry {
   title: string;
   img: ImageSourcePropType;
 }
-
 
 const entries: Entry[] = [
   { title: "Item 1", img: Intoduce1 },
@@ -37,7 +44,7 @@ function Intro() {
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const navigation = useNavigation<SettingsScreenNavigationProp>();
-  const count = 0 
+  const count = 0;
   const onPressPagination = (index: number) => {
     ref.current?.scrollTo({
       count: index - progress.value,
@@ -59,9 +66,9 @@ function Intro() {
       </View>
     );
   };
- 
+
   return (
-    <View style={{ flex: 1, marginVertical: 20 }}>
+    <View style={styles.container}>
       <Carousel
         ref={ref}
         width={width}
@@ -70,20 +77,19 @@ function Intro() {
         onProgressChange={progress}
         renderItem={renderItem}
         loop={false}
-        
       />
       {progress.value !== 3 ? (
         <View style={styles.navigationGroupWrapper}>
           <TouchableOpacity
             style={styles.navigationWrapper}
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.navigationText}>Skip</Text>
           </TouchableOpacity>
           <Pagination.Basic
             progress={progress}
             data={entries}
-            dotStyle={{ backgroundColor: "rgba(0,0,0,0.1)", borderRadius: 100 }}
+            dotStyle={{ backgroundColor: "#cdd993", borderRadius: 100 }}
             containerStyle={{ gap: 5, marginTop: 10 }}
             onPress={onPressPagination}
           />
@@ -97,7 +103,7 @@ function Intro() {
       ) : (
         <View style={styles.startButtonWrapper}>
           <Button
-            label="시작하기" 
+            label="시작하기"
             onPress={() => navigation.navigate("Signup")}
           />
         </View>
@@ -107,6 +113,7 @@ function Intro() {
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, marginVertical: 20, justifyContent: "center" },
   wrapper: {
     flex: 1,
     backgroundColor: "#FFF",
@@ -120,7 +127,7 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginHorizontal: 1,
-    backgroundColor: "#573353",
+    backgroundColor: "#555",
   },
   navigationWrapper: {
     height: 70,
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
   navigationText: {
     fontSize: 17,
     fontWeight: "700",
-    color: "#573353",
+    color: "#555",
   },
   startButtonWrapper: {
     padding: 24,
