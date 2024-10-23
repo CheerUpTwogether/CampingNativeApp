@@ -2,11 +2,11 @@ import useStore from "@/store/store";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontistoIcon from 'react-native-vector-icons/Fontisto';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import FontistoIcon from "react-native-vector-icons/Fontisto";
 import { SettingsScreenNavigationProp } from "@/types/route";
 import { useNavigation } from "@react-navigation/native";
-
+import Logo from "@/assets/images/LogoIcon.png";
 
 interface TopBarProps {
   leftIcon?: { uri: string } | undefined;
@@ -15,7 +15,7 @@ interface TopBarProps {
   rightIcon?: React.ReactElement | { uri: string };
   rightClick?: () => void;
   rightIsProfile?: boolean;
-  title?: string
+  title?: string;
 }
 
 const TopBar: React.FC<TopBarProps> = ({
@@ -27,7 +27,7 @@ const TopBar: React.FC<TopBarProps> = ({
   rightIsProfile = false,
   title,
 }) => {
-  const {userInfo} = useStore();
+  const { userInfo } = useStore();
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   return (
     <View style={styles.wrapper}>
@@ -49,31 +49,39 @@ const TopBar: React.FC<TopBarProps> = ({
           )}
         </TouchableOpacity>
       ) : (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <FontistoIcon name="tent" size={28} color="#386641" style={{marginRight: 8}} />
-          <Text style={{ fontSize: 18, color: "#386641" }}>캠핑투게더</Text>
+        <View style={styles.LogoWrapper}>
+          <Image source={Logo} style={{ width: 40, height: 40 }} />
+          <Text style={styles.Logo}>CampingGo</Text>
         </View>
       )}
       {title && <Text style={styles.title}>{title}</Text>}
-      
 
       {rightIcon || rightIsProfile ? (
         <TouchableOpacity
           onPress={() => {
-            if (rightClick) rightClick()
-            else navigation.navigate('Profile', {init: false})
+            if (rightClick) rightClick();
+            else navigation.navigate("Profile", { init: false });
           }}
         >
           {rightIsProfile ? (
-            userInfo.profile ?
-            <Image
-              source={{ uri: userInfo.profile }} 
-              style={[styles.icon, { width: 36, height: 36 }]}
-            />
-            : <Icon name="account-circle" size={36} color="#AEB6B9" />
+            userInfo.profile ? (
+              <Image
+                source={{ uri: userInfo.profile }}
+                style={[styles.icon, { width: 36, height: 36 }]}
+              />
+            ) : (
+              <Icon name="account-circle" size={36} color="#AEB6B9" />
+            )
           ) : (
             <>
-              {React.isValidElement(rightIcon) ? rightIcon : <Image source={rightIcon as { uri: string }} style={styles.icon} /> }
+              {React.isValidElement(rightIcon) ? (
+                rightIcon
+              ) : (
+                <Image
+                  source={rightIcon as { uri: string }}
+                  style={styles.icon}
+                />
+              )}
             </>
           )}
         </TouchableOpacity>
@@ -116,7 +124,14 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
     fontSize: 16,
-  }
+  },
+  LogoWrapper: { flexDirection: "row", alignItems: "center", gap: 6 },
+  Logo: {
+    fontSize: 18,
+    color: "#386641",
+    fontWeight: "600",
+    fontStyle: "italic",
+  },
 });
 
 export default TopBar;
