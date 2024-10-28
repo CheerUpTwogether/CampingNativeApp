@@ -12,7 +12,7 @@ import TopBar from "@/components/common/TopBar";
 import CommunityItem from "@/components/community/CommunityItem";
 import useStore from "@/store/store";
 import Replys from "@/components/community/Replys";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet from "@/components/common/BottomSheet";
 import SkeletonCommunityItem from "@/components/skeleton/SkeletonCommunityItem";
 
 const Community = ({ route }: CommunityProps) => {
@@ -23,7 +23,7 @@ const Community = ({ route }: CommunityProps) => {
   const [communityId, setCommunityId] = useState(0);
   const [loading, setLoading] = useState(true);
   const flatListRef = useRef<FlatList>(null); // FlatList의 ref 생성
-  const [show, setShow] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   useEffect(() => {
     if (route?.params?.refresh) {
@@ -37,7 +37,7 @@ const Community = ({ route }: CommunityProps) => {
   // callbacks
   const handlePresentModalPress = useCallback((newCommunityId: number) => {
     setCommunityId(newCommunityId);
-    setShow(true);
+    setIsShow(true);
   }, []);
 
   useEffect(() => {
@@ -102,9 +102,9 @@ const Community = ({ route }: CommunityProps) => {
         ref={flatListRef}
       />
       <BottomSheet
-        isShow={show}
-        setIsShow={setShow}
-        size={0.9}
+        isShow={isShow}
+        setIsShow={setIsShow}
+        size={0.8}
         component={<Replys communityId={communityId} />}
       />
     </SafeAreaView>
