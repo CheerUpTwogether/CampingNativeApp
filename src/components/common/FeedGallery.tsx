@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, View, Dimensions, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+interface FeedItem {
+  id: number;
+  title: string;
+  contents: string;
+  create_date: string;
+  images: string[];
+  is_liked: boolean;
+  like_count: number;
+  reply_count: number;
+}
 
 const numColumns = 3;
 const screenWidth = Dimensions.get("window").width;
 const imageSize = screenWidth / numColumns;
 
 // 피드 정렬을 위한 row 세팅
-const renderRow = (rowData, rowIndex, navigation) => (
+const renderRow = (
+  rowData: FeedItem[],
+  rowIndex: number,
+  navigation?: NavigationProp<any>
+) => (
   <View key={rowIndex} style={styles.row}>
-    {rowData.map((item) => (
+    {rowData.map((item: FeedItem) => (
       <View key={item.id} style={styles.item}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Feed", { id: item.id })}
+          activeOpacity={0.5}
+          onPress={() => console.log("TODO: 피드로 이동?")}
         >
           {item?.images?.[0] ? (
             <Image source={{ uri: item.images[0] }} style={styles.image} />
@@ -29,10 +45,15 @@ const renderRow = (rowData, rowIndex, navigation) => (
   </View>
 );
 
-const renderTextRow = (rowData, rowIndex) => (
+const renderTextRow = (rowData: FeedItem[], rowIndex: number) => (
   <View key={rowIndex} style={styles.textRow}>
     {rowData.map((item) => (
-      <View key={item.id} style={styles.textItem}>
+      <TouchableOpacity
+        key={item.id}
+        style={styles.textItem}
+        activeOpacity={0.5}
+        onPress={() => console.log("TODO: 피드로 이동?")}
+      >
         <Text style={styles.title}>
           {item.title.length > 20
             ? item.title.slice(0, 20) + "..."
@@ -43,12 +64,12 @@ const renderTextRow = (rowData, rowIndex) => (
             ? item.contents.slice(0, 32) + "..."
             : item.contents}
         </Text>
-      </View>
+      </TouchableOpacity>
     ))}
   </View>
 );
 
-const FeedGallery = ({ feedList }) => {
+const FeedGallery = ({ feedList }: { feedList: FeedItem[] }) => {
   const [activeTab, setActiveTab] = useState("withImages");
   const navigation = useNavigation();
 
@@ -59,8 +80,19 @@ const FeedGallery = ({ feedList }) => {
       : item.images.length === 0
   );
 
+  // 스타일에 사용될 피드 갯수
+  const withImagesCount = feedList.filter(
+    (item) => item.images.length > 0
+  ).length;
+  const withoutImagesCount = feedList.filter(
+    (item) => item.images.length === 0
+  ).length;
+
+  // 스타일에 사용될 선택된 탭
+  const isWithImagesActive = activeTab === "withImages";
+
   // 피드 정렬을 위한 column 세팅
-  const groupItemsInRows = (items, columns) => {
+  const groupItemsInRows = (items: FeedItem[], columns: number) => {
     const rows = [];
     for (let i = 0; i < items.length; i += columns) {
       rows.push(items.slice(i, i + columns));
@@ -76,32 +108,51 @@ const FeedGallery = ({ feedList }) => {
   return (
     <View style={styles.feedListContainer}>
       {/* Tab Bar */}
-      <View style={styles.tabBar}>
-        <TouchableOpacity onPress={() => setActiveTab("withImages")}>
+      <View style={styles.tabBarContainer}>
+        <TouchableOpacity
+          style={styles.tabBarWrapper}
+          onPress={() => setActiveTab("withImages")}
+        >
           <Image
             source={require("@/assets/icons/Images.png")}
-            style={[
-              styles.tabIcon,
-              activeTab === "withImages" && styles.activeTab,
-            ]}
+            style={[styles.tabIcon, isWithImagesActive && styles.activeIconTab]}
           />
+          <Text
+            style={[
+              styles.tabCount,
+              isWithImagesActive && styles.activeCountTab,
+            ]}
+          >
+            {withImagesCount}
+          </Text>
         </TouchableOpacity>
         <View style={styles.empty} />
-        <TouchableOpacity onPress={() => setActiveTab("withoutImages")}>
+        <TouchableOpacity
+          style={styles.tabBarWrapper}
+          onPress={() => setActiveTab("withoutImages")}
+        >
           <Image
             source={require("@/assets/icons/Text.png")}
             style={[
               styles.tabIcon,
-              activeTab === "withoutImages" && styles.activeTab,
+              !isWithImagesActive && styles.activeIconTab,
             ]}
           />
+          <Text
+            style={[
+              styles.tabCount,
+              !isWithImagesActive && styles.activeCountTab,
+            ]}
+          >
+            {withoutImagesCount}
+          </Text>
         </TouchableOpacity>
       </View>
 
       {/* Tab Content */}
       {rows.map((item, idx) =>
         activeTab === "withImages"
-          ? renderRow(item, idx, navigation)
+          ? renderRow(item, idx)
           : renderTextRow(item, idx)
       )}
     </View>
@@ -113,21 +164,34 @@ const styles = StyleSheet.create({
     marginTop: 16,
     flex: 1,
   },
-  tabBar: {
+  tabBarContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderColor: "#ddd",
   },
+  tabBarWrapper: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 4,
+  },
+  tabCount: { fontSize: 14 },
   tabIcon: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
     tintColor: "#AAA",
   },
-  activeTab: {
+  activeIconTab: {
     tintColor: "#386641",
+    width: 30,
+    height: 30,
+  },
+  activeCountTab: {
+    color: "#386641",
+    fontSize: 16,
   },
   empty: {
     width: 2,
