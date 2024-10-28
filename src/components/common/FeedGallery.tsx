@@ -3,17 +3,7 @@ import { Image, StyleSheet, View, Dimensions, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
-interface FeedItem {
-  id: number;
-  title: string;
-  contents: string;
-  create_date: string;
-  images: string[];
-  is_liked: boolean;
-  like_count: number;
-  reply_count: number;
-}
+import { FeedItem } from "@/types/myPage";
 
 const numColumns = 3;
 const screenWidth = Dimensions.get("window").width;

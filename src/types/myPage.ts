@@ -23,7 +23,18 @@ interface UserEditData {
 }
 
 interface CropPickerImage {
-  uri: string,
-  type: string,
-  name: string,
+  uri: string;
+  type: string;
+  name: string;
+}
+
+export interface FeedItem {
+  id: number;
+  title: string;
+  contents: string;
+  create_date: string;
+  images: string[];
+  is_liked: boolean;
+  like_count: number;
+  reply_count: number;
 }
